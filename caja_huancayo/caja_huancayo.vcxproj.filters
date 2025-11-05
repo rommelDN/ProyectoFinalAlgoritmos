@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Archivos de origen">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Archivos de recursos">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Estructuras">
+      <UniqueIdentifier>{0d7e5136-f050-4a58-8029-ea16aedc6cc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Servicios">
+      <UniqueIdentifier>{ca931498-0270-4e9a-8c4c-78645053e8ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Transaccion">
+      <UniqueIdentifier>{2e3cd126-c593-401f-8a76-06bfad222c16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\ServicioContratado">
+      <UniqueIdentifier>{f9ac3b84-b2b6-48ee-a3a2-587c6a8d4751}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Cliente">
+      <UniqueIdentifier>{02d188a1-3bfa-4aec-9bd1-0d619483b9de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Seguros">
+      <UniqueIdentifier>{72f3aced-2d1a-4741-a1be-1b44ab5c743e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Credito">
+      <UniqueIdentifier>{d7bea685-942a-4b35-a797-b258b3aa4385}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Cuentas">
+      <UniqueIdentifier>{e1afec4e-6840-45cd-a143-268a2dd150f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Tarjetas">
+      <UniqueIdentifier>{ee8e289e-898b-454e-9bb9-165dd8481fd2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Cola.h">
+      <Filter>Archivos de encabezado\Estructuras</Filter>
+    </ClInclude>
+    <ClInclude Include="ListaEnlazada.h">
+      <Filter>Archivos de encabezado\Estructuras</Filter>
+    </ClInclude>
+    <ClInclude Include="Nodo.h">
+      <Filter>Archivos de encabezado\Estructuras</Filter>
+    </ClInclude>
+    <ClInclude Include="Pila.h">
+      <Filter>Archivos de encabezado\Estructuras</Filter>
+    </ClInclude>
+    <ClInclude Include="Servicios.h">
+      <Filter>Archivos de encabezado\Servicios</Filter>
+    </ClInclude>
+    <ClInclude Include="Transaccion.h">
+      <Filter>Archivos de encabezado\Transaccion</Filter>
+    </ClInclude>
+    <ClInclude Include="ServicioContratado.h">
+      <Filter>Archivos de encabezado\ServicioContratado</Filter>
+    </ClInclude>
+    <ClInclude Include="Cliente.h">
+      <Filter>Archivos de encabezado\Cliente</Filter>
+    </ClInclude>
+    <ClInclude Include="Seguros.h">
+      <Filter>Archivos de encabezado\Seguros</Filter>
+    </ClInclude>
+    <ClInclude Include="Beneficiario.h">
+      <Filter>Archivos de encabezado\Seguros</Filter>
+    </ClInclude>
+    <ClInclude Include="Reclamo.h">
+      <Filter>Archivos de encabezado\Seguros</Filter>
+    </ClInclude>
+    <ClInclude Include="Credito.h">
+      <Filter>Archivos de encabezado\Credito</Filter>
+    </ClInclude>
+    <ClInclude Include="CreditoEmpresarial.h">
+      <Filter>Archivos de encabezado\Credito</Filter>
+    </ClInclude>
+    <ClInclude Include="MetaAhorro.h">
+      <Filter>Archivos de encabezado\Cuentas</Filter>
+    </ClInclude>
+    <ClInclude Include="Cuentas.h">
+      <Filter>Archivos de encabezado\Cuentas</Filter>
+    </ClInclude>
+    <ClInclude Include="CreditoPersonal.h">
+      <Filter>Archivos de encabezado\Credito</Filter>
+    </ClInclude>
+    <ClInclude Include="CreditoVivienda.h">
+      <Filter>Archivos de encabezado\Credito</Filter>
+    </ClInclude>
+    <ClInclude Include="Tarjetas.h">
+      <Filter>Archivos de encabezado\Tarjetas</Filter>
+    </ClInclude>
+    <ClInclude Include="TarjetaDebito.h">
+      <Filter>Archivos de encabezado\Tarjetas</Filter>
+    </ClInclude>
+    <ClInclude Include="TarjetaCredito.h">
+      <Filter>Archivos de encabezado\Tarjetas</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
