@@ -49,7 +49,9 @@ private:
 public:
 	Servicios(T1 n_cuenta, T1 t, T1 f_a) : num_cuenta(n_cuenta), titular(t), fecha_apertura(f_a){
 		id_servicio = generarIDServicio();
-		saldo = 0.0;
+		if (saldo == 0.0) {
+			saldo = 0.0;
+		}
 		historialTransacciones = new ListaEnlazada<Transaccion<string, double>>();
 	}
 
@@ -79,5 +81,19 @@ public:
 		historialTransacciones->mostrarTodo();
 	}
 
+	static Servicios<string,double> obtenerXnumCuenta(ListaEnlazada<Servicios<string,double>>& lista, const string& num_cuenta) {
+		if (lista.estaVacia()) {
+			throw runtime_error("La lista esta vacia. No se puede obtener el elemento.");
+		}
+		Nodo<Servicios<string,double>>* actual = lista.getCabeza();
+		while (actual != nullptr) {
+			if (actual->getDato().getNumCuenta() == num_cuenta) {
+				return actual->getDato();
+			}
+			actual = actual->getSiguiente();
+		}
+		throw runtime_error("No se encontro el servicio con el numero de cuenta proporcionado.");
+	}
 
+	Servicios() = default;
 };

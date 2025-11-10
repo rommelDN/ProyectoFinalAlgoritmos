@@ -21,7 +21,7 @@ private:
 		return "TXN -" + to_string(contador++);
 	}
 public:
-	Transaccion(T1 t, T2 m, T1 f, T1 d) : tipo(t), monto(m), descripcion(d){
+	Transaccion(T1 t, T2 m, T1 d) : tipo(t), monto(m), descripcion(d){
 		id_transaccion = generarID();
 		estado = "PENDIENTE";
 	}

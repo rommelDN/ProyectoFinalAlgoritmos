@@ -22,6 +22,9 @@ private:
 		return "CTA-" + to_string(contador++);
 	}
 
+	//LISTA ESTÁTICA COMPARTIDA para todos los objetos Cuenta
+	static ListaEnlazada<Servicios<string, double>>* listaServiciosGlobal;
+
 public:
 	Cuenta(T1 n_cuenta, T1 t, T1 f_a, T2 tasa_int, T2 limite_ret, T2 ahorro_obj)
 		: Servicios<string, double>(n_cuenta, t, f_a), tasa_interes(tasa_int),
@@ -29,7 +32,15 @@ public:
 		id_cuenta = generarID();
 		tipo_cuenta = "AHORRO";
 		metasAhorro = new Pila<MetaAhorro<string, double>>();
+		if (listaServiciosGlobal != nullptr) {
+			listaServiciosGlobal->agregarFinal(*this);
+		}
 	}
+
+	static void setListaServiciosGlobal(ListaEnlazada<Servicios<string, double>>& lista) {
+		listaServiciosGlobal = &lista;
+	}
+
     //getters
 	T1 getIdCuenta() { return id_cuenta; }
 	T1 getTipoCuenta() { return tipo_cuenta; }
@@ -41,7 +52,6 @@ public:
 	void setLimiteRetiro(T2 limite) { limite_retiro = limite; }
     void setAhorroObjetivo(T2 obj) { ahorroObjetivo = obj; }
 
-	
     void depositar(T1 monto) {    
     }
     
@@ -51,7 +61,7 @@ public:
 	void verificarMetasAhorro() {
 		if (!metasAhorro->estaVacia()) {
 			MetaAhorro<string, double> metaActual = metasAhorro->getTope();
-			double progreso = (this->saldo / metaActual.getMontoObjetivo()) * 100;
+			double progreso = (this->getSaldo() / metaActual.getMontoObjetivo()) * 100;
 
 			if (progreso < metaActual.calcularProgreso()) {
 				cout << "Atención: El retiro ha reducido tu progreso hacia la meta de ahorro" << std::endl;
@@ -60,9 +70,9 @@ public:
 		}
 	}
 
-	T1 getLimiteRetiroDisponible() const {
-		return min(limite_retiro, this->saldo);
-	}
+    T2 getLimiteRetiroDisponible() {
+		return std::min(limite_retiro, this->getSaldo());
+    }
 
 	void establecerMetaAhorro(double objetivo, string fechaObjetivo) {
 		if (objetivo <= 0) {
@@ -80,41 +90,41 @@ public:
 		cout << "Meta apilada correctamente" << endl;
 	}
 
-	void consultarMetaActual() const {
-		if (metasAhorro->estaVacia()) {
-			cout << "No hay metas de ahorro establecidas" << endl;
-			return;
-		}
+    void consultarMetaActual()  {
+        if (metasAhorro->estaVacia()) {
+            cout << "No hay metas de ahorro establecidas" << endl;
+            return;
+        }
 
-		MetaAhorro<std::string, double> metaActual = metasAhorro.verTope();
-		cout << "META ACTUAL:" << endl;
-		metaActual->mostrarProgreso();
+        MetaAhorro<std::string, double> metaActual = metasAhorro->getTope();
+        cout << "META ACTUAL:" << endl;
+        metaActual.mostrarProgreso();
 
-		double progreso = (this->saldo / metaActual.getMontoObjetivo()) * 100;
-		cout << "Progreso real: " << fixed << setprecision(1) << progreso << "%" << std::endl;
+        double progreso = (Servicios<string, double>::getSaldo() / metaActual.getMontoObjetivo()) * 100;
+        cout << "Progreso real: " << fixed << setprecision(1) << progreso << "%" << std::endl;
 
-		if (metaActual->metaCumplida()) {
-			cout << "¡META CUMPLIDA!" << endl;
-		}
+        if (metaActual.metaCumplida()) {
+            cout << "¡META CUMPLIDA!" << endl;
+        }
+    }
 
-	}
-
+    // Y en completarMetaActual:
 	bool completarMetaActual() {
-		if (metasAhorro.estaVacia()) {
+		if (metasAhorro->estaVacia()) {
 			cout << "No hay metas para completar" << endl;
 			return false;
 		}
 
 		MetaAhorro<string, double> metaActual = metasAhorro->getTope();
 
-		if (this->saldo >= metaActual.getMontoObjetivo()) {
+		if (this->getSaldo() >= metaActual.getMontoObjetivo()) {
 			MetaAhorro<string, double> metaCompletada = metasAhorro->desapilar();
 			cout << "¡META COMPLETADA!" << endl;
 			cout << "Objetivo: $" << metaCompletada.getMontoObjetivo() << endl;
-			cout << "Logrado: $" << this->saldo << endl;
+			cout << "Logrado: $" << this->getSaldo() << endl;
 
 			// Actualizar ahorro objetivo si hay otra meta
-			if (!metasAhorro.estaVacia()) {
+			if (!metasAhorro->estaVacia()) {
 				ahorroObjetivo = metasAhorro->getTope().getMontoObjetivo();
 				std::cout << "Nueva meta activa: $" << ahorroObjetivo << std::endl;
 			}
@@ -127,7 +137,7 @@ public:
 		}
 		else {
 			std::cout << "Aún no se cumple la meta actual" << std::endl;
-			std::cout << "Faltan: $" << (metaActual.getMontoObjetivo() - this->saldo) << std::endl;
+			std::cout << "Faltan: $" << (metaActual.getMontoObjetivo() - this->getSaldo()) << std::endl;
 			return false;
 		}
 	}
@@ -140,11 +150,11 @@ public:
 
 		MetaAhorro<string, double> metaCancelada = metasAhorro->desapilar();
 		cout << "META CANCELADA:" << endl;
-		cout << "Objetivo: $" << metaCancelada.getMontoObjetivo << endl;
+		cout << "Objetivo: $" << metaCancelada.getMontoObjetivo() << endl;
 		cout << "Fecha: " << metaCancelada.getFechaObjetivo() << endl;
 
 		// Actualizar ahorro objetivo si hay otra meta
-		if (!metasAhorro.estaVacia()) {
+		if (!metasAhorro->estaVacia()) {
 			ahorroObjetivo = metasAhorro->getTope().getMontoObjetivo();
 			cout << "Nueva meta activa: $" << ahorroObjetivo << endl;
 		}
@@ -158,3 +168,6 @@ public:
 
 
 };
+
+template<typename T1, typename T2>
+ListaEnlazada<Servicios<string, double>>* Cuenta<T1, T2>::listaServiciosGlobal = nullptr;

@@ -15,7 +15,7 @@ private:
 	Nodo<T>* tope;
 	int tamanio;
 public:
-	Pila() : tope(NULL),tamani(0){}
+	Pila() : tope(NULL),tamanio(0){}
 	bool estaVacia() const {
 		return tope == nullptr;
 	}

@@ -20,7 +20,7 @@ public:
 	~ListaEnlazada() {
 		Nodo<T>* actual = cabeza;
 		while (actual != NULL) {
-			Nodo<T>* siguiente = actual->siguiente;
+			Nodo<T>* siguiente = actual->getSiguiente();
 			delete actual;
 			actual = siguiente;
 		}
@@ -64,6 +64,8 @@ public:
 			contador++;
 		}
 	}
+
+	
 	
 };
 

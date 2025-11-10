@@ -20,7 +20,7 @@ private:
 
     string generarID() {
         static int contador = 1;
-        return "SRVC" + "-" + to_string(contador++);
+        return "SRVC-" + to_string(contador++);
     }
 public:
     ServicioContratado(T f, shared_ptr<Servicios<string, double>> s, shared_ptr<Cliente<string>> c):fecha_contratacion(f), servicio_ref(s),cliente_ref(c){
@@ -32,8 +32,8 @@ public:
 	T getID() const { return id_ser_contr; }
 	T getFechaContratacion() const { return fecha_contratacion; }
     T getEstado() const { return estado; }
-    shared_ptr<Servicios<string,double>> getServicioRef() const { return servicio_ref->getNumCuenta(); }
-    shared_ptr<Cliente<string>> getClienteRef() const { return cliente_ref->getNombre(); }
+    shared_ptr<Servicios<string,double>> getServicioRef() const { return servicio_ref; }
+    shared_ptr<Cliente<string>> getClienteRef() const { return cliente_ref; }
     //setters
     void setFechaContratacion(T f) { fecha_contratacion = f; }
     void setEstado(T e) { estado = e; }

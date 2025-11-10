@@ -8,7 +8,7 @@
 #include"ListaEnlazada.h"
 #include "Pila.h"
 #include "Cola.h"
-
+#include "Cliente.h"
 template <typename T1, typename T2>
 class Seguros : public Servicios<string, double> {
 private:
@@ -31,6 +31,10 @@ private:
 		static int contador = 1;
 		return "SG-" + to_string(contador++);
 	}
+
+	//LISTA ESTÁTICA COMPARTIDA para todos los objetos Cuenta
+	static ListaEnlazada<Servicios<string, double>>* listaServiciosGlobal;
+
 public:
 	Seguros(T1 n_cuenta, T1 t, T1 f_a, T1 t_seguro, T2 meses_cov, T2 prima_mensual, T2 monto_cov)
 		: Servicios<string, double>(n_cuenta, t, f_a), tipo_seguro(t_seguro), meses_cobertura(meses_cov),
@@ -42,6 +46,12 @@ public:
 		reclamos = new ListaEnlazada<Reclamo<string, double>>();
 		reclamosRecientes = new Pila<Reclamo<string, double>>();
 		reclamosPendientes = new Cola<Reclamo<string, double>>();
+		if (listaServiciosGlobal != nullptr) {
+			listaServiciosGlobal->agregarFinal(*this);
+		}
+	}
+	static void setListaServiciosGlobal(ListaEnlazada<Servicios<string, double>>& lista) {
+		listaServiciosGlobal = &lista;
 	}
 	//getters
 	T1 getIdSeguro() { return id_seguro; }
@@ -56,18 +66,41 @@ public:
 	void setMesesCobertura(T2 meses_cov) { meses_cobertura = meses_cov; }
 	void setPrimaMensual(T2 prima_mensual) { this->prima_mensual = prima_mensual; }
 	void setMontoCobertura(T2 monto_cov) { monto_cobertura = monto_cov; }
+	
+	void crearBeneficiario(string id_seguro, string dni, string n, string r, double p, ListaEnlazada<Cliente<string>>& listaClientes) {
+		Cliente<string> cliente;
+		try {
+			cliente = Cliente<string>::obtenerXdni(listaClientes, dni);
+			Beneficiario<string, double> nuevoBeneficiario(id_seguro, cliente.getID(), n, r, p);
+			beneficiarios->agregarFinal(nuevoBeneficiario);
+			cout << "Beneficiario creado con exito." << endl;
+
+		}
+		catch (const exception& e) {
+			cout << "Error al buscar cliente: " << e.what() << endl;
+
+		}
+	}
+	void mostrarBeneficiarios() {
+		if (beneficiarios->estaVacia()) {
+			cout << "No hay beneficiarios registrados para este seguro." << endl;
+			return;
+		}
+		cout << "Beneficiarios del Seguro " << id_seguro << ":" << endl;
+		beneficiarios->mostrarTodo();
+	}
 
 	string calcularFechaVencimiento(T1 fecha_inicio, T2 meses_cov) {
 		tm tm = {};
 		istringstream ss(fecha_inicio);
-		ss >> get_time(&tm, "%Y-%m-%d");
+		ss >> get_time(&tm, "%d/%m/%Y");  // Cambiado al formato correcto
 		if (ss.fail()) {
 			throw runtime_error("Error al parsear la fecha de inicio.");
 		}
 		tm.tm_mon += static_cast<int>(meses_cov);
 		mktime(&tm);
 		ostringstream os;
-		os << put_time(&tm, "%Y-%m-%d");
+		os << put_time(&tm, "%Y-%m-%d");  // Puedes cambiar esto también si quieres
 		return os.str();
 	}
 
@@ -101,13 +134,13 @@ public:
 		reclamo.ponerEnProceso();
 
 		// Simulación de evaluación
-		if (reclamo.getMontoReclamado() <= montoCobertura * 0.8) {
+		if (reclamo.getMontoReclamado() <= this->getMontoCobertura() * 0.8) {
 			// Aprobar reclamo
 			reclamo.aprobar(reclamo.getMontoReclamado());
 			cout << "Reclamo APROBADO. Monto a pagar: $" << reclamo.getMontoAprobado() << endl;
 
 			// Crear transacción de pago
-			Transaccion<string, double> pago("PAGO_SEGURO", reclamo.getMontoAprobado(), "Sistema");
+			Transaccion<string, double>pago("PAGO_SEGURO", reclamo.getMontoAprobado(), "Sistema");
 			pago.completar();
 			this->agrearTransaccion(pago);
 
@@ -126,8 +159,8 @@ public:
 		// Buscar y actualizar el reclamo en la lista principal
 		auto nodoActual = reclamos->getCabeza();
 		while (nodoActual != nullptr) {
-			if (nodoActual->dato.getIdReclamo() == reclamoActualizado.getIdReclamo()) {
-				nodoActual->dato = reclamoActualizado;
+			if (nodoActual->getDato().getIdReclamo() == reclamoActualizado.getIdReclamo()) {
+				nodoActual->getDato() = reclamoActualizado;
 				break;
 			}
 			nodoActual = nodoActual->getSiguiente();
@@ -135,3 +168,6 @@ public:
 	}
 
 };
+
+template<typename T1, typename T2>
+ListaEnlazada<Servicios<string, double>>* Seguros<T1, T2>::listaServiciosGlobal = nullptr;
