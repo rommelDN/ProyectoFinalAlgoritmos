@@ -40,6 +40,21 @@
     <Filter Include="Archivos de encabezado\Tarjetas">
       <UniqueIdentifier>{ee8e289e-898b-454e-9bb9-165dd8481fd2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\OrdenamientoAvz">
+      <UniqueIdentifier>{d67dfdd4-7ee5-485d-973b-a59cbde20b4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\BinarySearch">
+      <UniqueIdentifier>{768062e6-17a0-4ff3-80e0-f3292ee1adb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\HashTable">
+      <UniqueIdentifier>{e3eb0a5f-c702-4bb5-9d77-062289622895}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\ArbolBinarioB">
+      <UniqueIdentifier>{058b07ba-ca2d-4b32-ad2c-c85540783686}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\ArbolBinarioVL">
+      <UniqueIdentifier>{9526d30e-1df0-456c-a578-bade067a75e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -106,6 +121,27 @@
     </ClInclude>
     <ClInclude Include="TarjetaCredito.h">
       <Filter>Archivos de encabezado\Tarjetas</Filter>
+    </ClInclude>
+    <ClInclude Include="MergeSort.h">
+      <Filter>Archivos de encabezado\OrdenamientoAvz</Filter>
+    </ClInclude>
+    <ClInclude Include="QuickSort.h">
+      <Filter>Archivos de encabezado\OrdenamientoAvz</Filter>
+    </ClInclude>
+    <ClInclude Include="BinarySearch.h">
+      <Filter>Archivos de encabezado\BinarySearch</Filter>
+    </ClInclude>
+    <ClInclude Include="HashTable.h">
+      <Filter>Archivos de encabezado\HashTable</Filter>
+    </ClInclude>
+    <ClInclude Include="ArbolBinarioBusqueda.h">
+      <Filter>Archivos de encabezado\ArbolBinarioB</Filter>
+    </ClInclude>
+    <ClInclude Include="ArbolBinarioVL.h">
+      <Filter>Archivos de encabezado\ArbolBinarioVL</Filter>
+    </ClInclude>
+    <ClInclude Include="QuickSelect.h">
+      <Filter>Archivos de encabezado\OrdenamientoAvz</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

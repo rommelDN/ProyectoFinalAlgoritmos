@@ -126,7 +126,10 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ArbolBinarioBusqueda.h" />
+    <ClInclude Include="ArbolBinarioVL.h" />
     <ClInclude Include="Beneficiario.h" />
+    <ClInclude Include="BinarySearch.h" />
     <ClInclude Include="Cliente.h" />
     <ClInclude Include="Cola.h" />
     <ClInclude Include="Credito.h" />
@@ -134,10 +137,14 @@
     <ClInclude Include="CreditoPersonal.h" />
     <ClInclude Include="CreditoVivienda.h" />
     <ClInclude Include="Cuentas.h" />
+    <ClInclude Include="HashTable.h" />
     <ClInclude Include="ListaEnlazada.h" />
+    <ClInclude Include="MergeSort.h" />
     <ClInclude Include="MetaAhorro.h" />
     <ClInclude Include="Nodo.h" />
     <ClInclude Include="Pila.h" />
+    <ClInclude Include="QuickSelect.h" />
+    <ClInclude Include="QuickSort.h" />
     <ClInclude Include="Reclamo.h" />
     <ClInclude Include="Seguros.h" />
     <ClInclude Include="ServicioContratado.h" />
