@@ -25,52 +25,102 @@ private:
 	HashEntidad<T>** table;
 	int TABLE_SIZE;
 	int numElementos;
+	static HashEntidad<T>* TOMBSTONE;
 	int hashFunction(const string& key)const {
 		int hash = 0;
 		for (char c : key) hash = (hash * 37 + int(c)) % TABLE_SIZE;
 		return hash;
 	}
+	double loadFactor() const {
+		return (double)numElementos / TABLE_SIZE;
+	}
+	void rehash() {
+		int oldSize = TABLE_SIZE;
+		TABLE_SIZE *= 2;
+		HashEntidad<T>** oldTable = table;
+		table = new HashEntidad<T>*[TABLE_SIZE];
+		for (int i = 0; i < TABLE_SIZE; i++) table[i] = nullptr;
+		numElementos = 0;
+		for (int i = 0; i < oldSize; i++) {
+			if (oldTable[i] != nullptr && oldTable[i] != TOMBSTONE) {
+				insertar(oldTable[i]->getKey(), oldTable[i]->getValue());
+				delete oldTable[i];
+			}
+		}
+		delete[] oldTable;
+	}
 public:
-	HashTable(int size) :TABLE_SIZE(size), numElementos(0) {
+	HashTable(int size = 10) :TABLE_SIZE(size), numElementos(0) {
 		table = new HashEntidad<T>*[TABLE_SIZE];
 		for (int i = 0;i < TABLE_SIZE;i++) table[i] = nullptr;
 	}
 	~HashTable() {
-		for (int i = 0;i < TABLE_SIZE;i++) {
-			if (table[i] != nullptr)delete table[i];
+		for (int i = 0; i < TABLE_SIZE; i++) {
+			if (table[i] != nullptr && table[i] != TOMBSTONE)
+				delete table[i];
 		}
 		delete[] table;
 	}
 	void insertar(string key, T value) {
+
+		if (loadFactor() > 0.7)rehash();
 		int index = hashFunction(key);
 		int original = index, step = 1;
-		while (table[index] != nullptr && table[index]->getKey() != key) {
+		while (table[index] != nullptr && table[index] != TOMBSTONE && table[index]->getKey() != key) {
 			index = (original + step) % TABLE_SIZE;
 			step++;
 		}
-		if (table[index] != nullptr) table[index]->setValue(value);
+		if (table[index] != nullptr && table[index] != TOMBSTONE) {
+			table[index]->setValue(value);
+		}
 		else {
 			table[index] = new HashEntidad<T>(key, value);
 			numElementos++;
 		}
 	}
-	T* buscar(string key)const {
+	T* buscar(string key) const {
 		int index = hashFunction(key);
 		int original = index, step = 1;
 		while (table[index] != nullptr) {
-			if (table[index]->getKey() == key) return table[index]->getValue();
+			if (table[index] != TOMBSTONE &&
+				table[index]->getKey() == key) {
+				return new T(table[index]->getValue()); // retorna copia
+			}
 			index = (original + step) % TABLE_SIZE;
 			step++;
 		}
+		return nullptr;
 	}
-	void mostrar()const {
-		cout << "\n=== TABLE HASH ===\n";
-		for (int i = 0;i < TABLE_SIZE;i++) {
-			if (table[i] != nullptr) {
-				cout << "[" << i << "]" << table[i]->getKey() << "[" << i << "]" << table[i]->getValue() << endl;
+	bool eliminar(string key) {
+		int index = hashFunction(key);
+		int original = index, step = 1;
+		while (table[index] != nullptr) {
+			if (table[index] != TOMBSTONE &&
+				table[index]->getKey() == key) {
+				delete table[index];
+				table[index] = TOMBSTONE;
+				numElementos--;
+				return true;
 			}
-			else cout << "[" << i << "] ---\n";
+			index = (original + step) % TABLE_SIZE;
+			step++;
 		}
-	};
-
+		return false;
+	}
+	void mostrar() const {
+		cout << "\n=== TABLE HASH ===\n";
+		for (int i = 0; i < TABLE_SIZE; i++) {
+			if (table[i] == nullptr)
+				cout << "[" << i << "] ---\n";
+			else if (table[i] == TOMBSTONE)
+				cout << "[" << i << "] <TOMBSTONE>\n";
+			else
+				cout << "[" << i << "] " << table[i]->getKey()
+				<< " -> " << table[i]->getValue() << "\n";
+		}
+	}
 };
+
+template<typename T>
+HashEntidad<T>* HashTable<T>::TOMBSTONE = (HashEntidad<T>*) - 1;
+

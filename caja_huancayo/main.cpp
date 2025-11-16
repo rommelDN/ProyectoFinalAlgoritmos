@@ -12,6 +12,7 @@
 #include "ServicioContratado.h"
 #include "Cuentas.h"
 #include "Seguros.h"
+#include "HashTable.h"
 
 using namespace std;
 void limpiarBuffer() {
@@ -34,7 +35,91 @@ void mostrarMenu() {
 	cout << "8. Salir" << endl;
 	cout << "Seleccione una opcion: ";
 }
-void menuClientes(ListaEnlazada<Cliente<string>>& listaClientes) {
+
+void menuClientes(ListaEnlazada<Cliente<string>>& listaClientes, HashTable<Cliente<string>>& tablaClientes) {
+	int opcion;
+	do {
+		cout << "\n=== GESTION DE CLIENTES ===" << endl;
+		cout << "1. Agregar Cliente" << endl;
+		cout << "2. Mostrar Clientes" << endl;
+		cout << "3. Buscar Cliente por DNI" << endl;
+		cout << "4. Eliminar Cliente por DNI" << endl;
+		cout << "5. Volver al Menu Principal" << endl;
+		cout << "Seleccione una opcion: ";
+		cin >> opcion;
+		limpiarBuffer();
+		switch (opcion)
+		{
+		case 1: {
+			string nombre, apellido, dni, email, telefono;
+			cout << "\n--- Agregar Nuevo Cliente ---" << endl;
+			cout << "Nombre: ";
+			getline(cin, nombre);
+			cout << "Apellido: ";
+			getline(cin, apellido);
+			cout << "DNI: ";
+			getline(cin, dni);
+			cout << "Email: ";
+			getline(cin, email);
+			cout << "Telefono: ";
+			getline(cin, telefono);
+			Cliente<string> nuevo(nombre, apellido, dni, email, telefono);
+			tablaClientes.insertar(nuevo.getDNI(), nuevo);
+			listaClientes.agregarFinal(nuevo);
+			cout << "Cliente agregado exitosamente." << endl;
+			pausar();
+			break;
+		}
+		case 2: {
+			cout << "\n--- Tabla de Clientes ---" << endl;
+			tablaClientes.mostrar();
+			pausar();
+			break;
+		}
+		case 3: {
+			string dni;
+			cout << "\n--- Buscar Cliente por DNI ---" << endl;
+			cout << "Ingrese DNI: ";
+			getline(cin, dni);
+			Cliente<string>* cliente = tablaClientes.buscar(dni);
+			if (cliente != nullptr) {
+				cout << "Cliente encontrado:\n";
+				cliente->mostrar();
+			}
+			else {
+				cout << "Error: No se encontro el cliente con el DNI proporcionado." << endl;
+			}
+			pausar();
+			break;
+		}
+		case 4: {
+			string dni;
+			cout << "\n--- Eliminar Cliente por DNI ---" << endl;
+			cout << "Ingrese DNI: ";
+			getline(cin, dni);
+
+			bool eliminado = tablaClientes.eliminar(dni);
+
+			if (eliminado)
+				cout << "Cliente eliminado correctamente.\n";
+			else
+				cout << "Error: No existe un cliente con ese DNI.\n";
+
+			pausar();
+			break;
+		}
+		case 5:
+			cout << "Volviendo al menú principal..." << endl;
+			break;
+		default:
+			cout << "Opcion invalida. Intente de nuevo." << endl;
+			break;
+		}
+
+	} while (opcion != 5);
+};
+
+/*void menuClientes(ListaEnlazada<Cliente<string>>& listaClientes) {
 	int opcion;
 	do {
 		cout << "\n=== GESTION DE CLIENTES ===" << endl;
@@ -114,10 +199,9 @@ void menuClientes(ListaEnlazada<Cliente<string>>& listaClientes) {
 		}
 	} while (opcion != 4);
 	
-}
+}*/
 
 void menuCuentas(ListaEnlazada<Cuenta<string, double>>& listaCuentas,ListaEnlazada<Servicios<string,double>>&listaDeServicios) {
-
 	int opcion;
 	do {
 		cout << "\n=== GESTION DE CUENTAS ===" << endl;
@@ -371,6 +455,7 @@ void menuReportes(ListaEnlazada<Cliente<string>>& listaClientes,ListaEnlazada<Cu
 
 int main() {
 	ListaEnlazada<Cliente<string>> listaClientes;
+	HashTable<Cliente<string>> tablaClientes(20);
 	ListaEnlazada<Cuenta<string, double>> listaCuentas;
 	ListaEnlazada<Servicios<string, double>> listaDeServicios;
 	ListaEnlazada<ServicioContratado<string>> listaServiciosContratados;
@@ -387,7 +472,8 @@ int main() {
 
 		switch (opcionPrincipal) {
 		case 1:
-			menuClientes(listaClientes);
+			//menuClientes(listaClientes);
+			menuClientes(listaClientes,tablaClientes);
 			break;
 		case 2:
 			menuCuentas(listaCuentas, listaDeServicios);

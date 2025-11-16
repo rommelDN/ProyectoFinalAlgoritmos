@@ -63,6 +63,16 @@ public:
         throw runtime_error("No se encontró el cliente con el DNI proporcionado.");
     }
 
+	void mostrar() {
+		cout << "Cliente[ID: " << id_cliente << ", Nombre: " << nombre << ", Apellido: " << apellido << ", DNI: " << dni << ", Correo: " << correo << ", Telefono: " << telefono << "]" << endl;
+	};
+
+	// Sobrecarga del operador << para poder imprimir
+	friend ostream& operator<<(ostream& os, const Cliente& e) {
+		os << e.getNombre() << " " << e.getApellido() << "("<<"DNI: "<<e.getDNI()<<" | Correo: "<<e.getCorreo()<<" | Telefono: "<<e.getTelefono() << ")";
+		return os;
+	}
+
 	Cliente() = default;
 };
 
