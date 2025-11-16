@@ -7,22 +7,22 @@
 
 
 using namespace std;
-
+template<typename T>
 class HashEntidad {
 private:
 	string key;
-	int valor;
+	T valor;
 public:
-	HashEntidad(string key, int valor) :key(key), valor(valor) {}
+	HashEntidad(string key, T valor) :key(key), valor(valor) {}
 	string getKey() { return key; };
-	int getValue() { return valor; };
-	void setValue(int e) { valor = e; };
+	T getValue() { return valor; };
+	void setValue(T e) { valor = e; };
 };
 
-
+template<typename T>
 class HashTable {
 private:
-	HashEntidad** table;
+	HashEntidad<T>** table;
 	int TABLE_SIZE;
 	int numElementos;
 	int hashFunction(const string& key)const {
@@ -32,7 +32,7 @@ private:
 	}
 public:
 	HashTable(int size) :TABLE_SIZE(size), numElementos(0) {
-		table = new HashEntidad * [TABLE_SIZE];
+		table = new HashEntidad<T>*[TABLE_SIZE];
 		for (int i = 0;i < TABLE_SIZE;i++) table[i] = nullptr;
 	}
 	~HashTable() {
@@ -41,7 +41,7 @@ public:
 		}
 		delete[] table;
 	}
-	void insertar(string key, int value) {
+	void insertar(string key, T value) {
 		int index = hashFunction(key);
 		int original = index, step = 1;
 		while (table[index] != nullptr && table[index]->getKey() != key) {
@@ -50,11 +50,11 @@ public:
 		}
 		if (table[index] != nullptr) table[index]->setValue(value);
 		else {
-			table[index] = new HashEntidad(key, value);
+			table[index] = new HashEntidad<T>(key, value);
 			numElementos++;
 		}
 	}
-	int buscar(string key)const {
+	T* buscar(string key)const {
 		int index = hashFunction(key);
 		int original = index, step = 1;
 		while (table[index] != nullptr) {
