@@ -186,7 +186,6 @@ public:
 			<< " | Fecha Vencimiento: " << fecha_vencimiento
 			<< " | Estado Poliza: " << estado_poliza
 			<< " | Monto Cobertura: $" << monto_cobertura << endl;
-
 	}
 
 	// Sobrecarga del operador << para poder imprimir

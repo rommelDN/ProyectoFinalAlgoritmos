@@ -1,11 +1,11 @@
-#pragma once
+ #pragma once
 #include <string>
 #include<iostream>
 #include "servicios.h"
 #include "ListaEnlazada.h"
 #include "Pila.h"
 #include "MetaAhorro.h"
-
+#include "HashTable.h"
 using namespace std;
 template <typename T1, typename T2>
 class Cuenta : public Servicios<string, double> {
@@ -23,7 +23,7 @@ private:
 	}
 
 	//LISTA ESTÁTICA COMPARTIDA para todos los objetos Cuenta
-	static ListaEnlazada<Servicios<string, double>>* listaServiciosGlobal;
+	static HashTable<Servicios<string, double>>* tablaServiciosGlobal;
 
 public:
 	Cuenta(T1 n_cuenta, T1 t, T1 f_a, T2 tasa_int, T2 limite_ret, T2 ahorro_obj)
@@ -32,21 +32,21 @@ public:
 		id_cuenta = generarID();
 		tipo_cuenta = "AHORRO";
 		metasAhorro = new Pila<MetaAhorro<string, double>>();
-		if (listaServiciosGlobal != nullptr) {
-			listaServiciosGlobal->agregarFinal(*this);
+		if (tablaServiciosGlobal != nullptr) {
+			tablaServiciosGlobal->insertar(n_cuenta, *this);
 		}
 	}
 
-	static void setListaServiciosGlobal(ListaEnlazada<Servicios<string, double>>& lista) {
-		listaServiciosGlobal = &lista;
+	static void setTablaServiciosGlobal(HashTable<Servicios<string, double>>& tabla) {
+		tablaServiciosGlobal = &tabla;
 	}
 
     //getters
-	T1 getIdCuenta() { return id_cuenta; }
-	T1 getTipoCuenta() { return tipo_cuenta; }
-	T2 getTasaInteres() { return tasa_interes; }
-	T2 getLimiteRetiro() { return limite_retiro; }
-	T2 getAhorroObjetivo() { return ahorroObjetivo; }
+	T1 getIdCuenta() const{ return id_cuenta; }
+	T1 getTipoCuenta()const { return tipo_cuenta; }
+	T2 getTasaInteres()const { return tasa_interes; }
+	T2 getLimiteRetiro()const { return limite_retiro; }
+	T2 getAhorroObjetivo()const { return ahorroObjetivo; }
     //setters
 	void setTasaInteres(T2 tasa) { tasa_interes = tasa; }
 	void setLimiteRetiro(T2 limite) { limite_retiro = limite; }
@@ -166,8 +166,19 @@ public:
 		return true;
 	}
 
+	void mostrar() {
+		//Servicios<string, double>::mostrarInfo();
+		cout << "ID Cuenta: " << id_cuenta
+			<< " | Tipo Cuenta: " << tipo_cuenta
+			<< " | Tasa Interes: " << tasa_interes << "%"
+			<< " | Limite Retiro: $" << limite_retiro
+			<< " | Ahorro Objetivo: $" << ahorroObjetivo << endl;
+	}
+
+	// Sobrecarga del operador << para poder imprimir
+	friend ostream& operator<<(ostream& os, const Cuenta& e) {
+		os << e.getIdCuenta() << "(" << " Tipo Cuenta " << e.getTipoCuenta() << "| Tasa de Interes: " << e.getTasaInteres() << " | Limite x Retiro: " << e.getLimiteRetiro()<< ")";
+		return os;
+	}
 
 };
-
-template<typename T1, typename T2>
-ListaEnlazada<Servicios<string, double>>* Cuenta<T1, T2>::listaServiciosGlobal = nullptr;

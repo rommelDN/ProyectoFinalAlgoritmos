@@ -4,7 +4,7 @@
 #include<vector>
 #include<algorithm>
 #include<functional>
-
+#include"ListaEnlazada.h"
 
 using namespace std;
 template<typename T>
@@ -119,6 +119,30 @@ public:
 				<< " -> " << table[i]->getValue() << "\n";
 		}
 	}
+
+	ListaEnlazada<T> toListaEnlazada() const {
+		ListaEnlazada<T> lista;
+		for (int i = 0; i < TABLE_SIZE; i++) {
+			if (table[i] != nullptr && table[i] != TOMBSTONE) {
+				lista.agregarFinal(table[i]->getValue());
+			}
+		}
+		return lista;
+	}
+
+	vector<T> toVector() const {
+		vector<T> vec;
+		vec.reserve(numElementos);
+
+		for (int i = 0; i < TABLE_SIZE; i++) {
+			if (table[i] != nullptr) {
+				vec.push_back(table[i]->getValue());
+			}
+		}
+		return vec;
+	}
+
+
 };
 
 template<typename T>

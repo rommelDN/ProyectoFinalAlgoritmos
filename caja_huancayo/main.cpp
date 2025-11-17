@@ -6,6 +6,10 @@
 #include "Pila.h"
 #include "Cola.h"
 #include "ListaEnlazada.h"
+//ORDENAMIENTOS AVANZADOS
+#include "MergeSort.h"
+#include "QuickSort.h"
+#include "QuickSelect.h"
 //CLASSES
 #include "Cliente.h"
 #include "Servicios.h"
@@ -13,6 +17,8 @@
 #include "Cuentas.h"
 #include "Seguros.h"
 #include "HashTable.h"
+#include "Cuentas.cpp"
+#include "Seguros.cpp"
 
 using namespace std;
 void limpiarBuffer() {
@@ -36,7 +42,7 @@ void mostrarMenu() {
 	cout << "Seleccione una opcion: ";
 }
 
-void menuClientes(ListaEnlazada<Cliente<string>>& listaClientes, HashTable<Cliente<string>>& tablaClientes) {
+void menuClientes(HashTable<Cliente<string>>& tablaClientes) {
 	int opcion;
 	do {
 		cout << "\n=== GESTION DE CLIENTES ===" << endl;
@@ -65,7 +71,7 @@ void menuClientes(ListaEnlazada<Cliente<string>>& listaClientes, HashTable<Clien
 			getline(cin, telefono);
 			Cliente<string> nuevo(nombre, apellido, dni, email, telefono);
 			tablaClientes.insertar(nuevo.getDNI(), nuevo);
-			listaClientes.agregarFinal(nuevo);
+			//listaClientes.agregarFinal(nuevo);
 			cout << "Cliente agregado exitosamente." << endl;
 			pausar();
 			break;
@@ -119,89 +125,7 @@ void menuClientes(ListaEnlazada<Cliente<string>>& listaClientes, HashTable<Clien
 	} while (opcion != 5);
 };
 
-/*void menuClientes(ListaEnlazada<Cliente<string>>& listaClientes) {
-	int opcion;
-	do {
-		cout << "\n=== GESTION DE CLIENTES ===" << endl;
-		cout << "1. Agregar Cliente" << endl;
-		cout << "2. Mostrar Clientes" << endl;
-		cout << "3. Buscar Cliente por DNI" << endl;
-		cout << "4. Volver al Menu Principal" << endl;
-		cout << "Seleccione una opcion: ";
-		cin >> opcion;
-		limpiarBuffer();
-
-		switch (opcion)
-		{
-		case 1: {
-			string nombre, apellido, dni, email, telefono;
-			cout << "\n--- Agregar Nuevo Cliente ---" << endl;
-			cout << "Nombre: ";
-			getline(cin, nombre);
-			cout << "Apellido: ";
-			getline(cin, apellido);
-			cout << "DNI: ";
-			getline(cin, dni);
-			cout << "Email: ";
-			getline(cin, email);
-			cout << "Telefono: ";
-			getline(cin, telefono);
-
-			try {
-				listaClientes.agregarFinal(Cliente<string>(nombre, apellido, dni, email, telefono));
-				cout << "Cliente agregado exitosamente." << endl;
-			}
-			catch (const exception& e) {
-				cout << "Error al agregar cliente: " << e.what() << endl;
-			}
-			pausar();
-			break;
-		}
-		case 2: { 
-			cout << "\n--- Lista de Clientes ---" << endl;
-			if(listaClientes.estaVacia()) {
-				cout << "No hay clientes registrados." << endl;
-			} else {
-				listaClientes.mostrarTodo();
-			}
-			pausar();
-			break; 
-		};
-		case 3: { 
-			string dni;
-			cout << "\n--- Buscar Cliente por DNI ---" << endl;
-			cout << "Ingrese DNI: ";
-			getline(cin, dni);
-			try
-			{
-				Cliente<string> cliente = Cliente<string>::obtenerXdni(listaClientes, dni);
-				cout << "Cliente encontrado:" << endl;
-				cout << "ID: " << cliente.getID() << endl;
-				cout << "Nombre: " << cliente.getNombre() << " " << cliente.getApellido() << endl;
-				cout << "DNI: " << cliente.getDNI() << endl;
-				cout << "Email: " << cliente.getCorreo() << endl;
-				cout << "Telefono: " << cliente.getTelefono() << endl;
-			}
-			catch (const std::exception&)
-			{
-				cout << "Error: No se encontro el cliente con el DNI proporcionado." << endl;
-			}
-			pausar();
-			break; 
-		};
-		case 4:
-			cout << "Volviendo al menu principal..." << endl;
-			break; 
-		
-		default:
-			cout << "Opcion invalida. Intente de nuevo." << endl;
-			break;
-		}
-	} while (opcion != 4);
-	
-}*/
-
-void menuCuentas(ListaEnlazada<Cuenta<string, double>>& listaCuentas,ListaEnlazada<Servicios<string,double>>&listaDeServicios) {
+void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas,HashTable<Servicios<string,double>>& tablaDeServicios) {
 	int opcion;
 	do {
 		cout << "\n=== GESTION DE CUENTAS ===" << endl;
@@ -233,9 +157,9 @@ void menuCuentas(ListaEnlazada<Cuenta<string, double>>& listaCuentas,ListaEnlaza
 			cin >> ahorro;
 			limpiarBuffer();
 			try {
-				Cuenta<string, double>::setListaServiciosGlobal(listaDeServicios);
+				Cuenta<string, double>::setTablaServiciosGlobal(tablaDeServicios);
 				Cuenta<string, double> nuevaCuenta(numCuenta, titular, fecha, tasa, limite, ahorro);
-				listaCuentas.agregarFinal(nuevaCuenta);
+				tablaCuentas.insertar(nuevaCuenta.getNumCuenta(), nuevaCuenta);
 				cout << "Cuenta creada exitosamente." << endl;
 				cout << "ID Cuenta: " << nuevaCuenta.getIdCuenta() << endl;
 
@@ -247,12 +171,8 @@ void menuCuentas(ListaEnlazada<Cuenta<string, double>>& listaCuentas,ListaEnlaza
 			break;
 		};
 		case 2: {
-			cout << "\n--- Lista de Cuentas ---" << endl;
-			if(listaCuentas.estaVacia()) {
-				cout << "No hay cuentas registradas." << endl;
-			} else {
-				listaCuentas.mostrarTodo();
-			}
+			cout << "\n--- Tabla de Cuentas ---" << endl;
+			tablaCuentas.mostrar();
 			pausar();
 			break;
 		
@@ -263,12 +183,22 @@ void menuCuentas(ListaEnlazada<Cuenta<string, double>>& listaCuentas,ListaEnlaza
 			cout << "Ingrese Numero de Cuenta: ";
 			getline(cin, numCuenta);
 			cout << "Buscando cuenta..." << endl;
-			
-			
+			Cuenta<string, double>* cuenta = tablaCuentas.buscar(numCuenta);
+			if (cuenta != nullptr) {
+				cout << "Cliente encontrado:\n";
+				cuenta->mostrar();
+			}
+			else {
+				cout << "Error: No se encontro el cliente con el DNI proporcionado." << endl;
+			}
 			pausar();
 			break;
 		};
-		case 4:
+		case 4: {
+			pausar();
+			break;
+		}
+		case 5:
 			cout << "Volviendo al menu principal..." << endl;
 			break;
 		default:
@@ -279,14 +209,14 @@ void menuCuentas(ListaEnlazada<Cuenta<string, double>>& listaCuentas,ListaEnlaza
 	
 }
 
-void menuSeguros(ListaEnlazada<Seguros<string,double>>& listaSeguros, ListaEnlazada<Servicios<string, double>>& listaDeServicios,ListaEnlazada<Cliente<string>>& listaClientes) {
+void menuSeguros(HashTable<Seguros<string,double>>& tablaSeguros,HashTable<Servicios<string, double>>& tablaDeServicios, HashTable<Cliente<string>>& tablaClientes) {
 	int opcion;
 	do {
 		cout << "\n=== GESTION DE SEGUROS ===" << endl;
 		cout << "1. Crear Seguro" << endl;
 		cout << "2. Mostrar Seguro" << endl; //Por Cliente
 		cout << "3. Ingresar Asegurados" << endl;
-		cout << "4. Crear Reclamo" << endl;
+		cout << "4. Ordenar Seguros (MergeSort)" << endl;
 		cout << "5. Volver al Menu Principal" << endl;
 		cin >> opcion;
 		limpiarBuffer();
@@ -294,9 +224,17 @@ void menuSeguros(ListaEnlazada<Seguros<string,double>>& listaSeguros, ListaEnlaz
 		switch (opcion)
 		{
 		case 1: { 
-			string n_cuenta, t, f_a, t_seguro;
+			string dni,n_cuenta, t, f_a, t_seguro;
 			double meses_cov, prima_mensual, monto_cov;
 			cout << "\n--- Crear Nuevo Seguro ---" << endl;
+			cout << "DNI del Cliente: ";
+			getline(cin, dni);
+			Cliente<string>* cliente = tablaClientes.buscar(dni);
+			if (cliente == nullptr) {
+				cout << "ERROR: Cliente no encontrado.\n";
+				break;
+			}
+			cout << "Cliente encontrado: INGRESE DATOS DE SEGURO" << endl;
 			cout << "Numero de Cuenta: ";
 			getline(cin, n_cuenta);
 			cout << "Titular: ";
@@ -313,9 +251,9 @@ void menuSeguros(ListaEnlazada<Seguros<string,double>>& listaSeguros, ListaEnlaz
 			cin >> monto_cov;
 			limpiarBuffer();
 			try{
-				Seguros<string, double>::setListaServiciosGlobal(listaDeServicios);
+				Seguros<string, double>::setTablaServiciosGlobal(tablaDeServicios);
 				Seguros<string, double> nuevoSeguro(n_cuenta, t, f_a, t_seguro, meses_cov, prima_mensual, monto_cov);
-				listaSeguros.agregarFinal(nuevoSeguro);
+				tablaSeguros.insertar(nuevoSeguro.getNumCuenta(), nuevoSeguro);
 				cout << "Seguro creado exitosamente." << endl;
 				cout << "ID Cuenta: " << nuevoSeguro.getIdSeguro() << endl;
 			
@@ -325,37 +263,71 @@ void menuSeguros(ListaEnlazada<Seguros<string,double>>& listaSeguros, ListaEnlaz
 			pausar();
 			break; 
 		};
-		case 2: { break; };
+		case 2: { 
+			cout << "\n--- Tabla de Cuentas ---" << endl;
+			tablaSeguros.mostrar();
+			pausar();
+			break; 
+		};
 		case 3: { 
-			string id_seg, dni, n, r;
-			double p;
+			string dni, nombre, relacion, num_cuenta;
+			double porcentaje;
 			cout << "\n--- Ingresar Asegurados ---" << endl;
-			cout << "ID del Seguro: ";
-			getline(cin, id_seg);
 			cout << "DNI del Cliente: ";
 			getline(cin, dni);
+			Cliente<string>* cliente = tablaClientes.buscar(dni);
+			if (cliente == nullptr) {
+				cout << "ERROR: Cliente no encontrado.\n";
+				break;
+			}
+			cout << "Cliente encontrado: INGRESE DATOS DE ASEGURADOS" << endl;
+			cout << "Ingrese el numero de cuenta: ";
+			getline(cin, num_cuenta);
+			Seguros<string, double>* seguro = tablaSeguros.buscar(num_cuenta);
+			if (seguro == nullptr) {
+				cout << "ERROR: Seguro no encontrado.\n";
+				break;
+			}
 			cout << "Nombre del Beneficiario: ";
-			getline(cin, n);
+			getline(cin, nombre);
 			cout << "Relacion con el Beneficiario: ";
-			getline(cin, r);
+			getline(cin, relacion);
 			cout << "Porcentaje de Participacion: ";
-			cin >> p;
+			cin >> porcentaje;
 			limpiarBuffer();
 			try
 			{
-				//Implementa la creacion del asegurado
-				
-
+				seguro->crearBeneficiarioHash(seguro, cliente, nombre, relacion, porcentaje);
 			}
 			catch (const exception& e)
 			{
 				cout << "Error al Ingresar Asegurado: " << e.what() << endl;
 			}
-			pausar();
 			
+			pausar();
 			break; 
 		};
-		case 4: { break; };
+		case 4: { 
+			cout << "\n--- Ordenar Seguros ( Convirtiendo HASH TABLE - VECTOR ) ---" << endl;
+			auto listas = tablaSeguros.toVector();
+			if (listas.empty()) {
+				cout << "No hay Seguros para ordenar.\n";
+				pausar();
+				break;
+			}
+			auto criterio = [](const Seguros<string, double>& a,
+				const Seguros<string, double>& b) {
+					return a.getIdSeguro() < b.getIdSeguro();
+				};
+			mergeSort(listas,0,(int)listas.size()-1, criterio);
+			cout << "\n--- Cuentas Ordenadas ---\n";
+			for (auto& l : listas) {
+				l.mostrarInfo();
+				cout << "------------------\n";
+			}
+			pausar();
+			break; 
+		};
 		case 5:
 			cout << "Volviendo al menu principal..." << endl;
 			break;
@@ -366,7 +338,68 @@ void menuSeguros(ListaEnlazada<Seguros<string,double>>& listaSeguros, ListaEnlaz
 	} while (opcion!=5);
 };
 
-void menuServiciosContratados(ListaEnlazada<ServicioContratado<string>>& listaServiciosContratados,ListaEnlazada<Cliente<string>>& listaClientes,ListaEnlazada<Servicios<string, double>>& listaDeServicios) {
+void menuServiciosContratados(
+	HashTable<ServicioContratado<string>>& tablaServiciosContratados,
+	HashTable<Cliente<string>>& tablaClientes,
+	HashTable<Servicios<string, double>>& tablaDeServicios
+) {
+	int opcion;
+
+	do {
+		cout << "\n=== SERVICIOS CONTRATADOS ===" << endl;
+		cout << "1. Contratar Servicio" << endl;
+		cout << "2. Mostrar Servicios Contratados" << endl;
+		cout << "3. Volver al Menu Principal" << endl;
+		cout << "Seleccione una opcion: ";
+		cin >> opcion;
+		limpiarBuffer();
+
+		switch (opcion)
+		{
+		case 1: {
+			string fecha, dniCliente, numCuentaServicio;
+			cout << "\n--- Contratar Nuevo Servicio ---" << endl;
+			cout << "Fecha de Contratacion (dd/mm/aaaa): ";
+			getline(cin, fecha);
+			cout << "DNI del Cliente: ";
+			getline(cin, dniCliente);
+			cout << "Numero de Cuenta del Servicio: ";
+			getline(cin, numCuentaServicio);
+			try {
+				// Convertir HashTables a vectores para usar tus métodos actuales
+				auto vecClientes = tablaClientes.toListaEnlazada();
+				auto vecServicios = tablaDeServicios.toListaEnlazada();
+				Cliente<string> cliente = Cliente<string>::obtenerXdni(vecClientes, dniCliente);
+				Servicios<string, double> servicio = Servicios<string, double>::obtenerXnumCuenta(vecServicios, numCuentaServicio);
+				auto servicioPtr = make_shared<Servicios<string, double>>(servicio);
+				auto clientePtr = make_shared<Cliente<string>>(cliente);
+				ServicioContratado<string> nuevo(fecha, servicioPtr, clientePtr);
+				tablaServiciosContratados.insertar(servicio.getNumCuenta(), nuevo);
+				cout << "Servicio contratado exitosamente!" << endl;
+			}
+			catch (const exception& e) {
+				cout << "Error al contratar servicio: " << e.what() << endl;
+			}
+			pausar();
+			break;
+		}
+		case 2: {
+			cout << "\n--- Servicios Contratados ---" << endl;
+			tablaServiciosContratados.mostrar();
+			pausar();
+			break;
+		}
+		case 3:
+			cout << "Volviendo al menu principal..." << endl;
+			break;
+		default:
+			cout << "Opción no válida." << endl;
+			break;
+		}
+	} while (opcion != 3);
+}
+
+/*void menuServiciosContratados(ListaEnlazada<ServicioContratado<string>>& listaServiciosContratados, ListaEnlazada<Cliente<string>>& listaClientes, ListaEnlazada<Servicios<string, double>>& listaDeServicios) {
 	int opcion;
 
 	do {
@@ -426,7 +459,7 @@ void menuServiciosContratados(ListaEnlazada<ServicioContratado<string>>& listaSe
 		}
 	} while (opcion != 3);
 	
-};
+};*/
 
 void menuReportes(ListaEnlazada<Cliente<string>>& listaClientes,ListaEnlazada<Cuenta<string, double>>& listaCuentas,ListaEnlazada<Servicios<string, double>>& listaDeServicios,ListaEnlazada<ServicioContratado<string>>& listaServiciosContratados) {
 	cout << "\n=== REPORTES DEL SISTEMA ===" << endl;
@@ -454,15 +487,25 @@ void menuReportes(ListaEnlazada<Cliente<string>>& listaClientes,ListaEnlazada<Cu
 }
 
 int main() {
+
 	ListaEnlazada<Cliente<string>> listaClientes;
-	HashTable<Cliente<string>> tablaClientes(20);
+	HashTable<Cliente<string>> tablaClientes(10);
+
 	ListaEnlazada<Cuenta<string, double>> listaCuentas;
+	HashTable<Cuenta<string, double>> tablaCuentas(10);
+
+	ListaEnlazada<Seguros<string, double>> listaSeguros;
+	HashTable<Seguros<string, double>> tablaSeguros(10);
+
 	ListaEnlazada<Servicios<string, double>> listaDeServicios;
+	HashTable<Servicios<string, double>> tablaDeServicios(10);
+
 	ListaEnlazada<ServicioContratado<string>> listaServiciosContratados;
-	ListaEnlazada<Seguros<string, double>> listaSeguros; // Lista de servicios para la configuración global
+	HashTable<ServicioContratado<string>> tablaServiciosContratados(10);
+	
 	// Configuración inicial
-	Cuenta<string, double>::setListaServiciosGlobal(listaDeServicios);
-	Seguros<string, double>::setListaServiciosGlobal(listaDeServicios);
+	Cuenta<string, double>::setTablaServiciosGlobal(tablaDeServicios);
+	Seguros<string, double>::setTablaServiciosGlobal(tablaDeServicios);
 
 	int opcionPrincipal;
 	do {
@@ -472,14 +515,13 @@ int main() {
 
 		switch (opcionPrincipal) {
 		case 1:
-			//menuClientes(listaClientes);
-			menuClientes(listaClientes,tablaClientes);
+			menuClientes(tablaClientes);
 			break;
 		case 2:
-			menuCuentas(listaCuentas, listaDeServicios);
+			menuCuentas(tablaCuentas, tablaDeServicios);
 			break;
 		case 3:
-			menuSeguros(listaSeguros, listaDeServicios, listaClientes);
+			menuSeguros(tablaSeguros, tablaDeServicios, tablaClientes);
 			break;
 		case 4:
 			//Gestionar Creditos
@@ -488,10 +530,10 @@ int main() {
 			//Gestionar Tarjetas
 			break;
 		case 6:
-			menuServiciosContratados(listaServiciosContratados, listaClientes, listaDeServicios);
+			menuServiciosContratados(tablaServiciosContratados, tablaClientes, tablaDeServicios);
 			break;
 		case 7:
-			menuReportes(listaClientes, listaCuentas, listaDeServicios, listaServiciosContratados);
+			//menuReportes(listaClientes, listaCuentas, listaDeServicios, listaServiciosContratados);
 			break;
 		case 8:
 			cout << "\n¡Gracias por usar el Sistema Bancario! Hasta pronto." << endl;

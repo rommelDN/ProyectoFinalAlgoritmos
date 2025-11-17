@@ -60,6 +60,12 @@
     <ClCompile Include="main.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="Cuentas.cpp">
+      <Filter>Archivos de encabezado\Cuentas</Filter>
+    </ClCompile>
+    <ClCompile Include="Seguros.cpp">
+      <Filter>Archivos de encabezado\Seguros</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cola.h">

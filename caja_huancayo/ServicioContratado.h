@@ -46,5 +46,11 @@ public:
         cout << "-> Info del Cliente que contrato el servicio: " << endl;
         cliente_ref->mostrarInfo();
 	}
+    friend ostream& operator<<(ostream& os, const ServicioContratado& e) {
+        os << "( "<<"|ID: " << e.getID()<<"| DNI: "<<e.getClienteRef()->getDNI() << "| CLIENTE: " << e.getClienteRef()->getNombre() << "| NUM_CUENTA: " << e.getServicioRef()->getNumCuenta() <<")";
+        return os;
+    }
+
+	ServicioContratado() = default;
     
 };

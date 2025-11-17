@@ -77,8 +77,8 @@ public:
 			<< " | Titular: " << titular
 			<< " | Fecha Apertura: " << fecha_apertura
 			<< " | Saldo: $" << saldo << endl;
-		cout << "-> Historial de Transacciones: " << endl;
-		historialTransacciones->mostrarTodo();
+		//cout << "-> Historial de Transacciones: " << endl;
+		//historialTransacciones->mostrarTodo();
 	}
 
 	static Servicios<string,double> obtenerXnumCuenta(ListaEnlazada<Servicios<string,double>>& lista, const string& num_cuenta) {
