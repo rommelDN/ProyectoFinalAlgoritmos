@@ -217,7 +217,12 @@ void menuSeguros(HashTable<Seguros<string,double>>& tablaSeguros,HashTable<Servi
 		cout << "2. Mostrar Seguro" << endl; //Por Cliente
 		cout << "3. Ingresar Asegurados" << endl;
 		cout << "4. Ordenar Seguros (MergeSort)" << endl;
-		cout << "5. Volver al Menu Principal" << endl;
+		cout << "5. Buscar Seguro por Numero de Cuenta" << endl;
+		cout << "6. Crear Reclamo " << endl;
+		cout << "7. Evaluar Cola de Reclamos " << endl;
+		cout << "8. Mostrar Cola de Reclamos " << endl;
+		cout << "9. Mostrar PIla de Reclamos " << endl;
+		cout << "10. Volver al Menu Principal" << endl;
 		cin >> opcion;
 		limpiarBuffer();
 
@@ -328,14 +333,113 @@ void menuSeguros(HashTable<Seguros<string,double>>& tablaSeguros,HashTable<Servi
 			pausar();
 			break; 
 		};
-		case 5:
+		case 5: {
+			string numCuenta;
+			cout << "\n--- Buscar Seguro por Numero ---" << endl;
+			cout << "Ingrese Numero de Cuenta: ";
+			getline(cin, numCuenta);
+			cout << "Buscando cuenta..." << endl;
+			Seguros<string, double>* seguros = tablaSeguros.buscar(numCuenta);
+			if (seguros != nullptr) {
+				cout << "Cliente encontrado:\n";
+				seguros->mostrar();
+			}
+			else {
+				cout << "Error: No se encontro el cliente con el DNI proporcionado." << endl;
+			}
+			pausar();
+			break;
+		};
+		case 6: {
+			cout << "\n--- Crear Clamo ---" << endl;
+			string id_seguro, id_cliente, descripcion, fecha, num_cuenta, dni;
+			double monto;
+			cout << "Ingrese Numero del Seguro: ";
+			getline(cin, num_cuenta);
+			Seguros<string, double>* seguro = tablaSeguros.buscar(num_cuenta);
+			if (seguro == nullptr) {
+				cout << "ERROR: Seguro no encontrado.\n";
+				break;
+			}
+			cout << "Ingrese DNI del Cliente: ";
+			getline(cin, dni);
+			Cliente<string>* cliente = tablaClientes.buscar(dni);
+			if (cliente == nullptr) {
+				cout << "ERROR: Cliente no encontrado.\n";
+				break;
+			}
+			cout << "Ingrese Descripcion del Reclamo: ";
+			getline(cin, descripcion);
+			cout << "Ingrese Monto del Reclamo: ";
+			cin >> monto;
+			limpiarBuffer();
+			cout << "Ingrese Fecha del Reclamo (dd/mm/aaaa): ";
+			getline(cin, fecha);
+			try {
+				seguro->crearReclamo(seguro->getIdSeguro(), cliente->getID(), descripcion, fecha, monto);
+				cout << "Reclamo creado con exito.\n";
+			}
+			catch (const exception& e) {
+				cout << "Error al crear reclamo: " << e.what() << endl;
+			}
+			pausar();
+			break;
+		};
+		case 7: {
+			cout << "\n--- Procesar Reclamos ---" << endl;
+			string num_cuenta;
+			cout << "Ingrese Numero del Seguro: ";
+			getline(cin, num_cuenta);
+			Seguros<string, double>* seguro = tablaSeguros.buscar(num_cuenta);
+			if (seguro == nullptr) {
+				cout << "ERROR: Seguro no encontrado.\n";
+				break;
+			}
+			bool procesado = seguro->procesarReclamosEncolados();
+			if (!procesado)
+				cout << "No hay reclamos pendientes.\n";
+			else
+				cout << "Procesamiento finalizado.\n";
+			pausar();
+			break;
+		};
+		case 8: {
+			cout << "\n--- Mostrar Cola De Reclamos ---" << endl;
+			string num_cuenta;
+			cout << "Ingrese Numero del Seguro: ";
+			getline(cin, num_cuenta);
+			Seguros<string, double>* seguro = tablaSeguros.buscar(num_cuenta);
+			if (seguro == nullptr) {
+				cout << "ERROR: Seguro no encontrado.\n";
+				break;
+			}
+			seguro->mostrarColaReclamos();
+			pausar();
+			break;
+		};
+		case 9: {
+			cout << "\n--- Mostrar Historial de Reclamos ---" << endl;
+			string num_cuenta;
+			cout << "Ingrese Numero del Seguro: ";
+			getline(cin, num_cuenta);
+			Seguros<string, double>* seguro = tablaSeguros.buscar(num_cuenta);
+			if (seguro == nullptr) {
+				cout << "ERROR: Seguro no encontrado.\n";
+				break;
+			}
+			seguro->mostrarHistorialReclamos();
+			pausar();
+			break;
+		}
+
+		case 10:
 			cout << "Volviendo al menu principal..." << endl;
 			break;
 		default:
 			break;
 		}
 	
-	} while (opcion!=5);
+	} while (opcion!=10);
 };
 
 void menuServiciosContratados(

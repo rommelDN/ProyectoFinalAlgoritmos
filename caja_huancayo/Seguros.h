@@ -25,8 +25,8 @@ private:
 
 	// Composición con reclamos
 	ListaEnlazada<Beneficiario<string, double>>* beneficiarios;
-	ListaEnlazada<Reclamo<string, double>>* reclamos;
-	Pila<Reclamo<string, double>>* reclamosRecientes;  // Para ver los más recientes
+
+	Pila<Reclamo<string, double>>* HistorialReclamos;  // Para ver los más recientes
 	Cola<Reclamo<string, double>>* reclamosPendientes; // Para procesar en orden
 
 	string generarID() {
@@ -45,8 +45,7 @@ public:
 		estado_poliza = "ACTIVA";
 		fecha_vencimiento = calcularFechaVencimiento(f_a, meses_cov);
 		beneficiarios = new ListaEnlazada<Beneficiario<string, double>>();
-		reclamos = new ListaEnlazada<Reclamo<string, double>>();
-		reclamosRecientes = new Pila<Reclamo<string, double>>();
+		HistorialReclamos = new Pila<Reclamo<string, double>>();
 		reclamosPendientes = new Cola<Reclamo<string, double>>();
 		
 		if (tablaServiciosGlobal != nullptr) {
@@ -71,21 +70,7 @@ public:
 	void setMesesCobertura(T2 meses_cov) { meses_cobertura = meses_cov; }
 	void setPrimaMensual(T2 prima_mensual) { this->prima_mensual = prima_mensual; }
 	void setMontoCobertura(T2 monto_cov) { monto_cobertura = monto_cov; }
-	
-	/*void crearBeneficiario(string id_seguro, string dni, string n, string r, double p, ListaEnlazada<Cliente<string>>& listaClientes) {
-		Cliente<string> cliente;
-		try {
-			cliente = Cliente<string>::obtenerXdni(listaClientes, dni);
-			Beneficiario<string, double> nuevoBeneficiario(id_seguro, cliente.getID(), n, r, p);
-			beneficiarios->agregarFinal(nuevoBeneficiario);
-			cout << "Beneficiario creado con exito." << endl;
 
-		}
-		catch (const exception& e) {
-			cout << "Error al buscar cliente: " << e.what() << endl;
-
-		}
-	}*/
 	void crearBeneficiarioHash(Seguros<string, double>* seguro,Cliente<string>* cliente,const string& nombre,const string& relacion,double porcentaje) {
 		Beneficiario<string, double> nuevo(seguro->getIdSeguro(),cliente->getID(),nombre,relacion,porcentaje);
 		seguro->beneficiarios->agregarFinal(nuevo);
@@ -117,68 +102,66 @@ public:
 
 	void crearReclamo(T1 id_seguro,T1 id_cliente, T1 descripcion, T1 fecha, T2 monto_reclamado) {
 		Reclamo<string, double> nuevoReclamo(id_seguro, id_cliente, descripcion, fecha, monto_reclamado);
-		reclamos->agregarFinal(nuevoReclamo);
-		reclamosRecientes->apilar(nuevoReclamo);
-		reclamosPendientes->encolar(nuevoReclamo);
-		cout << "Reclamo creado con ID: " << nuevoReclamo.getIdReclamo() << endl;
+		reclamosPendientes->encolar(nuevoReclamo); //Para el procesamiento en Cola de todas las solicitudes de reclamos
+		cout << "Reclamo Enviado con ID: " << nuevoReclamo.getIdReclamo() << endl;
 	}
 
-	// Procesar siguiente reclamo pendiente
-	/*void procesarSiguienteReclamo() {
+	bool procesarReclamosEncolados() {
 		if (reclamosPendientes->estaVacia()) {
-			cout << "No hay reclamos pendientes por procesar." << endl;
-			return;
+			cout << "No hay reclamos pendientes.\n";
+			return false;
 		}
+		char opcion;
+		// Procesar mientras existan reclamos
+		while (!reclamosPendientes->estaVacia()) {
+			// Obtener referencia al reclamo actual (el primero de la cola)
+			Reclamo<string, double>& reclamo = reclamosPendientes->getFrenteRef();
+			bool aprobado = evaluarReclamo(reclamo);
+			// Mover reclamo al historial siempre
+			HistorialReclamos->apilar(reclamo);
+			// Quitar de la cola
+			reclamosPendientes->desencolar();
+			// Si aún quedan reclamos, preguntar si desea continuar
+			if (!reclamosPendientes->estaVacia()) {
+				cout << "\n¿Desea procesar el siguiente reclamo? (s/n): ";
+				cin >> opcion;
 
-		Reclamo<string, double> reclamo = reclamosPendientes->getFrente();
-		reclamosPendientes->desencolar();
-
-		cout << "Procesando reclamo: " << reclamo.getIdReclamo() << endl;
-		reclamo.mostrarInfo();
-
-		// Aquí iría la lógica de evaluación del reclamo
-		evaluarReclamo(reclamo);
+				if (opcion == 'n' || opcion == 'N') {
+					cout << "Procesamiento detenido por el usuario.\n";
+					return true;
+				}
+			}
+		}
+		cout << "Todos los reclamos pendientes fueron procesados.\n";
+		return true;
 	}
 
-	// Evaluar y decidir sobre el reclamo
-	void evaluarReclamo(Reclamo<string, double>& reclamo) {
+	bool evaluarReclamo(Reclamo<string, double>& reclamo) {
 		reclamo.ponerEnProceso();
-
-		// Simulación de evaluación
+		cout << "Evaluando reclamo (EN PROCESO) ID: "
+			<< reclamo.getIdReclamo()
+			<< " | Monto Reclamado: $"
+			<< reclamo.getMontoReclamado() << endl;
+		// Si el monto es aceptable
 		if (reclamo.getMontoReclamado() <= this->getMontoCobertura() * 0.8) {
-			// Aprobar reclamo
 			reclamo.aprobar(reclamo.getMontoReclamado());
-			cout << "Reclamo APROBADO. Monto a pagar: $" << reclamo.getMontoAprobado() << endl;
-
-			// Crear transacción de pago
-			Transaccion<string, double>pago("PAGO_SEGURO", reclamo.getMontoAprobado(), "Sistema");
+			cout << "Reclamo APROBADO. Monto a pagar: $"
+				<< reclamo.getMontoAprobado() << endl;
+			Transaccion<string, double> pago("PAGO_SEGURO", reclamo.getMontoAprobado(), "Sistema");
 			pago.completar();
 			this->agrearTransaccion(pago);
 
-		}
-		else {
-			// Rechazar reclamo
-			reclamo.rechazar();
-			cout << "Reclamo RECHAZADO. Monto excede cobertura." << endl;
+			return true;
 		}
 
-		// Actualizar en la lista principal
-		actualizarReclamoEnLista(reclamo);
+		// Reclamo rechazado
+		reclamo.rechazar();
+		cout << "Reclamo RECHAZADO. Monto excede cobertura." << endl;
+		return false;
 	}
-	// Actualizar reclamo en la lista principal
-	void actualizarReclamoEnLista(const Reclamo<string, double>&reclamoActualizado) {
-		// Buscar y actualizar el reclamo en la lista principal
-		auto nodoActual = reclamos->getCabeza();
-		while (nodoActual != nullptr) {
-			if (nodoActual->getDato().getIdReclamo() == reclamoActualizado.getIdReclamo()) {
-				nodoActual->getDato() = reclamoActualizado;
-				break;
-			}
-			nodoActual = nodoActual->getSiguiente();
-		}
-	}*/
 
-	void mostrarInfo() const  {
+
+	void mostrar() const  {
 		cout << "ID Seguro: " << id_seguro
 			<< " | Tipo Seguro: " << tipo_seguro
 			<< " | Meses Cobertura: " << meses_cobertura
@@ -187,6 +170,28 @@ public:
 			<< " | Estado Poliza: " << estado_poliza
 			<< " | Monto Cobertura: $" << monto_cobertura << endl;
 
+	}
+	void mostrarColaReclamos() {
+		if (reclamosPendientes->estaVacia()) {
+			cout << "No hay reclamos pendientes." << endl;
+			return;
+		}
+		cout << "Reclamos Pendientes:" << endl;
+		reclamosPendientes->mostrar([](const Reclamo<string, double>& r) {
+			r.mostrarInfo();
+			cout << "------------------------" << endl;
+			});
+	}
+	void mostrarHistorialReclamos() {
+		if (HistorialReclamos->estaVacia()) {
+			cout << "No hay reclamos en el historial." << endl;
+			return;
+		}
+		cout << "\n===== HISTORIAL DE RECLAMOS =====\n";
+		HistorialReclamos->mostrar([](const Reclamo<string, double>& r) {
+			r.mostrarInfo();
+			cout << "------------------------" << endl;});
+		
 	}
 
 	// Sobrecarga del operador << para poder imprimir

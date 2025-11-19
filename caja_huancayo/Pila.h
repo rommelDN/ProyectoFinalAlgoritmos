@@ -66,4 +66,12 @@ public:
 
 	}
 
+	void mostrar(function<void(const T&)> printElemento) const {
+		Nodo<T>* actual = tope;
+		while (actual != nullptr) {
+			printElemento(actual->getDato());
+			actual = actual->getSiguiente();
+		}
+	}
+
 };

@@ -77,7 +77,7 @@ public:
 		return estado == "RECHAZADO"; 
 	}
 
-	void mostrarInfo() {
+	void mostrarInfo() const {
 		cout << "ID Reclamo: " << id_reclamo << endl;
 		cout << "ID Seguro: " << id_seguro << endl;
 		cout << "ID Cliente: " << id_cliente << endl;

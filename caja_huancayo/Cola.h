@@ -75,4 +75,18 @@ public:
 		}
 		
 	}
+	T& getFrenteRef() {
+		if (estaVacia()) {
+			throw std::runtime_error("ERROR: Cola vacía");
+		}
+		return frente->dato; // Devuelve referencia al dato original
+	}
+	void mostrar(function<void(const T&)> printElemento) const {
+		Nodo<T>* actual = frente;
+		while (actual != nullptr) {
+			printElemento(actual->getDato());
+			actual = actual->getSiguiente();
+		}
+	}
+
 };

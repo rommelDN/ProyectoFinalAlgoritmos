@@ -2,7 +2,7 @@
 #include <iostream>
 template <typename T>
 class Nodo{
-private:
+public:
 	T dato;
 	Nodo<T>* siguiente;
 public:
@@ -11,4 +11,5 @@ public:
 	Nodo<T>* getSiguiente() { return siguiente; }
 	void setSiguiente(Nodo<T>* sig) { siguiente = sig; }
 	void setDato(T v) { dato = v; }
+
 };
