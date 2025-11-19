@@ -81,11 +81,11 @@ public:
 		//historialTransacciones->mostrarTodo();
 	}
 
-	static Servicios<string,double> obtenerXnumCuenta(ListaEnlazada<Servicios<string,double>>& lista, const string& num_cuenta) {
+	static Servicios<string, double> obtenerXnumCuenta(ListaEnlazada<Servicios<string, double>>& lista, const string& num_cuenta) {
 		if (lista.estaVacia()) {
 			throw runtime_error("La lista esta vacia. No se puede obtener el elemento.");
 		}
-		Nodo<Servicios<string,double>>* actual = lista.getCabeza();
+		Nodo<Servicios<string, double>>* actual = lista.getCabeza();
 		while (actual != nullptr) {
 			if (actual->getDato().getNumCuenta() == num_cuenta) {
 				return actual->getDato();
@@ -93,6 +93,21 @@ public:
 			actual = actual->getSiguiente();
 		}
 		throw runtime_error("No se encontro el servicio con el numero de cuenta proporcionado.");
+	};
+
+	void mostrarHistorialTransacciones() {
+		cout << "\n=== HISTORIAL DE TRANSACCIONES ===\n";
+		if (historialTransacciones == nullptr || historialTransacciones->estaVacia()) {
+			cout << "No hay transacciones registradas.\n";
+			return;
+		}
+		Nodo<Transaccion<string, double>>* actual = historialTransacciones->getCabeza();
+		while (actual != nullptr) {
+			auto& t = actual->getDatoref();
+			t.mostrarInfo();
+			actual = actual->siguiente; 
+		};
+		cout << "\n=== FIN DEL HISTORIAL ===\n";
 	}
 
 	Servicios() = default;

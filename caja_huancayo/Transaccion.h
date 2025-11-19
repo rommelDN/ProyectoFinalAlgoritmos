@@ -18,7 +18,7 @@ private:
 
 	string generarID() {
 		static int contador = 1;
-		return "TXN -" + to_string(contador++);
+		return "TXN-" + to_string(contador++);
 	}
 public:
 	Transaccion(T1 t, T2 m, T1 d) : tipo(t), monto(m), descripcion(d){
@@ -53,6 +53,9 @@ public:
 	}
 	bool esRetiro() const {
 		return tipo == "RETIRO";
+	}
+	T1 getID()const {
+		return id_transaccion;
 	}
 	T2 getMonto() const {
 		return monto;

@@ -38,7 +38,8 @@ void mostrarMenu() {
 	cout << "5.	Gestionar Tarjetas" << endl;
 	cout << "6. Gestionar Servicios Contratados" << endl;
 	cout << "7. Mostrar Reportes" << endl;
-	cout << "8. Salir" << endl;
+	cout << "8. Gestionar Transacciones" << endl;
+	cout << "9. Salir" << endl;
 	cout << "Seleccione una opcion: ";
 }
 
@@ -590,6 +591,43 @@ void menuReportes(ListaEnlazada<Cliente<string>>& listaClientes,ListaEnlazada<Cu
 	pausar();
 }
 
+void menuTrasacciones(ListaEnlazada<Transaccion<string,double>>& listaTransacciones,HashTable<Servicios<string,double>>& tablaDeServicios) {
+	int opcion;
+	do {
+		cout << "\n=== GESTION DE TRANSACCIONES ===" << endl;
+		cout << "1. Mostrar Transacciones (NUM.Cuenta)" << endl;
+		cout << "2. Filtrar Transacciones" << endl;
+		cout << "3. Volver al Menu Principal" << endl;
+		cin >> opcion;
+		limpiarBuffer();
+		switch (opcion) {
+		case 1:
+		{
+			cout << "\n--- Mostrar Historial de Transacciones ---" << endl;
+			string num_cuenta;
+			cout << "Ingrese Numero de Cuenta: ";
+			getline(cin, num_cuenta);
+			Servicios<string, double>* servicio = tablaDeServicios.buscar(num_cuenta);
+			if (servicio == nullptr) {
+				cout << "ERROR: Servicio no encontrado.\n";
+				break;
+			}
+			servicio->mostrarHistorialTransacciones();
+			pausar();
+			break;
+
+		};
+		case 2:
+		{
+
+		};
+		default:
+			break;
+		}
+	} while (opcion != 3);
+	
+
+};
 int main() {
 
 	ListaEnlazada<Cliente<string>> listaClientes;
@@ -607,6 +645,8 @@ int main() {
 	ListaEnlazada<ServicioContratado<string>> listaServiciosContratados;
 	HashTable<ServicioContratado<string>> tablaServiciosContratados(10);
 	
+	ListaEnlazada<Transaccion<string, double>> listaTransacciones;
+
 	// Configuración inicial
 	Cuenta<string, double>::setTablaServiciosGlobal(tablaDeServicios);
 	Seguros<string, double>::setTablaServiciosGlobal(tablaDeServicios);
@@ -640,13 +680,16 @@ int main() {
 			//menuReportes(listaClientes, listaCuentas, listaDeServicios, listaServiciosContratados);
 			break;
 		case 8:
+			menuTrasacciones(listaTransacciones,tablaDeServicios);
+			break;
+		case 9:
 			cout << "\n¡Gracias por usar el Sistema Bancario! Hasta pronto." << endl;
 			break;
 		default:
 			cout << "Opcion no valida! Intente de nuevo." << endl;
 			pausar();
 		}
-	} while (opcionPrincipal != 8);
+	} while (opcionPrincipal != 9);
 
 	return 0;
 };

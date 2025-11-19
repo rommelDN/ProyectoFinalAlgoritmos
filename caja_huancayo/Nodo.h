@@ -8,8 +8,10 @@ public:
 public:
 	Nodo(T v, Nodo<T>*sig=NULL) :dato(v), siguiente(sig) {}
 	T getDato() { return dato; }
+	T& getDatoref() { return dato; }
 	Nodo<T>* getSiguiente() { return siguiente; }
 	void setSiguiente(Nodo<T>* sig) { siguiente = sig; }
 	void setDato(T v) { dato = v; }
+
 
 };
