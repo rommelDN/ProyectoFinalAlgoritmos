@@ -20,26 +20,6 @@ private:
 	T1 fecha_apertura;	//String
 	ListaEnlazada<Transaccion<string, double>>* historialTransacciones;
 
-	void actualizarSaldo(const Transaccion<string, double>& transaccion) {
-		if (transaccion.esPendiente()) {
-			cout << "La transaccion esta pendiente. No se actualiza el saldo." << endl;
-			cout << "Completar o fallar la transaccion antes de actualizar el saldo." << endl;
-			//esCompleta -> modifica mi estado PENDIENTA A COMPLETADA
-			//esFallida -> modifica mi estado PENDIENTA A FALLIDA
-		}
-		if (transaccion.esCompletada()) {
-			if (transaccion.esDeposito()) {
-				saldo += transaccion.getMonto();
-			}
-			else if (transaccion.esRetiro()){
-				saldo -= transaccion.getMonto();
-			}
-		}
-		if(transaccion.esFallida()) {
-			cout << "La transaccion ha fallado. No se actualiza el saldo." << endl;
-			cout << "Revisar posibles fallos en la transacion" << endl;
-		}
-	}
 
 	string generarIDServicio() {
 		static int contador = 1;
@@ -68,7 +48,31 @@ public:
 	void agrearTransaccion(const Transaccion<string, double>& transaccion) {
 		historialTransacciones->agregarFinal(transaccion);
 		cout << "Transacción agregada al historial: " << transaccion.getTipo()<< " - $" << transaccion.getMonto() << endl;
-		actualizarSaldo(transaccion);
+		if (transaccion.esCompletada()) actualizarSaldo(transaccion);
+
+	}
+
+	void actualizarSaldo(const Transaccion<string, double>& transaccion) {
+		if (transaccion.esPendiente()) {
+			cout << "La transaccion esta pendiente. No se actualiza el saldo." << endl;
+			cout << "Completar o fallar la transaccion antes de actualizar el saldo." << endl;
+			//esCompleta -> modifica mi estado PENDIENTA A COMPLETADA
+			//esFallida -> modifica mi estado PENDIENTA A FALLIDA
+		}
+		if (transaccion.esCompletada()) {
+			if (transaccion.esDeposito()) {
+				this->saldo += transaccion.getMonto();
+				cout << "Deposito exitoso. Nuevo saldo: " << this->saldo << endl;
+			}
+			else if (transaccion.esRetiro()) {
+				this->saldo -= transaccion.getMonto();
+				cout << "Retiro exitoso. Nuevo saldo: " << this->saldo << endl;
+			}
+		}
+		if (transaccion.esFallida()) {
+			cout << "La transaccion ha fallado. No se actualiza el saldo." << endl;
+			cout << "Revisar posibles fallos en la transacion" << endl;
+		}
 	}
 
 	void mostrarInfo() const {

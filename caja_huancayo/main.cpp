@@ -133,7 +133,9 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas,HashTable<Servi
 		cout << "1. Crear Cuenta" << endl;
 		cout << "2. Mostrar Cuentas" << endl;
 		cout << "3. Buscar Cuenta por Numero" << endl;
-		cout << "4. Volver al Menu Principal" << endl;
+		cout << "4. Depositar" << endl;
+		cout << "5. Retirar" << endl;
+		cout << "6. Volver al Menu Principal" << endl;
 		cout << "Seleccione una opcion: ";
 		cin >> opcion;
 		limpiarBuffer();
@@ -185,6 +187,7 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas,HashTable<Servi
 			getline(cin, numCuenta);
 			cout << "Buscando cuenta..." << endl;
 			Cuenta<string, double>* cuenta = tablaCuentas.buscar(numCuenta);
+			Servicios<string, double>* servicio = tablaDeServicios.buscar(numCuenta);
 			if (cuenta != nullptr) {
 				cout << "Cliente encontrado:\n";
 				cuenta->mostrar();
@@ -196,17 +199,70 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas,HashTable<Servi
 			break;
 		};
 		case 4: {
+			cout << "\n--- Depositar A Cuenta ---" << endl;
+			string numCuenta;
+			double monto;
+			cout << "Ingrese Numero de Cuenta: ";
+			getline(cin, numCuenta);
+			Cuenta<string, double>* cuenta = tablaCuentas.buscar(numCuenta);
+			if (cuenta == nullptr) {
+				cout << "Error: No se encontro la cuenta con el numero proporcionado." << endl;
+				pausar();
+				break;
+			}
+			cout << "Ingrese Monto a Depositar: ";
+			cin >> monto;
+			limpiarBuffer();
+			double saldoAnterior = cuenta->getSaldo();
+			cuenta->depositar(monto);
+			if (cuenta->getSaldo() != saldoAnterior) {
+				tablaCuentas.eliminar(numCuenta);
+				tablaCuentas.insertar(numCuenta, *cuenta);
+				cout << "Saldo actualizado en el sistema." << endl;
+			}
+			delete cuenta;
 			pausar();
 			break;
 		}
-		case 5:
+
+		/*
+		case 4: {
+			cout << "\n--- Depositar A Cuenta ---" << endl;
+			string numCuenta;
+			double monto;
+			cout << "Ingrese Numero de Cuenta: ";
+			getline(cin, numCuenta);
+			Cuenta<string, double>* cuenta = tablaCuentas.buscar(numCuenta);
+			if (cuenta == nullptr) {
+				cout << "Error: No se encontro la cuenta con el numero proporcionado." << endl;
+				pausar();
+				break;
+			}
+			cout << "Ingrese Monto a Depositar: ";
+			cin >> monto;
+			limpiarBuffer();
+			double saldoAnterior = cuenta->getSaldo();
+			cuenta->depositar(monto);
+			if (cuenta->getSaldo() != saldoAnterior) {
+				tablaCuentas.actualizar(numCuenta, *cuenta);
+				cout << "Saldo actualizado en el sistema." << endl;
+			}
+			pausar();
+			break;
+		}*/
+		case 5: {
+			cout << "\n--- Retirar A Cuenta ---" << endl;
+			pausar();
+			break;
+		}
+		case 6:
 			cout << "Volviendo al menu principal..." << endl;
 			break;
 		default:
 			break;
 		}
 	
-	} while (opcion != 4);
+	} while (opcion != 6);
 	
 }
 
@@ -597,7 +653,7 @@ void menuTrasacciones(ListaEnlazada<Transaccion<string,double>>& listaTransaccio
 		cout << "\n=== GESTION DE TRANSACCIONES ===" << endl;
 		cout << "1. Mostrar Transacciones (NUM.Cuenta)" << endl;
 		cout << "2. Filtrar Transacciones" << endl;
-		cout << "3. Volver al Menu Principal" << endl;
+		cout << "3. Regresar a Menu Principal" << endl;
 		cin >> opcion;
 		limpiarBuffer();
 		switch (opcion) {
@@ -619,7 +675,11 @@ void menuTrasacciones(ListaEnlazada<Transaccion<string,double>>& listaTransaccio
 		};
 		case 2:
 		{
-
+			cout << "\n--- Filtrar Historial de Transacciones ---" << endl;
+		};
+		case 3:
+		{
+			cout << "\n--- Regresar a Menu Principal ---" << endl;
 		};
 		default:
 			break;

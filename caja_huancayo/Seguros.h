@@ -147,7 +147,7 @@ public:
 			reclamo.aprobar(reclamo.getMontoReclamado());
 			cout << "Reclamo APROBADO. Monto a pagar: $"
 				<< reclamo.getMontoAprobado() << endl;
-			Transaccion<string, double> pago("PAGO_SEGURO", reclamo.getMontoAprobado(), "Sistema");
+			Transaccion<string, double> pago("RETIRO", reclamo.getMontoAprobado(), "Sistema");
 			pago.completar();
 			this->agrearTransaccion(pago);
 

@@ -70,11 +70,7 @@ public:
 		return estado;
 	}
 	void mostrarInfo() const {
-		cout << "ID: " << id_transaccion << endl;
-		cout << "Tipo: " << tipo << endl;
-		cout << "Monto: $" << monto << endl;
-		cout << "Descripción: " << descripcion << endl;
-		cout << "Estado: " << estado << endl;
+		cout << "ID: " << id_transaccion<<"| Tipo: " << tipo << "| Monto: $" << monto <<  "| Descripción: " << descripcion <<"| Estado: " << estado << endl;
 		cout << "=================================" << endl;
 	}
 };

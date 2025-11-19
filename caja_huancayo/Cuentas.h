@@ -52,11 +52,41 @@ public:
 	void setLimiteRetiro(T2 limite) { limite_retiro = limite; }
     void setAhorroObjetivo(T2 obj) { ahorroObjetivo = obj; }
 
-    void depositar(T1 monto) {    
-    }
+	void depositar(double monto) {
+		Transaccion<string, double> transaccionDep("DEPOSITO", monto, "DepositoAcuentaDeAhorro");
+		transaccionDep.mostrarInfo();
+		cout << "Transaccion pendiente esperando confirmacion" << endl;
+		string confirm;
+		cout << "Deseas confirmar el movimiento? (s/n)" << endl;
+		cin >> confirm;
+		if (confirm == "s") {
+			transaccionDep.completar();
+			this->agrearTransaccion(transaccionDep);
+			this->verificarMetasAhorro();
+			cout << "El movimiento se realizo con exito" << endl;
+			this->mostrarInfo();
+			return;
+		}
+		else {
+			transaccionDep.fallar();
+			cout << "El movimiento FALLO" << endl;
+			return;
+		}
+	
+		
+	};
     
-	void retirar(T1 monto) {
-    }
+	void retirar(double monto) {
+		if (monto > this->getLimiteRetiroDisponible()) {
+			cout << "Error: Monto de retiro excede el limite disponible" << endl;
+			return;
+		}
+		Transaccion<string, double> transaccionRet("RETIRO", monto, "RetiroDeCuentaDeAhorro");
+		Servicios<string, double>::agrearTransaccion(transaccionRet);
+		this->verificarMetasAhorro();
+		transaccionRet.completar();
+
+	};
 
 	void verificarMetasAhorro() {
 		if (!metasAhorro->estaVacia()) {
@@ -167,12 +197,12 @@ public:
 	}
 
 	void mostrar() {
-		//Servicios<string, double>::mostrarInfo();
 		cout << "ID Cuenta: " << id_cuenta
 			<< " | Tipo Cuenta: " << tipo_cuenta
 			<< " | Tasa Interes: " << tasa_interes << "%"
 			<< " | Limite Retiro: $" << limite_retiro
-			<< " | Ahorro Objetivo: $" << ahorroObjetivo << endl;
+			<< " | Ahorro Objetivo: $" << ahorroObjetivo<<"| Saldo: "<<this->getSaldo() << endl;
+		
 	}
 
 	// Sobrecarga del operador << para poder imprimir
