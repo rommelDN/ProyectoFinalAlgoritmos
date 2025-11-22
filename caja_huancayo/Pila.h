@@ -66,6 +66,10 @@ public:
 
 	}
 
+
+	/////////////////////////
+	// Requiere lambda para mostrar elementos
+	/////////////////////////
 	void mostrar(function<void(const T&)> printElemento) const {
 		Nodo<T>* actual = tope;
 		while (actual != nullptr) {

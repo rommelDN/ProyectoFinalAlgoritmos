@@ -42,6 +42,7 @@ public:
 	T1 getTitular() { return titular; }
 	T1 getFechaApertura() { return fecha_apertura; }
 	//setters
+	void setSaldo(T2 s) { saldo = s; }
 	void setTitular(T1 t) { titular = t; }
 	void setNumCuenta(T1 n_cuenta) { num_cuenta = n_cuenta; }
 

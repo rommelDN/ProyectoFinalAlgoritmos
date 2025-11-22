@@ -142,6 +142,14 @@ public:
 		return vec;
 	}
 
+	void forEach(const function<void(const T&)>& callback) const {
+		for (int i = 0; i < TABLE_SIZE; i++) {
+			if (table[i] != nullptr && table[i] != TOMBSTONE) {
+				callback(table[i]->getValue());
+			}
+		}
+	}
+
 
 };
 

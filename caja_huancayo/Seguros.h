@@ -10,7 +10,9 @@
 #include "Cola.h"
 #include "Cliente.h"
 #include"HashTable.h"
-
+////////////////////////////
+//USO DE TEMPLATES
+////////////////////////////
 template <typename T1, typename T2>
 class Seguros : public Servicios<string, double> {
 private:
@@ -23,9 +25,11 @@ private:
 	T2 monto_cobertura;		//Double
 
 
-	// Composición con reclamos
+	
+	/////////////////////////////
+	//Estructuras para Beneficiarios y Reclamos
+	/////////////////////////////
 	ListaEnlazada<Beneficiario<string, double>>* beneficiarios;
-
 	Pila<Reclamo<string, double>>* HistorialReclamos;  // Para ver los más recientes
 	Cola<Reclamo<string, double>>* reclamosPendientes; // Para procesar en orden
 
@@ -33,8 +37,9 @@ private:
 		static int contador = 1;
 		return "SG-" + to_string(contador++);
 	}
-
-	//LISTA ESTÁTICA COMPARTIDA para todos los objetos Cuenta
+	////////////////////////////////
+	//HASH TABLA COMPARTIDA para todos los objetos Cuenta
+	////////////////////////////////
 	static HashTable<Servicios<string, double>>* tablaServiciosGlobal;
 
 public:
@@ -85,20 +90,34 @@ public:
 		cout << "Beneficiarios del Seguro " << id_seguro << ":" << endl;
 		beneficiarios->mostrarTodo();
 	}
+	/////////////////////////////////
+	//Funcion Recursiva
+	/////////////////////////////////
+	string sumarMesesRecursivo(tm fecha, int meses_restantes) {
+		// Caso base: ya no hay meses por sumar
+		if (meses_restantes == 0) {
+			// Normalizar fecha
+			mktime(&fecha);
+			ostringstream os;
+			os << put_time(&fecha, "%Y-%m-%d");
+			return os.str();
+		}
+		fecha.tm_mon += 1;
+		mktime(&fecha); // Normaliza por si pasa de diciembre
 
+		return sumarMesesRecursivo(fecha, meses_restantes - 1);
+	}
 	string calcularFechaVencimiento(T1 fecha_inicio, T2 meses_cov) {
-		tm tm = {};
+		tm fecha = {};
 		istringstream ss(fecha_inicio);
-		ss >> get_time(&tm, "%d/%m/%Y");  // Cambiado al formato correcto
+		ss >> get_time(&fecha, "%d/%m/%Y");
 		if (ss.fail()) {
 			throw runtime_error("Error al parsear la fecha de inicio.");
 		}
-		tm.tm_mon += static_cast<int>(meses_cov);
-		mktime(&tm);
-		ostringstream os;
-		os << put_time(&tm, "%Y-%m-%d");  // Puedes cambiar esto también si quieres
-		return os.str();
+
+		return sumarMesesRecursivo(fecha, static_cast<int>(meses_cov));
 	}
+
 
 	void crearReclamo(T1 id_seguro,T1 id_cliente, T1 descripcion, T1 fecha, T2 monto_reclamado) {
 		Reclamo<string, double> nuevoReclamo(id_seguro, id_cliente, descripcion, fecha, monto_reclamado);
@@ -177,6 +196,9 @@ public:
 			return;
 		}
 		cout << "Reclamos Pendientes:" << endl;
+		/////////////////////////////
+		// Uso de función lambda
+		/////////////////////////////
 		reclamosPendientes->mostrar([](const Reclamo<string, double>& r) {
 			r.mostrarInfo();
 			cout << "------------------------" << endl;
@@ -188,6 +210,9 @@ public:
 			return;
 		}
 		cout << "\n===== HISTORIAL DE RECLAMOS =====\n";
+		/////////////////////////////
+		// Uso de función lambda
+		/////////////////////////////
 		HistorialReclamos->mostrar([](const Reclamo<string, double>& r) {
 			r.mostrarInfo();
 			cout << "------------------------" << endl;});
@@ -196,13 +221,13 @@ public:
 
 	// Sobrecarga del operador << para poder imprimir
 	friend ostream& operator<<(ostream& os, const Seguros& e) {
-		os <<"( " << e.getIdSeguro() << " | "
-			<< e.getTipoSeguro() << " | "
-			<< e.getMesesCobertura() << " | "
-			<< e.getPrimaMensual() << " | "
-			<< e.getFechaVencimiento() << " | "
-			<< e.getEstadoPoliza() << " | "
-			<< e.getMontoCobertura()<<" )";
+		os <<"( " <<"ID:"<< e.getIdSeguro() << " | "
+			<<"Tipo Seguro :"<< e.getTipoSeguro() << " | "
+			<<"Meses Covertura : "<< e.getMesesCobertura() << " | "
+			<<"Prima Mensual : " << e.getPrimaMensual() << " | "
+			<<"Fecha Vencimiento : " << e.getFechaVencimiento() << " | "
+			<<"Estado Poliza: " << e.getEstadoPoliza() << " | "
+			<<"Monto Covertura: " << e.getMontoCobertura()<<" )";
 		return os;
 	}
 

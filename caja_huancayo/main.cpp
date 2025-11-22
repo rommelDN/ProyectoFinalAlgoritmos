@@ -10,6 +10,7 @@
 #include "MergeSort.h"
 #include "QuickSort.h"
 #include "QuickSelect.h"
+#include "DataSetGenerator.h"
 //CLASSES
 #include "Cliente.h"
 #include "Servicios.h"
@@ -274,12 +275,14 @@ void menuSeguros(HashTable<Seguros<string,double>>& tablaSeguros,HashTable<Servi
 		cout << "2. Mostrar Seguro" << endl; //Por Cliente
 		cout << "3. Ingresar Asegurados" << endl;
 		cout << "4. Ordenar Seguros (MergeSort)" << endl;
-		cout << "5. Buscar Seguro por Numero de Cuenta" << endl;
-		cout << "6. Crear Reclamo " << endl;
-		cout << "7. Evaluar Cola de Reclamos " << endl;
-		cout << "8. Mostrar Cola de Reclamos " << endl;
-		cout << "9. Mostrar PIla de Reclamos " << endl;
-		cout << "10. Volver al Menu Principal" << endl;
+		cout << "5. Ordenar Seguros (QuickSort)" << endl;
+		cout << "6. Buscar Seguro por Numero de Cuenta" << endl;
+		cout << "7. Crear Reclamo " << endl;
+		cout << "8. Evaluar Cola de Reclamos " << endl;
+		cout << "9. Mostrar Cola de Reclamos " << endl;
+		cout << "10. Mostrar PIla de Reclamos " << endl;
+		cout << "11. Generar Data Set " << endl;
+		cout << "12. Volver al Menu Principal" << endl;
 		cin >> opcion;
 		limpiarBuffer();
 
@@ -377,6 +380,9 @@ void menuSeguros(HashTable<Seguros<string,double>>& tablaSeguros,HashTable<Servi
 				pausar();
 				break;
 			}
+			////////////////////////////////////
+			//ORDENAMIENTO CON MERGESORT
+			////////////////////////////////////
 			auto criterio = [](const Seguros<string, double>& a,
 				const Seguros<string, double>& b) {
 					return a.getIdSeguro() < b.getIdSeguro();
@@ -391,6 +397,32 @@ void menuSeguros(HashTable<Seguros<string,double>>& tablaSeguros,HashTable<Servi
 			break; 
 		};
 		case 5: {
+			cout << "\n--- Ordenar Seguros ( Convirtiendo HASH TABLE - VECTOR ) ---" << endl;
+			auto listas = tablaSeguros.toVector();
+			if (listas.empty()) {
+				cout << "No hay Seguros para ordenar.\n";
+				pausar();
+				break;
+			}
+			////////////////////////////////////
+			//ORDENAMIENTO CON QUICKSORT
+			/////////////////////////////////////
+			auto criterio = [](const Seguros<string, double>& a,
+				const Seguros<string, double>& b) {
+					return a.getMesesCobertura() < b.getMesesCobertura();
+				};
+			quicksort(listas, 0, (int)listas.size() - 1,criterio);
+			cout << "\n--- Cuentas Ordenadas x Meses De Cobertura---\n";
+			for (auto& l : listas) {
+				l.mostrarInfo();
+				cout << "------------------\n";
+			}
+
+			pausar();
+			break;
+		
+		};
+		case 6: {
 			string numCuenta;
 			cout << "\n--- Buscar Seguro por Numero ---" << endl;
 			cout << "Ingrese Numero de Cuenta: ";
@@ -407,7 +439,7 @@ void menuSeguros(HashTable<Seguros<string,double>>& tablaSeguros,HashTable<Servi
 			pausar();
 			break;
 		};
-		case 6: {
+		case 7: {
 			cout << "\n--- Crear Clamo ---" << endl;
 			string id_seguro, id_cliente, descripcion, fecha, num_cuenta, dni;
 			double monto;
@@ -442,7 +474,7 @@ void menuSeguros(HashTable<Seguros<string,double>>& tablaSeguros,HashTable<Servi
 			pausar();
 			break;
 		};
-		case 7: {
+		case 8: {
 			cout << "\n--- Procesar Reclamos ---" << endl;
 			string num_cuenta;
 			cout << "Ingrese Numero del Seguro: ";
@@ -460,7 +492,7 @@ void menuSeguros(HashTable<Seguros<string,double>>& tablaSeguros,HashTable<Servi
 			pausar();
 			break;
 		};
-		case 8: {
+		case 9: {
 			cout << "\n--- Mostrar Cola De Reclamos ---" << endl;
 			string num_cuenta;
 			cout << "Ingrese Numero del Seguro: ";
@@ -474,7 +506,7 @@ void menuSeguros(HashTable<Seguros<string,double>>& tablaSeguros,HashTable<Servi
 			pausar();
 			break;
 		};
-		case 9: {
+		case 10: {
 			cout << "\n--- Mostrar Historial de Reclamos ---" << endl;
 			string num_cuenta;
 			cout << "Ingrese Numero del Seguro: ";
@@ -488,15 +520,34 @@ void menuSeguros(HashTable<Seguros<string,double>>& tablaSeguros,HashTable<Servi
 			pausar();
 			break;
 		}
+		case 11: {
+			cout << "\n--- Data Set ---" << endl;
+			cout << endl;
+			vector<string> columnas = { "ID", "Tipo Seguro", "Monto Covertura" };
+			vector<DataSetGenerator<Seguros<string, double>>::Extractor> extractores = {
+				[](const Seguros<string,double>& s) { return s.getIdSeguro(); },
+				[](const Seguros<string,double>& s) { return s.getTipoSeguro(); },
+				[](const Seguros<string,double>& s) { return to_string(s.getMontoCobertura());}
+			};
+			DataSetGenerator<Seguros<string,double>>::listar(
+				columnas,
+				extractores,
+				tablaSeguros   // <- tu hash table ya existente
+			);
 
-		case 10:
+
+			pausar();
+			break;
+		};
+
+		case 12:
 			cout << "Volviendo al menu principal..." << endl;
 			break;
 		default:
 			break;
 		}
 	
-	} while (opcion!=10);
+	} while (opcion!=12);
 };
 
 void menuServiciosContratados(
@@ -689,7 +740,7 @@ void menuTrasacciones(ListaEnlazada<Transaccion<string,double>>& listaTransaccio
 
 };
 int main() {
-
+	// Estructuras de Datos Principales
 	ListaEnlazada<Cliente<string>> listaClientes;
 	HashTable<Cliente<string>> tablaClientes(10);
 

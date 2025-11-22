@@ -55,6 +55,9 @@
     <Filter Include="Archivos de encabezado\ArbolBinarioVL">
       <UniqueIdentifier>{9526d30e-1df0-456c-a578-bade067a75e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\DataSetGenerator">
+      <UniqueIdentifier>{487684e4-5f45-4175-b600-fcd6471a3d6c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -148,6 +151,9 @@
     </ClInclude>
     <ClInclude Include="QuickSelect.h">
       <Filter>Archivos de encabezado\OrdenamientoAvz</Filter>
+    </ClInclude>
+    <ClInclude Include="DataSetGenerator.h">
+      <Filter>Archivos de encabezado\DataSetGenerator</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
