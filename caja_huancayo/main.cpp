@@ -136,7 +136,11 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas,HashTable<Servi
 		cout << "3. Buscar Cuenta por Numero" << endl;
 		cout << "4. Depositar" << endl;
 		cout << "5. Retirar" << endl;
-		cout << "6. Volver al Menu Principal" << endl;
+		cout << "6. Ordenar Cuentas (MergeSort)" << endl;
+		cout << "7. Ordenar Cuentas (QuickSort)" << endl;
+		cout << "8. Generar Data Set " << endl;
+		cout << "9. Calcular Intereses " << endl;
+		cout << "10. Volver al Menu Principal" << endl;
 		cout << "Seleccione una opcion: ";
 		cin >> opcion;
 		limpiarBuffer();
@@ -199,13 +203,14 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas,HashTable<Servi
 			pausar();
 			break;
 		};
-		case 4: {
+		/*case 4: {
 			cout << "\n--- Depositar A Cuenta ---" << endl;
 			string numCuenta;
 			double monto;
 			cout << "Ingrese Numero de Cuenta: ";
 			getline(cin, numCuenta);
 			Cuenta<string, double>* cuenta = tablaCuentas.buscar(numCuenta);
+			Servicios<string, double>* servicio = tablaDeServicios.buscar(numCuenta);
 			if (cuenta == nullptr) {
 				cout << "Error: No se encontro la cuenta con el numero proporcionado." << endl;
 				pausar();
@@ -214,56 +219,148 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas,HashTable<Servi
 			cout << "Ingrese Monto a Depositar: ";
 			cin >> monto;
 			limpiarBuffer();
-			double saldoAnterior = cuenta->getSaldo();
+			double saldoAnterior = servicio->getSaldo();
 			cuenta->depositar(monto);
 			if (cuenta->getSaldo() != saldoAnterior) {
-				tablaCuentas.eliminar(numCuenta);
-				tablaCuentas.insertar(numCuenta, *cuenta);
+				servicio->setSaldo(saldoAnterior + monto);
 				cout << "Saldo actualizado en el sistema." << endl;
 			}
 			delete cuenta;
 			pausar();
 			break;
-		}
-
-		/*
+		}*/
 		case 4: {
 			cout << "\n--- Depositar A Cuenta ---" << endl;
 			string numCuenta;
 			double monto;
+
 			cout << "Ingrese Numero de Cuenta: ";
 			getline(cin, numCuenta);
-			Cuenta<string, double>* cuenta = tablaCuentas.buscar(numCuenta);
-			if (cuenta == nullptr) {
-				cout << "Error: No se encontro la cuenta con el numero proporcionado." << endl;
+
+			
+			Cuenta<string, double>* cuenta = tablaCuentas.buscarRef(numCuenta);
+			Servicios<string, double>* servicio = tablaDeServicios.buscarRef(numCuenta);
+			if (cuenta == nullptr || servicio == nullptr) {
+				cout << "Error: No se encontro la cuenta." << endl;
 				pausar();
 				break;
 			}
 			cout << "Ingrese Monto a Depositar: ";
 			cin >> monto;
 			limpiarBuffer();
-			double saldoAnterior = cuenta->getSaldo();
+			double saldoAnterior = servicio->getSaldo();
+
 			cuenta->depositar(monto);
+
 			if (cuenta->getSaldo() != saldoAnterior) {
-				tablaCuentas.actualizar(numCuenta, *cuenta);
 				cout << "Saldo actualizado en el sistema." << endl;
 			}
+
 			pausar();
 			break;
-		}*/
+		}
+
 		case 5: {
 			cout << "\n--- Retirar A Cuenta ---" << endl;
 			pausar();
 			break;
 		}
-		case 6:
+		case 6: {
+			cout << "\n--- Ordenar Cuentas ( Convirtiendo HASH TABLE - VECTOR ) ---" << endl;
+			auto listas = tablaCuentas.toVector();
+			if (listas.empty()) {
+				cout << "No hay Cuentas para ordenar.\n";
+				pausar();
+				break;
+			}
+			////////////////////////////////////
+			//ORDENAMIENTO CON MERGESORT
+			////////////////////////////////////
+			auto criterio = [](const Cuenta<string, double>& a,
+				const Cuenta<string, double>& b) {
+					return a.getLimiteRetiro() < b.getLimiteRetiro();
+			};
+			mergeSort(listas, 0, (int)listas.size() - 1, criterio);
+			cout << "\n--- Cuentas Ordenadas ---\n";
+			for (auto& l : listas) {
+				l.mostrarInfo();
+				cout << "------------------\n";
+			}
+			pausar();
+			break;
+		}
+		case 7: {
+			cout << "\n--- Ordenar Cuentas ( Convirtiendo HASH TABLE - VECTOR ) ---" << endl;
+			auto listas = tablaCuentas.toVector();
+			if (listas.empty()) {
+				cout << "No hay Cuentas para ordenar.\n";
+				pausar();
+				break;
+			}
+			////////////////////////////////////
+			//ORDENAMIENTO CON QUICKSORT
+			/////////////////////////////////////
+			auto criterio = [](const Cuenta<string, double>& a,
+				const Cuenta<string, double>& b) {
+					return a.getAhorroObjetivo() < b.getAhorroObjetivo();
+				};
+			quicksort(listas, 0, (int)listas.size() - 1, criterio);
+			cout << "\n--- Cuentas Ordenadas x Ahorro Objetivo---\n";
+			for (auto& l : listas) {
+				l.mostrarInfo();
+				cout << "------------------\n";
+			}
+			pausar();
+			break;
+		}
+		case 8: {
+			cout << "\n--- Data Set ---" << endl;
+			cout << endl;
+			vector<string> columnasCuentas = { "ID", "Tasa De Interes", "Limite Retiro" };
+			vector<DataSetGenerator<Cuenta<string, double>>::Extractor> extrac = {
+				[](const Cuenta<string,double>& c) { return c.getIdCuenta(); },
+				[](const Cuenta<string,double>& c) { return to_string(c.getTasaInteres()); },
+				[](const Cuenta<string,double>& c) { return to_string(c.getLimiteRetiro());}
+			};
+			DataSetGenerator<Cuenta<string, double>>::listar(
+				columnasCuentas,
+				extrac,
+				tablaCuentas   
+			);
+			pausar();
+			break;
+		};
+			
+		case 9:
+		{
+			cout << "\n--- Calcular Intereses ---" << endl;
+			string numCuenta;
+			int meses;
+			cout << "Ingrese Numero de Cuenta: ";
+			getline(cin, numCuenta);
+			Cuenta<string, double>* cuenta = tablaCuentas.buscar(numCuenta);
+			Servicios<string, double>* servicio = tablaDeServicios.buscar(numCuenta);
+			if (cuenta == nullptr) {
+				cout << "Error: No se encontro la cuenta con el numero proporcionado." << endl;
+				pausar();
+				break;
+			}
+			cout << "Calculando intereses, Ingrese Cantidad de meses: ";
+			cin >> meses;
+			double futuro = cuenta->interesRecursivo(meses);
+			cout << "El monto futuro despues de " << meses << " meses es: $" << futuro << endl;
+			pausar();
+			break;
+		
+		};
+		case 10:
 			cout << "Volviendo al menu principal..." << endl;
 			break;
 		default:
 			break;
 		}
 	
-	} while (opcion != 6);
+	} while (opcion != 10);
 	
 }
 

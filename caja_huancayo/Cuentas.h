@@ -7,6 +7,9 @@
 #include "MetaAhorro.h"
 #include "HashTable.h"
 using namespace std;
+////////////////////////////
+//USO DE TEMPLATES
+////////////////////////////
 template <typename T1, typename T2>
 class Cuenta : public Servicios<string, double> {
 private:
@@ -15,6 +18,10 @@ private:
 	T2 tasa_interes;	//double
 	T2 limite_retiro;	//double
 	T2 ahorroObjetivo;	//double
+
+	/////////////////////////////
+	//Estructuras para Metas De Ahorro
+	/////////////////////////////
 	Pila<MetaAhorro<string, double>>* metasAhorro;
 
 	string generarID() {
@@ -22,7 +29,9 @@ private:
 		return "CTA-" + to_string(contador++);
 	}
 
-	//LISTA ESTÁTICA COMPARTIDA para todos los objetos Cuenta
+	////////////////////////////////
+	//HASH TABLA COMPARTIDA para todos los objetos Cuenta
+	////////////////////////////////
 	static HashTable<Servicios<string, double>>* tablaServiciosGlobal;
 
 public:
@@ -202,8 +211,26 @@ public:
 			<< " | Tasa Interes: " << tasa_interes << "%"
 			<< " | Limite Retiro: $" << limite_retiro
 			<< " | Ahorro Objetivo: $" << ahorroObjetivo<<"| Saldo: "<<this->getSaldo() << endl;
-		
 	}
+	/////////////////////////////////
+	//Funcion Recursiva
+	/////////////////////////////////
+	double interesRecursivo(int meses) {
+		return interesRecursivoInterno(this->getSaldo(), meses);
+	}
+	double interesRecursivoInterno(double saldoActual, int meses) {
+		cout << "Meses restantes: " << meses << ", Saldo actual: " << saldoActual << endl;
+		cout <<"Tasa de Interes: "<< tasa_interes << endl;
+
+		if (meses == 0) return saldoActual;
+
+		double nuevoSaldo = saldoActual * (1 + tasa_interes/100.0);
+		return interesRecursivoInterno(nuevoSaldo, meses - 1);
+	}
+
+
+
+
 
 	// Sobrecarga del operador << para poder imprimir
 	friend ostream& operator<<(ostream& os, const Cuenta& e) {

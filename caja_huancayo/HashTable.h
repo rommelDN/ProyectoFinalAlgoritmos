@@ -17,6 +17,11 @@ public:
 	string getKey() { return key; };
 	T getValue() { return valor; };
 	void setValue(T e) { valor = e; };
+
+	T& getValueRef() { return valor; }
+	const T& getValueRef() const { return valor; }
+
+	void setValueRef(const T& e) { valor = e; }
 };
 
 template<typename T>
@@ -149,6 +154,42 @@ public:
 			}
 		}
 	}
+
+	T* buscarRef(string key) {
+		int index = hashFunction(key);
+		int original = index, step = 1;
+
+		while (table[index] != nullptr) {
+			if (table[index] != TOMBSTONE &&
+				table[index]->getKey() == key) {
+
+				// RETORNA REFERENCIA REAL AL OBJETO
+				return &(table[index]->getValueRef());
+			}
+			index = (original + step) % TABLE_SIZE;
+			step++;
+		}
+		return nullptr;
+	}
+
+	bool actualizar(string key, const T& nuevoValor) {
+		int index = hashFunction(key);
+		int original = index, step = 1;
+
+		while (table[index] != nullptr) {
+			if (table[index] != TOMBSTONE &&
+				table[index]->getKey() == key) {
+
+				table[index]->setValue(nuevoValor); // SOBREESCRIBIR OBJETO
+				return true;
+			}
+			index = (original + step) % TABLE_SIZE;
+			step++;
+		}
+		return false;
+	}
+
+
 
 
 };
