@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <iostream>
 #include <string>
 #include <functional>
@@ -10,8 +10,8 @@
 #include"Transaccion.h"
 using namespace std;
 
-template <typename T1,typename T2>
-class Servicios{
+template <typename T1, typename T2>
+class Servicios {
 private:
 	T1 id_servicio;		//String
 	T2 saldo;			//Double
@@ -27,20 +27,17 @@ private:
 	}
 
 public:
-	Servicios(T1 n_cuenta, T1 t, T1 f_a) : num_cuenta(n_cuenta), titular(t), fecha_apertura(f_a){
+	Servicios(T1 n_cuenta, T1 t, T1 f_a) : num_cuenta(n_cuenta), titular(t), fecha_apertura(f_a), saldo(0.0) {
 		id_servicio = generarIDServicio();
-		if (saldo == 0.0) {
-			saldo = 0.0;
-		}
 		historialTransacciones = new ListaEnlazada<Transaccion<string, double>>();
 	}
 
 	//getters
-	T1 getIdServicio() { return id_servicio; }
-	T2 getSaldo() { return saldo; }
-	T1 getNumCuenta() { return num_cuenta; }
-	T1 getTitular() { return titular; }
-	T1 getFechaApertura() { return fecha_apertura; }
+	T1 getIdServicio() const { return id_servicio; }
+	T2 getSaldo() const { return saldo; }
+	T1 getNumCuenta() const { return num_cuenta; }
+	T1 getTitular() const { return titular; }
+	T1 getFechaApertura() const { return fecha_apertura; }
 	//setters
 	void setSaldo(T2 s) { saldo = s; }
 	void setTitular(T1 t) { titular = t; }
@@ -48,7 +45,7 @@ public:
 
 	void agrearTransaccion(const Transaccion<string, double>& transaccion) {
 		historialTransacciones->agregarFinal(transaccion);
-		cout << "Transacción agregada al historial: " << transaccion.getTipo()<< " - $" << transaccion.getMonto() << endl;
+		cout << "Transacciï¿½n agregada al historial: " << transaccion.getTipo() << " - $" << transaccion.getMonto() << endl;
 		if (transaccion.esCompletada()) actualizarSaldo(transaccion);
 
 	}
@@ -110,7 +107,7 @@ public:
 		while (actual != nullptr) {
 			auto& t = actual->getDatoref();
 			t.mostrarInfo();
-			actual = actual->siguiente; 
+			actual = actual->siguiente;
 		};
 		cout << "\n=== FIN DEL HISTORIAL ===\n";
 	}

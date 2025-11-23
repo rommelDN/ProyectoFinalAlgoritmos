@@ -57,7 +57,7 @@ private:
 public:
 	HashTable(int size = 10) :TABLE_SIZE(size), numElementos(0) {
 		table = new HashEntidad<T>*[TABLE_SIZE];
-		for (int i = 0;i < TABLE_SIZE;i++) table[i] = nullptr;
+		for (int i = 0; i < TABLE_SIZE; i++) table[i] = nullptr;
 	}
 	~HashTable() {
 		for (int i = 0; i < TABLE_SIZE; i++) {
@@ -119,11 +119,27 @@ public:
 				cout << "[" << i << "] ---\n";
 			else if (table[i] == TOMBSTONE)
 				cout << "[" << i << "] <TOMBSTONE>\n";
-			else
-				cout << "[" << i << "] " << table[i]->getKey()
-				<< " -> " << table[i]->getValue() << "\n";
+			else {
+				cout << "[" << i << "] Key: " << table[i]->getKey() << "\n";
+				// Llamar a mostrarInfo() si el objeto lo tiene
+				mostrarValor(table[i]->getValue());
+			}
 		}
 	}
+
+private:
+	// Método auxiliar para mostrar valores
+	template<typename U>
+	auto mostrarValor(const U& valor) const -> decltype(valor.mostrarInfo(), void()) {
+		valor.mostrarInfo();
+	}
+
+	// Sobrecarga para tipos básicos
+	void mostrarValor(...) const {
+		cout << "  [Objeto almacenado]\n";
+	}
+
+public:
 
 	ListaEnlazada<T> toListaEnlazada() const {
 		ListaEnlazada<T> lista;
@@ -196,4 +212,3 @@ public:
 
 template<typename T>
 HashEntidad<T>* HashTable<T>::TOMBSTONE = (HashEntidad<T>*) - 1;
-
