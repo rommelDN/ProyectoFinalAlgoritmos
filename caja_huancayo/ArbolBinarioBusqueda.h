@@ -4,27 +4,34 @@
 #include<vector>
 #include<algorithm>
 #include<functional>
+using namespace std;
 
 template<class T>
-class Nodo {
+class NodoBST {
 public:
 	T elemento;
-	Nodo* izq;
-	Nodo* der;
+	NodoBST* izq;
+	NodoBST* der;
+
+	NodoBST() : izq(nullptr), der(nullptr) {};
+	NodoBST(T e) : elemento(e), izq(nullptr), der(nullptr) {};
 };
 
 template<class T>
 class ArbolBB {
 	typedef function<int(T, T)>Comp;
-	Nodo<T>* raiz;
+	NodoBST<T>* raiz;
 	void(*procesar)(T);
 	Comp comparar;
+
+	function<int(const T&)> extractor;
+
 private:
 	bool _vacio() { return raiz == nullptr; };
-	bool _insertar(Nodo<T>*& nodo, T e) {
+	bool _insertar(NodoBST<T>*& nodo, T e) {
 		if (nodo == nullptr) {
-			nodo = new Nodo<T>();
-			nodo->elemento = e;
+			nodo = new NodoBST<T>(e);
+			//nodo->elemento = e;
 			return true;
 		}
 		else {
@@ -34,16 +41,16 @@ private:
 			else return _insertar(nodo->izq, e);
 		}
 	}
-	bool _buscar(Nodo<T>* nodo, T e) {
+	bool _buscar(NodoBST<T>* nodo, T e) {
 		if (nodo == nullptr)return false;
 		else {
 			int r = comparar(nodo->elemento, e);
-			if (r == 0)return nodo->elemento;
+			if (r == 0)return true;
 			else if (r < 0)return _buscar(nodo->der, e);
 			else return _buscar(nodo->izq, e);
 		}
 	}
-	bool _eliminar(Nodo<T>*& nodo, T e) {
+	bool _eliminar(NodoBST<T>*& nodo, T e) {
 		if (nodo == nullptr)return false;
 		else {
 			int r = comparar(nodo->elemento, e);
@@ -56,19 +63,19 @@ private:
 					return true;
 				}
 				else if (nodo->izq == nullptr) {
-					Nodo<T>* temp = nodo;
+					NodoBST<T>* temp = nodo;
 					nodo = temp->der;
 					delete temp;
 					return true;
 				}
 				else if (nodo->der == nullptr) {
-					Nodo<T>* temp = nodo;
+					NodoBST<T>* temp = nodo;
 					nodo = temp->izq;
 					delete temp;
 					return true;
 				}
 				else {
-					Nodo<T>* aux = nodo->der;
+					NodoBST<T>* aux = nodo->der;
 					while (aux->izq != nullptr) {
 						aux = aux->izq;
 					}
@@ -79,7 +86,7 @@ private:
 			}
 		}
 	}
-	Nodo<T>* _obtener(Nodo<T>* nodo, T e) {
+	NodoBST<T>* _obtener(NodoBST<T>* nodo, T e) {
 		if (nodo == nullptr)return nullptr;
 		else {
 			int r = comparar(nodo->elemento, e);
@@ -89,7 +96,7 @@ private:
 		}
 
 	}
-	int _cantidad(Nodo<T>* nodo) {
+	int _cantidad(NodoBST<T>* nodo) {
 		if (nodo == nullptr)return 0;
 		else {
 			int ci, cd;
@@ -98,7 +105,7 @@ private:
 			return 1 + ci + cd;
 		}
 	}
-	int _altura(Nodo<T>* nodo) {
+	int _altura(NodoBST<T>* nodo) {
 		if (nodo == nullptr)return 0;
 		else {
 			int ai, ad;
@@ -107,54 +114,56 @@ private:
 			return ai > ad ? ai : ad;
 		}
 	}
-	int _minimo(Nodo<T>* nodo) {
+	T _minimo(NodoBST<T>* nodo) {
 		if (nodo->izq == nullptr)nodo->elemento;
 		else return _minimo(nodo->izq);
 	}
-	int _maximo(Nodo<T>* nodo) {
-		if (nodo->der == nullptr)return nodo->elemento;
+	T _maximo(NodoBST<T>* nodo) {
+		if (nodo->der == nullptr) nodo->elemento;
 		else return _maximo(nodo->der);
 	}
-	void _enOrden(Nodo<T>* nodo) {
+	void _enOrden(NodoBST<T>* nodo) {
 		if (nodo == nullptr)return;
 		_enOrden(nodo->izq);
 		procesar(nodo->elemento);
 		_enOrden(nodo->der);
 	}
-	void _preOrden(Nodo<T>* nodo) {
+	void _preOrden(NodoBST<T>* nodo) {
 		if (nodo == nullptr)return;
 		procesar(nodo->elemento);
 		_preOrden(nodo->izq);
 		_preOrden(nodo->der);
 	}
-	void _postOrden(Nodo<T>* nodo) {
+	void _postOrden(NodoBST<T>* nodo) {
 		if (nodo == nullptr)return;
 		_postOrden(nodo->izq);
 		_postOrden(nodo->der);
 		procesar(nodo->elemento);
 	}
-	int _sumarSubArbolIzq(Nodo<T*>nodo) {
+	int _sumarSubArbolIzq(NodoBST<T>* nodo) {
 		if (nodo == nullptr)return 0;
-		return nodo->elemento + _sumarSubArbolIzq(nodo->izq) + _sumarSubArbolIzq(nodo->der);
+		return extractor(nodo->elemento)+ _sumarSubArbolIzq(nodo->izq)+ _sumarSubArbolIzq(nodo->der);
 	}
-	int _sumarHojas(Nodo<T>* nodo) {
+	int _sumarHojas(NodoBST<T>* nodo) {
 		if (nodo == nullptr)return 0;
 		if (nodo->der == nullptr && nodo->der == nullptr) {
-			return nodo->elemento;
+			return extractor(nodo->elemento);
 		}
 		return _sumarHojas(nodo->izq) + _sumarHojas(nodo->der);
 	}
-	void _mostrarArbol(Nodo<T>*& nodo, int nivel = 0) {
+	void _mostrarArbol(NodoBST<T>*& nodo, int nivel = 0) {
 		if (nodo == nullptr)return;
 		_mostrarArbol(nodo->der, nivel + 1);
-		for (int i = 0;i < nivel;i++)cout << "  ";
-		cout << nodo->elemento << endl;
+		for (int i = 0; i < nivel; i++) cout << "  ";
+		cout << extractor(nodo->elemento) << endl;
 		_mostrarArbol(nodo->izq, nivel + 1);
 	}
 public:
-	ArbolBB(void(*otroPunteroFuncion)(T)) {
+	ArbolBB(void(*otroPunteroFuncion)(T),Comp comparadorExterno, function<int(const T&)> extraExt) {
 		this->procesar = otroPunteroFuncion;
-		this->comparar = [](T a, T b) {return a - b;};
+		//this->comparar = [](T a, T b) {return a - b;};
+		this->comparar = comparadorExterno;
+		this->extractor = extraExt;
 		raiz = nullptr;
 	}
 	bool insertar(T e) {
@@ -178,7 +187,7 @@ public:
 	bool Buscar(T e) {
 		return _buscar(raiz, e);
 	}
-	Nodo<T>* Obtener(T e) {
+	NodoBST<T>* Obtener(T e) {
 		return _obtener(raiz, e);
 	}
 	T Minimo() {

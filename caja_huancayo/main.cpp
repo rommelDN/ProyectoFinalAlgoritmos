@@ -10,6 +10,9 @@
 #include "MergeSort.h"
 #include "QuickSort.h"
 #include "QuickSelect.h"
+//ESTRUCTURAS DE DATOS - ARBOLES
+#include "ArbolBinarioBusqueda.h"
+//DATASET GENERATOR
 #include "DataSetGenerator.h"
 //CLASSES
 #include "Cliente.h"
@@ -148,7 +151,9 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 		cout << "7. Ordenar Cuentas (QuickSort)" << endl;
 		cout << "8. Generar Data Set " << endl;
 		cout << "9. Calcular Intereses " << endl;
-		cout << "10. Volver al Menu Principal" << endl;
+		cout << "10. Usar Arbol Binario De Busqueda " << endl;
+		cout << "11. Usar Arbol Binario Valanceado " << endl;
+		cout << "12. Volver al Menu Principal" << endl;
 		cout << "Seleccione una opcion: ";
 		cin >> opcion;
 		limpiarBuffer();
@@ -212,32 +217,6 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 			pausar();
 			break;
 		};
-			  /*case 4: {
-				  cout << "\n--- Depositar A Cuenta ---" << endl;
-				  string numCuenta;
-				  double monto;
-				  cout << "Ingrese Numero de Cuenta: ";
-				  getline(cin, numCuenta);
-				  Cuenta<string, double>* cuenta = tablaCuentas.buscar(numCuenta);
-				  Servicios<string, double>* servicio = tablaDeServicios.buscar(numCuenta);
-				  if (cuenta == nullptr) {
-					  cout << "Error: No se encontro la cuenta con el numero proporcionado." << endl;
-					  pausar();
-					  break;
-				  }
-				  cout << "Ingrese Monto a Depositar: ";
-				  cin >> monto;
-				  limpiarBuffer();
-				  double saldoAnterior = servicio->getSaldo();
-				  cuenta->depositar(monto);
-				  if (cuenta->getSaldo() != saldoAnterior) {
-					  servicio->setSaldo(saldoAnterior + monto);
-					  cout << "Saldo actualizado en el sistema." << endl;
-				  }
-				  delete cuenta;
-				  pausar();
-				  break;
-			  }*/
 		case 4: {
 			cout << "\n--- Depositar A Cuenta ---" << endl;
 			string numCuenta;
@@ -268,7 +247,6 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 			pausar();
 			break;
 		}
-
 		case 5: {
 			cout << "\n--- Retirar A Cuenta ---" << endl;
 			pausar();
@@ -339,7 +317,6 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 			pausar();
 			break;
 		};
-
 		case 9:
 		{
 			cout << "\n--- Calcular Intereses ---" << endl;
@@ -362,14 +339,92 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 			break;
 
 		};
-		case 10:
+		case 10: {
+
+			cout << "\n--- Construyendo BST con ahorroObjetivo ---\n";
+
+			auto cuentas = tablaCuentas.toVector();
+			if (cuentas.empty()) {
+				cout << "No hay cuentas registradas.\n";
+				pausar();
+				break;
+			}
+
+			// Procesador: qué hacer al imprimir en un recorrido
+			auto procesarAhorro = [](int ahorro) {
+				cout << "Ahorro objetivo (int): " << ahorro << endl;
+				};
+
+			// Comparador para ints
+			auto compararAhorro = [](int a, int b) {
+				if (a < b) return -1;
+				if (a > b) return  1;
+				return 0;
+				};
+
+			// NO usamos extractor porque insertamos ints directamente
+			ArbolBB<int> arbolAhorros(
+				procesarAhorro,
+				compararAhorro,
+				[](const int& x) { return x; }   // extractor trivial
+			);
+
+			// Insertamos en el BST SOLO el ahorro objetivo convertido a int
+			for (auto& cuenta : cuentas) {
+				double ahorroDouble = cuenta.getAhorroObjetivo();
+				int ahorroEntero = static_cast<int>(ahorroDouble);
+				arbolAhorros.insertar(ahorroEntero);
+			}
+
+			cout << "\n--- Ahorros objetivo ORDENADOS (InOrden) ---\n";
+			arbolAhorros.enOrden();
+
+			cout << "\n\n--- Estructura del BST ---\n";
+			arbolAhorros.mostrar();
+
+			pausar();
+			break;
+		}
+
+
+
+		/*case 10: {
+			cout << "\n--- Construyendo BST con las cuentas ---\n";
+			auto cuentas = tablaCuentas.toVector();
+			if (cuentas.empty()) {
+				cout << "No hay cuentas registradas.\n";
+				pausar();
+				break;
+			};
+			auto procesarCuenta = [](Cuenta<string, double> c) {
+				c.mostrar();
+				};
+			auto compararCuenta = [](Cuenta<string, double> a, Cuenta<string, double> b) {
+				return a.getNumCuenta().compare(b.getNumCuenta());
+				};
+			ArbolBB<Cuenta<string, double>> arbolCuentas(
+				procesarCuenta,
+				compararCuenta
+			);
+			for (auto& cuenta : cuentas) {
+				arbolCuentas.insertar(cuenta);
+			}
+			cout << "\n--- Cuentas ordenadas (InOrden) ---\n";
+			arbolCuentas.enOrden();
+			cout << "\n--- Estructura del árbol ---\n";
+			arbolCuentas.mostrar();
+			pausar();
+			break;
+		};*/
+
+		case 12:
 			cout << "Volviendo al menu principal..." << endl;
 			break;
 		default:
 			break;
 		}
 
-	} while (opcion != 10);
+	} while (opcion != 12);
 
 }
 
@@ -1472,6 +1527,7 @@ void menuCreditos(vector<Credito<string, double>*>& listaCreditos, HashTable<Cli
 	} while (opcion != 5);
 }
 
+
 int main() {
 	// Estructuras de Datos Principales
 	ListaEnlazada<Cliente<string>> listaClientes;
@@ -1534,7 +1590,7 @@ int main() {
 			menuTrasacciones(listaTransacciones, tablaDeServicios);
 			break;
 		case 9:
-			cout << "\n�Gracias por usar el Sistema Bancario! Hasta pronto." << endl;
+			cout << "\nGracias por usar el Sistema Bancario! Hasta pronto." << endl;
 			for (auto c : listaCreditos) delete c;
 			break;
 		default:

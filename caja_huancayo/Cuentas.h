@@ -230,8 +230,6 @@ public:
 
 
 
-
-
 	// Sobrecarga del operador << para poder imprimir
 	friend ostream& operator<<(ostream& os, const Cuenta& e) {
 		os << e.getIdCuenta() << "(" << " Tipo Cuenta " << e.getTipoCuenta() << "| Tasa de Interes: " << e.getTasaInteres() << " | Limite x Retiro: " << e.getLimiteRetiro()<< ")";

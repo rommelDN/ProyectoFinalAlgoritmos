@@ -58,6 +58,9 @@
     <Filter Include="Archivos de encabezado\DataSetGenerator">
       <UniqueIdentifier>{487684e4-5f45-4175-b600-fcd6471a3d6c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\Grafos">
+      <UniqueIdentifier>{c6f2561d-e448-419e-ac10-8c73060a818f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
