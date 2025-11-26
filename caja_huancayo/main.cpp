@@ -12,6 +12,7 @@
 #include "QuickSelect.h"
 //ESTRUCTURAS DE DATOS - ARBOLES
 #include "ArbolBinarioBusqueda.h"
+#include "ArbolBinarioVL.h"
 //DATASET GENERATOR
 #include "DataSetGenerator.h"
 //CLASSES
@@ -151,9 +152,8 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 		cout << "7. Ordenar Cuentas (QuickSort)" << endl;
 		cout << "8. Generar Data Set " << endl;
 		cout << "9. Calcular Intereses " << endl;
-		cout << "10. Usar Arbol Binario De Busqueda " << endl;
-		cout << "11. Usar Arbol Binario Valanceado " << endl;
-		cout << "12. Volver al Menu Principal" << endl;
+		cout << "10. Usar Arbol Binario (EnOrden - Ahorro Objetivo) " << endl;
+		cout << "11. Volver al Menu Principal" << endl;
 		cout << "Seleccione una opcion: ";
 		cin >> opcion;
 		limpiarBuffer();
@@ -385,46 +385,14 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 			pausar();
 			break;
 		}
-
-
-
-		/*case 10: {
-			cout << "\n--- Construyendo BST con las cuentas ---\n";
-			auto cuentas = tablaCuentas.toVector();
-			if (cuentas.empty()) {
-				cout << "No hay cuentas registradas.\n";
-				pausar();
-				break;
-			};
-			auto procesarCuenta = [](Cuenta<string, double> c) {
-				c.mostrar();
-				};
-			auto compararCuenta = [](Cuenta<string, double> a, Cuenta<string, double> b) {
-				return a.getNumCuenta().compare(b.getNumCuenta());
-				};
-			ArbolBB<Cuenta<string, double>> arbolCuentas(
-				procesarCuenta,
-				compararCuenta
-			);
-			for (auto& cuenta : cuentas) {
-				arbolCuentas.insertar(cuenta);
-			}
-			cout << "\n--- Cuentas ordenadas (InOrden) ---\n";
-			arbolCuentas.enOrden();
-			cout << "\n--- Estructura del árbol ---\n";
-			arbolCuentas.mostrar();
-			pausar();
-			break;
-		};*/
-
-		case 12:
+		case 11:
 			cout << "Volviendo al menu principal..." << endl;
 			break;
 		default:
 			break;
 		}
 
-	} while (opcion != 12);
+	} while (opcion != 11);
 
 }
 
@@ -439,11 +407,12 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros, HashTable<Ser
 		cout << "5. Ordenar Seguros (QuickSort)" << endl;
 		cout << "6. Buscar Seguro por Numero de Cuenta" << endl;
 		cout << "7. Crear Reclamo " << endl;
-		cout << "8. Evaluar Cola de Reclamos " << endl;
+		cout << "8. Procesar Cola de Reclamos " << endl;
 		cout << "9. Mostrar Cola de Reclamos " << endl;
-		cout << "10. Mostrar PIla de Reclamos " << endl;
+		cout << "10. Mostrar Historial de Reclamos " << endl;
 		cout << "11. Generar Data Set " << endl;
-		cout << "12. Volver al Menu Principal" << endl;
+		cout << "12. Usa AVL" << endl;
+		cout << "13. Volver al Menu Principal" << endl;
 		cin >> opcion;
 		limpiarBuffer();
 
@@ -702,14 +671,73 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros, HashTable<Ser
 			break;
 		};
 
-		case 12:
+		case 12: {
+			cout << "\n--- Construyendo AVL con números de cuenta (Seguros) ---\n";
+
+			auto seguros = tablaSeguros.toVector();
+			if (seguros.empty()) {
+				cout << "No hay seguros registrados.\n";
+				pausar();
+				break;
+			}
+
+			auto procesarCuenta = [](string cuenta) {
+				cout << "Cuenta asociada al seguro: " << cuenta << endl;
+				};
+
+			auto compararCuentas = [](string a, string b) {
+				return a.compare(b);  // devuelve -1, 0, 1
+				};
+
+			ArbolAVL<string> arbolSeguros(
+				procesarCuenta,
+				compararCuentas
+			);
+
+			for (auto& seg : seguros) {
+				arbolSeguros.insertar(seg.getNumCuenta());
+			}
+
+			cout << "\n--- Numeros de cuenta ORDENADOS (InOrden) ---\n";
+			arbolSeguros.enOrden();
+
+			cout << "\n--- Estructura del AVL ---\n";
+			arbolSeguros.mostrar();
+
+			// --- BÚSQUEDA ---
+			cout << "\nIngrese numero de cuenta del seguro a buscar: ";
+			string cuentaBuscada;
+			getline(cin, cuentaBuscada);
+
+			if (arbolSeguros.Buscar(cuentaBuscada)) {
+				cout << "\nNumero de cuenta encontrado en el arbol AVL.\n";
+
+				Seguros<string, double>* seguro = tablaSeguros.buscar(cuentaBuscada);
+				if (seguro != nullptr) {
+					cout << "\n--- Seguro encontrado ---\n";
+					seguro->mostrar();
+				}
+				else {
+					cout << "El AVL tenia el numero, pero el HashTable no encontro el seguro.\n";
+				}
+			}
+			else {
+				cout << "\n No existe un seguro asociado a ese número de cuenta.\n";
+			}
+
+			pausar();
+			break;
+		}
+
+
+		case 13:
 			cout << "Volviendo al menu principal..." << endl;
 			break;
 		default:
 			break;
 		}
 
-	} while (opcion != 12);
+	} while (opcion != 13);
 };
 
 void menuServiciosContratados(
