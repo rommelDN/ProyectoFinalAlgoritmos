@@ -158,5 +158,11 @@
     <ClInclude Include="DataSetGenerator.h">
       <Filter>Archivos de encabezado\DataSetGenerator</Filter>
     </ClInclude>
+    <ClInclude Include="Diseno.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="GrafoBeneficiaro.h">
+      <Filter>Archivos de encabezado\Seguros</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

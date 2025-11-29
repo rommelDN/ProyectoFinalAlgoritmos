@@ -140,6 +140,8 @@
     <ClInclude Include="CreditoVivienda.h" />
     <ClInclude Include="Cuentas.h" />
     <ClInclude Include="DataSetGenerator.h" />
+    <ClInclude Include="Diseno.h" />
+    <ClInclude Include="GrafoBeneficiaro.h" />
     <ClInclude Include="HashTable.h" />
     <ClInclude Include="ListaEnlazada.h" />
     <ClInclude Include="MergeSort.h" />

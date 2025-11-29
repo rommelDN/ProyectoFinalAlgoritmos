@@ -39,7 +39,16 @@ void pausar() {
 	cout << "\nPresione Enter para continuar...";
 	limpiarBuffer();
 }
+
+void limpiarConsola() {
+	system("cls");
+}
+
 void dibujarMenu();
+
+void dibujarMenuCuentas();
+void dibujarMenuSeguros();
+void dibujarMenuTransaccion();
 
 void mostrarMenu() {
 	
@@ -141,6 +150,8 @@ void menuClientes(HashTable<Cliente<string>>& tablaClientes) {
 };
 
 void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Servicios<string, double>>& tablaDeServicios) {
+	dibujarMenuCuentas();
+	gotoxy(5, 10);
 	int opcion;
 	do {
 		cout << "\n=== GESTION DE CUENTAS ===" << endl;
@@ -156,6 +167,7 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 		cout << "10. Volver al Menu Principal" << endl;
 		cout << "Seleccione una opcion: ";
 		cin >> opcion;
+		system("cls");
 		limpiarBuffer();
 
 		switch (opcion)
@@ -190,13 +202,17 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 				cout << "Error al crear cuenta: " << e.what() << endl;
 			}
 			pausar();
+			system("cls");
 			break;
+			
 		};
 		case 2: {
 			cout << "\n--- Tabla de Cuentas ---" << endl;
 			tablaCuentas.mostrar();
 			pausar();
+			system("cls");
 			break;
+			
 
 		};
 		case 3: {
@@ -378,7 +394,363 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 
 }
 
-void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros, HashTable<Servicios<string, double>>& tablaDeServicios, HashTable<Cliente<string>>& tablaClientes) {
+void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
+	HashTable<Servicios<string, double>>& tablaDeServicios,
+	HashTable<Cliente<string>>& tablaClientes) {
+	int opcion;
+	do {
+		cout << "\n=== GESTION DE SEGUROS ===" << endl;
+		cout << "1. Crear Seguro" << endl;
+		cout << "2. Mostrar Seguro" << endl;
+		cout << "3. Ingresar Asegurados" << endl;
+		cout << "4. Ordenar Seguros (MergeSort)" << endl;
+		cout << "5. Ordenar Seguros (QuickSort)" << endl;
+		cout << "6. Buscar Seguro por Numero de Cuenta" << endl;
+		cout << "7. Crear Reclamo" << endl;
+		cout << "8. Evaluar Cola de Reclamos" << endl;
+		cout << "9. Mostrar Cola de Reclamos" << endl;
+		cout << "10. Mostrar Pila de Reclamos" << endl;
+		cout << "11. Generar Data Set" << endl;
+		cout << "13. Crear Relacion entre Beneficiarios" << endl;
+		cout << "14. Mostrar Red de Beneficiarios (Grafo)" << endl;
+		cout << "12. Volver al Menu Principal" << endl;
+		cout << "Opcion: ";
+		cin >> opcion;
+		limpiarBuffer();
+
+		switch (opcion)
+		{
+		case 1: {
+			string dni, n_cuenta, t, f_a, t_seguro;
+			double meses_cov, prima_mensual, monto_cov;
+			cout << "\n--- Crear Nuevo Seguro ---" << endl;
+			cout << "DNI del Cliente: ";
+			getline(cin, dni);
+			Cliente<string>* cliente = tablaClientes.buscar(dni);
+			if (cliente == nullptr) {
+				cout << "ERROR: Cliente no encontrado.\n";
+				break;
+			}
+			cout << "Cliente encontrado: INGRESE DATOS DE SEGURO" << endl;
+			cout << "Numero de Cuenta: ";
+			getline(cin, n_cuenta);
+			cout << "Titular: ";
+			getline(cin, t);
+			cout << "Fecha (dd/mm/aaaa): ";
+			getline(cin, f_a);
+			cout << "Tipo de Seguro: ";
+			getline(cin, t_seguro);
+			cout << "Prima Mensual: ";
+			cin >> prima_mensual;
+			cout << "Meses De Covertura: ";
+			cin >> meses_cov;
+			cout << "Monto De Covertura: ";
+			cin >> monto_cov;
+			limpiarBuffer();
+			try {
+				Seguros<string, double>::setTablaServiciosGlobal(tablaDeServicios);
+				Seguros<string, double> nuevoSeguro(n_cuenta, t, f_a, t_seguro, meses_cov, prima_mensual, monto_cov);
+				tablaSeguros.insertar(nuevoSeguro.getNumCuenta(), nuevoSeguro);
+				cout << "Seguro creado exitosamente." << endl;
+				cout << "ID Cuenta: " << nuevoSeguro.getIdSeguro() << endl;
+			}
+			catch (const exception& e) {
+				cout << "Error al crear seguro: " << e.what() << endl;
+			}
+			pausar();
+			break;
+		}
+
+		case 2: {
+			cout << "\n--- Tabla de Cuentas ---" << endl;
+			tablaSeguros.mostrar();
+			pausar();
+			break;
+		}
+
+		case 3: {
+			// MODIFICADO: Ahora usa crearBeneficiarioConGrafo
+			string dni, nombre, relacion, num_cuenta;
+			double porcentaje;
+			cout << "\n--- Ingresar Asegurados ---" << endl;
+			cout << "DNI del Cliente: ";
+			getline(cin, dni);
+			Cliente<string>* cliente = tablaClientes.buscar(dni);
+			if (cliente == nullptr) {
+				cout << "ERROR: Cliente no encontrado.\n";
+				break;
+			}
+			cout << "Cliente encontrado: INGRESE DATOS DE ASEGURADOS" << endl;
+			cout << "Ingrese el numero de cuenta: ";
+			getline(cin, num_cuenta);
+			Seguros<string, double>* seguro = tablaSeguros.buscar(num_cuenta);
+			if (seguro == nullptr) {
+				cout << "ERROR: Seguro no encontrado.\n";
+				break;
+			}
+			cout << "Nombre del Beneficiario: ";
+			getline(cin, nombre);
+			cout << "Relacion con el Beneficiario: ";
+			getline(cin, relacion);
+			cout << "Porcentaje de Participacion: ";
+			cin >> porcentaje;
+			limpiarBuffer();
+			try {
+				// CAMBIO AQUÍ: Usa el nuevo método que integra el grafo
+				seguro->crearBeneficiarioConGrafo(seguro, cliente, nombre, relacion, porcentaje);
+			}
+			catch (const exception& e) {
+				cout << "Error al Ingresar Asegurado: " << e.what() << endl;
+			}
+			pausar();
+			break;
+		}
+
+		case 4: {
+			cout << "\n--- Ordenar Seguros ( Convirtiendo HASH TABLE - VECTOR ) ---" << endl;
+			auto listas = tablaSeguros.toVector();
+			if (listas.empty()) {
+				cout << "No hay Seguros para ordenar.\n";
+				pausar();
+				break;
+			}
+			auto criterio = [](const Seguros<string, double>& a,
+				const Seguros<string, double>& b) {
+					return a.getIdSeguro() < b.getIdSeguro();
+				};
+			mergeSort(listas, 0, (int)listas.size() - 1, criterio);
+			cout << "\n--- Cuentas Ordenadas ---\n";
+			for (auto& l : listas) {
+				l.mostrarInfo();
+				cout << "------------------\n";
+			}
+			pausar();
+			break;
+		}
+
+		case 5: {
+			cout << "\n--- Ordenar Seguros ( Convirtiendo HASH TABLE - VECTOR ) ---" << endl;
+			auto listas = tablaSeguros.toVector();
+			if (listas.empty()) {
+				cout << "No hay Seguros para ordenar.\n";
+				pausar();
+				break;
+			}
+			auto criterio = [](const Seguros<string, double>& a,
+				const Seguros<string, double>& b) {
+					return a.getMesesCobertura() < b.getMesesCobertura();
+				};
+			quicksort(listas, 0, (int)listas.size() - 1, criterio);
+			cout << "\n--- Cuentas Ordenadas x Meses De Cobertura---\n";
+			for (auto& l : listas) {
+				l.mostrarInfo();
+				cout << "------------------\n";
+			}
+			pausar();
+			break;
+		}
+
+		case 6: {
+			string numCuenta;
+			cout << "\n--- Buscar Seguro por Numero ---" << endl;
+			cout << "Ingrese Numero de Cuenta: ";
+			getline(cin, numCuenta);
+			cout << "Buscando cuenta..." << endl;
+			Seguros<string, double>* seguros = tablaSeguros.buscar(numCuenta);
+			if (seguros != nullptr) {
+				cout << "Cliente encontrado:\n";
+				seguros->mostrar();
+			}
+			else {
+				cout << "Error: No se encontro el cliente con el DNI proporcionado." << endl;
+			}
+			pausar();
+			break;
+		}
+
+		case 7: {
+			cout << "\n--- Crear Reclamo ---" << endl;
+			string id_seguro, id_cliente, descripcion, fecha, num_cuenta, dni;
+			double monto;
+			cout << "Ingrese Numero del Seguro: ";
+			getline(cin, num_cuenta);
+			Seguros<string, double>* seguro = tablaSeguros.buscar(num_cuenta);
+			if (seguro == nullptr) {
+				cout << "ERROR: Seguro no encontrado.\n";
+				break;
+			}
+			cout << "Ingrese DNI del Cliente: ";
+			getline(cin, dni);
+			Cliente<string>* cliente = tablaClientes.buscar(dni);
+			if (cliente == nullptr) {
+				cout << "ERROR: Cliente no encontrado.\n";
+				break;
+			}
+			cout << "Ingrese Descripcion del Reclamo: ";
+			getline(cin, descripcion);
+			cout << "Ingrese Monto del Reclamo: ";
+			cin >> monto;
+			limpiarBuffer();
+			cout << "Ingrese Fecha del Reclamo (dd/mm/aaaa): ";
+			getline(cin, fecha);
+			try {
+				seguro->crearReclamo(seguro->getIdSeguro(), cliente->getID(), descripcion, fecha, monto);
+				cout << "Reclamo creado con exito.\n";
+			}
+			catch (const exception& e) {
+				cout << "Error al crear reclamo: " << e.what() << endl;
+			}
+			pausar();
+			break;
+		}
+
+		case 8: {
+			cout << "\n--- Procesar Reclamos ---" << endl;
+			string num_cuenta;
+			cout << "Ingrese Numero del Seguro: ";
+			getline(cin, num_cuenta);
+			Seguros<string, double>* seguro = tablaSeguros.buscar(num_cuenta);
+			if (seguro == nullptr) {
+				cout << "ERROR: Seguro no encontrado.\n";
+				break;
+			}
+			bool procesado = seguro->procesarReclamosEncolados();
+			if (!procesado)
+				cout << "No hay reclamos pendientes.\n";
+			else
+				cout << "Procesamiento finalizado.\n";
+			pausar();
+			break;
+		}
+
+		case 9: {
+			cout << "\n--- Mostrar Cola De Reclamos ---" << endl;
+			string num_cuenta;
+			cout << "Ingrese Numero del Seguro: ";
+			getline(cin, num_cuenta);
+			Seguros<string, double>* seguro = tablaSeguros.buscar(num_cuenta);
+			if (seguro == nullptr) {
+				cout << "ERROR: Seguro no encontrado.\n";
+				break;
+			}
+			seguro->mostrarColaReclamos();
+			pausar();
+			break;
+		}
+
+		case 10: {
+			cout << "\n--- Mostrar Historial de Reclamos ---" << endl;
+			string num_cuenta;
+			cout << "Ingrese Numero del Seguro: ";
+			getline(cin, num_cuenta);
+			Seguros<string, double>* seguro = tablaSeguros.buscar(num_cuenta);
+			if (seguro == nullptr) {
+				cout << "ERROR: Seguro no encontrado.\n";
+				break;
+			}
+			seguro->mostrarHistorialReclamos();
+			pausar();
+			break;
+		}
+
+		case 11: {
+			cout << "\n--- Data Set ---" << endl;
+			vector<string> columnas = { "ID", "Tipo Seguro", "Monto Covertura" };
+			vector<DataSetGenerator<Seguros<string, double>>::Extractor> extractores = {
+				[](const Seguros<string,double>& s) { return s.getIdSeguro(); },
+				[](const Seguros<string,double>& s) { return s.getTipoSeguro(); },
+				[](const Seguros<string,double>& s) { return to_string(s.getMontoCobertura()); }
+			};
+			DataSetGenerator<Seguros<string, double>>::listar(
+				columnas,
+				extractores,
+				tablaSeguros
+			);
+			pausar();
+			break;
+		}
+
+			   // ========== NUEVOS CASOS PARA EL GRAFO ==========
+
+		case 13: {
+			// Crear relación entre beneficiarios
+			cout << "\n--- Crear Relacion entre Beneficiarios ---" << endl;
+			string num_cuenta, dni;
+			cout << "Ingrese Numero del Seguro: ";
+			getline(cin, num_cuenta);
+			Seguros<string, double>* seguro = tablaSeguros.buscar(num_cuenta);
+			if (seguro == nullptr) {
+				cout << "ERROR: Seguro no encontrado.\n";
+				break;
+			}
+			cout << "DNI del Cliente: ";
+			getline(cin, dni);
+			Cliente<string>* cliente = tablaClientes.buscar(dni);
+			if (cliente == nullptr) {
+				cout << "ERROR: Cliente no encontrado.\n";
+				break;
+			}
+
+			string nombre_origen, nombre_destino, tipo_relacion;
+			double peso;
+
+			cout << "\n--- Beneficiario Origen ---" << endl;
+			cout << "Nombre del beneficiario origen: ";
+			getline(cin, nombre_origen);
+
+			cout << "\n--- Beneficiario Destino ---" << endl;
+			cout << "Nombre del beneficiario destino: ";
+			getline(cin, nombre_destino);
+
+			cout << "\nPeso de la relacion (porcentaje transferible): ";
+			cin >> peso;
+			limpiarBuffer();
+
+			cout << "Tipo de relacion (SUSTITUTO/DEPENDIENTE/FAMILIAR): ";
+			getline(cin, tipo_relacion);
+
+			try {
+				seguro->crearRelacionBeneficiarios(
+					nombre_origen, cliente->getID(),
+					nombre_destino, cliente->getID(),
+					peso, tipo_relacion
+				);
+			}
+			catch (const exception& e) {
+				cout << "Error: " << e.what() << endl;
+			}
+			pausar();
+			break;
+		}
+
+		case 14: {
+			// Mostrar red completa de beneficiarios
+			cout << "\n--- Red de Beneficiarios (Grafo) ---" << endl;
+			string num_cuenta;
+			cout << "Ingrese Numero del Seguro: ";
+			getline(cin, num_cuenta);
+			Seguros<string, double>* seguro = tablaSeguros.buscar(num_cuenta);
+			if (seguro == nullptr) {
+				cout << "ERROR: Seguro no encontrado.\n";
+				break;
+			}
+			seguro->mostrarRedBeneficiarios();
+			pausar();
+			break;
+		}
+
+		case 12:
+			cout << "Volviendo al menu principal..." << endl;
+			break;
+
+		default:
+			cout << "Opcion invalida. Intente de nuevo." << endl;
+			break;
+		}
+
+	} while (opcion != 12);
+}
+/*void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros, HashTable<Servicios<string, double>>& tablaDeServicios, HashTable<Cliente<string>>& tablaClientes) {
 	int opcion;
 	do {
 		cout << "\n=== GESTION DE SEGUROS ===" << endl;
@@ -661,7 +1033,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros, HashTable<Ser
 
 	} while (opcion != 12);
 };
-
+*/
 void menuServiciosContratados(
 	HashTable<ServicioContratado<string>>& tablaServiciosContratados,
 	HashTable<Cliente<string>>& tablaClientes,
@@ -1923,9 +2295,14 @@ int main() {
 			menuClientes(tablaClientes);
 			break;
 		case 2:
+			//dibujarMenuCuentas();
+			//gotoxy(5, 10);
 			menuCuentas(tablaCuentas, tablaDeServicios);
+			system("cls");
 			break;
 		case 3:
+			dibujarMenuSeguros();
+			gotoxy(5, 10);
 			menuSeguros(tablaSeguros, tablaDeServicios, tablaClientes);
 			break;
 		case 4:
@@ -1942,6 +2319,8 @@ int main() {
 			//menuReportes(listaClientes, listaCuentas, listaDeServicios, listaServiciosContratados);
 			break;*/
 		case 7:
+			dibujarMenuTransaccion();
+			gotoxy(5, 10);
 			menuTrasacciones(listaTransacciones, tablaDeServicios);
 			break;
 		case 8:
