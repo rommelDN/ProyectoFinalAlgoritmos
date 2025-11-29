@@ -156,4 +156,100 @@ public:
 		usarCredito(monto);
 	}
 
+	// ========================================
+	// HITO 2: METODOS MEJORADOS CON ARBOL Y GRAFO
+	// ========================================
+
+	// Transferir crédito a otra tarjeta (usa el grafo)
+	// Big O: O(log n)
+	void transferirCredito(string tarjetaDestino, double monto) {
+		if (monto > getCreditoDisponible()) {
+			cout << "ERROR: Credito insuficiente para la transferencia" << endl;
+			return;
+		}
+
+		// Usar el crédito disponible
+		usarCredito(monto);
+
+		// Registrar en el grafo
+		time_t now = time(0);
+		char buffer[26];
+#ifdef _WIN32
+		ctime_s(buffer, sizeof(buffer), &now);
+#else
+		ctime_r(&now, buffer);
+#endif
+		string fecha = buffer;
+		fecha = fecha.substr(0, fecha.length() - 1); // Quitar \n
+		this->registrarTransferencia(tarjetaDestino, monto, fecha);
+
+		cout << "Transferencia de credito completada exitosamente" << endl;
+	}
+
+	// Analizar red de transferencias de esta tarjeta (usa grafo BFS)
+	// Big O: O(V + E)
+	void analizarRedTransferencias() {
+		cout << "\n=== ANALISIS DE RED - TARJETA CREDITO " << this->getNumTarjeta() << " ===" << endl;
+
+		// Mostrar transferencias directas
+		this->mostrarMisTransferencias();
+
+		// Mostrar total enviado
+		double totalEnviado = this->calcularTotalEnviado();
+		if (totalEnviado > 0) {
+			cout << "\nTotal transferido: $" << totalEnviado << endl;
+
+			// Mostrar tarjetas alcanzables
+			cout << "\nTarjetas conectadas por transferencias:" << endl;
+			this->recorridoBFS(this->getNumTarjeta());
+		}
+	}
+
+	// Registrar tarjeta en árbol AVL
+	// Big O: O(log n)
+	void registrarEnArbol() {
+		this->insertarEnArbol();
+		cout << "Tarjeta de credito registrada en el arbol AVL" << endl;
+	}
+
+	// Buscar tarjetas similares en el árbol (por rango de números)
+	// Big O: O(log n)
+	static void buscarTarjetasSimilares(string numeroBase) {
+		cout << "\n=== BUSQUEDA EN ARBOL AVL ===" << endl;
+
+		if (Tarjetas<string>::buscarEnArbol(numeroBase)) {
+			cout << "Tarjeta " << numeroBase << " ENCONTRADA en el arbol" << endl;
+		}
+		else {
+			cout << "Tarjeta " << numeroBase << " NO encontrada" << endl;
+		}
+	}
+
+	// Lambda avanzada: Simular pagos automáticos
+	// Big O: O(k) donde k = número de cuotas
+	void simularPagosCuotas(int numCuotas) {
+		if (credito_utilizado <= 0) {
+			cout << "No hay deuda para simular pagos" << endl;
+			return;
+		}
+
+		cout << "\n=== SIMULACION DE PAGOS EN CUOTAS ===" << endl;
+
+		// Lambda que calcula cuota con interés
+		auto calcularCuota = [this](double deuda, int cuotas) -> double {
+			double tasaMensual = tasa_interes_mensual / 100.0;
+			double factor = pow(1 + tasaMensual, cuotas);
+			return deuda * (tasaMensual * factor) / (factor - 1);
+			};
+
+		double cuotaMensual = calcularCuota(credito_utilizado, numCuotas);
+		double totalAPagar = cuotaMensual * numCuotas;
+		double interesTotal = totalAPagar - credito_utilizado;
+
+		cout << "Deuda actual: $" << credito_utilizado << endl;
+		cout << "Numero de cuotas: " << numCuotas << endl;
+		cout << "Cuota mensual: $" << cuotaMensual << endl;
+		cout << "Total a pagar: $" << totalAPagar << endl;
+		cout << "Interes total: $" << interesTotal << endl;
+	}
 };
