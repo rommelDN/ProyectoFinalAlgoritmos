@@ -22,6 +22,8 @@ public:
 	const T& getValueRef() const { return valor; }
 
 	void setValueRef(const T& e) { valor = e; }
+
+
 };
 
 template<typename T>
@@ -126,7 +128,16 @@ public:
 			}
 		}
 	}
+	
+	// Getter para el número de elementos
+	int getNumElementos() const {
+		return numElementos;
+	}
 
+	// Si ya usas getTamanio() en otros lados, puedes llamarla así también:
+	int getTamanio() const {
+		return numElementos;
+	}
 private:
 	// Método auxiliar para mostrar valores
 	template<typename U>
