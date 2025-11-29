@@ -155,4 +155,130 @@ public:
 	void realizarTransaccion(double monto) override {
 		retirar(monto);
 	}
+
+	// ========================================
+	// HITO 2: METODOS MEJORADOS CON ARBOL Y GRAFO
+	// ========================================
+
+	// Transferir dinero a otra tarjeta (usa el grafo)
+	// Big O: O(log n)
+	void transferirDinero(string tarjetaDestino, double monto) {
+		if (monto > this->getSaldo()) {
+			cout << "ERROR: Saldo insuficiente para la transferencia" << endl;
+			return;
+		}
+		if (retirado_hoy + monto > limite_diario_retiro) {
+			cout << "ERROR: Excede limite diario. Disponible: $" << getLimiteDisponibleHoy() << endl;
+			return;
+		}
+
+		// Realizar el retiro
+		retirar(monto);
+
+		// Registrar en el grafo
+		time_t now = time(0);
+		char buffer[26];
+#ifdef _WIN32
+		ctime_s(buffer, sizeof(buffer), &now);
+#else
+		ctime_r(&now, buffer);
+#endif
+		string fecha = buffer;
+		fecha = fecha.substr(0, fecha.length() - 1); // Quitar \n
+		this->registrarTransferencia(tarjetaDestino, monto, fecha);
+
+		cout << "Transferencia completada exitosamente" << endl;
+	}
+
+	// Analizar patrones de retiro usando grafo
+	// Big O: O(V + E)
+	void analizarPatronesRetiro() {
+		cout << "\n=== ANALISIS DE PATRONES - TARJETA DEBITO " << this->getNumTarjeta() << " ===" << endl;
+
+		// Mostrar transferencias realizadas
+		this->mostrarMisTransferencias();
+
+		// Calcular total transferido
+		double totalTransferido = this->calcularTotalEnviado();
+		if (totalTransferido > 0) {
+			cout << "\nTotal transferido: $" << totalTransferido << endl;
+
+			// Lambda para calcular promedio
+			auto calcularPromedio = [totalTransferido](int numTransferencias) -> double {
+				return numTransferencias > 0 ? totalTransferido / numTransferencias : 0;
+				};
+
+			// Aquí podrías contar las transferencias desde el grafo
+			cout << "Monto promedio por transferencia: (ver grafo completo)" << endl;
+
+			// Mostrar red de conexiones
+			cout << "\nRed de transferencias desde esta tarjeta:" << endl;
+			this->recorridoBFS(this->getNumTarjeta());
+		}
+		else {
+			cout << "No se han realizado transferencias desde esta tarjeta" << endl;
+		}
+	}
+
+	// Registrar tarjeta en árbol AVL
+	// Big O: O(log n)
+	void registrarEnArbol() {
+		this->insertarEnArbol();
+		cout << "Tarjeta de debito registrada en el arbol AVL" << endl;
+	}
+
+	// Verificar conectividad con otra tarjeta
+	// Big O: O(V + E)
+	void verificarConexionCon(string otraTarjeta) {
+		cout << "\n=== VERIFICAR CONEXION ===" << endl;
+		cout << "Desde: " << this->getNumTarjeta() << endl;
+		cout << "Hacia: " << otraTarjeta << endl;
+
+		if (this->existeCamino(this->getNumTarjeta(), otraTarjeta)) {
+			cout << "EXISTE una ruta de transferencias entre estas tarjetas" << endl;
+		}
+		else {
+			cout << "NO EXISTE conexion directa o indirecta" << endl;
+		}
+	}
+
+	// Lambda avanzada: Simular retiros programados
+	// Big O: O(k)
+	void simularRetirosSemanales(int numSemanas) {
+		cout << "\n=== SIMULACION DE RETIROS SEMANALES ===" << endl;
+
+		// Lambda que calcula distribución óptima
+		auto distribucionOptima = [this](int semanas) -> double {
+			double limiteTotal = limite_diario_retiro * 7 * semanas; // 7 días por semana
+			double retiroPorSemana = limiteTotal / semanas;
+			return retiroPorSemana;
+			};
+
+		// Lambda para verificar si es factible
+		auto esFactible = [this](double retiroPorSemana) -> bool {
+			double retiroDiario = retiroPorSemana / 7;
+			return retiroDiario <= limite_diario_retiro;
+			};
+
+		double retiroSemanal = distribucionOptima(numSemanas);
+
+		cout << "Numero de semanas: " << numSemanas << endl;
+		cout << "Retiro semanal optimo: $" << retiroSemanal << endl;
+		cout << "Retiro diario promedio: $" << (retiroSemanal / 7) << endl;
+
+		if (esFactible(retiroSemanal)) {
+			cout << "Plan FACTIBLE dentro de limites diarios" << endl;
+		}
+		else {
+			cout << "Plan NO FACTIBLE - excede limite diario" << endl;
+		}
+	}
+
+	// Explorar red completa de transferencias usando DFS recursivo
+	// Big O: O(V + E)
+	void explorarRedCompleta() {
+		cout << "\n=== EXPLORACION COMPLETA DE RED (DFS RECURSIVO) ===" << endl;
+		cout << "Iniciando desde tarjeta: " << this->getNumTarjeta() << endl;
+		this->recorridoDFS(this->getNumTarjeta());
+	}
 };
