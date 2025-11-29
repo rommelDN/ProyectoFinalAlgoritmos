@@ -8,8 +8,12 @@
 #include <functional>
 #include <vector>
 #include <cmath>
+#include <map>
+#include <set>
+#include <queue>
 #include "Servicios.h"
 #include "Pila.h"
+#include "ArbolBinarioVL.h"  // Usando AVL (mejor que BST)
 
 using namespace std;
 
@@ -25,6 +29,54 @@ private:
 
 	// ESTRUCTURA DE DATOS: Pila para movimientos pendientes
 	Pila<Transaccion<string, double>>* movimientosPendientes;
+
+	// ========================================
+	// HITO 2: PRIMER ARBOL AVL - POR NUMERO DE TARJETA
+	// ========================================
+	static ArbolAVL<string>* arbolTarjetasPorNumero;
+	static bool arbol1Inicializado;
+
+	// ========================================
+	// HITO 2: SEGUNDO ARBOL AVL - POR SALDO/CREDITO
+	// ========================================
+	struct TarjetaPorMonto {
+		double monto;
+		string numTarjeta;
+
+		TarjetaPorMonto() : monto(0), numTarjeta("") {}
+		TarjetaPorMonto(double m, string n) : monto(m), numTarjeta(n) {}
+
+		// Operadores para el AVL
+		bool operator<(const TarjetaPorMonto& otro) const { return monto < otro.monto; }
+		bool operator>(const TarjetaPorMonto& otro) const { return monto > otro.monto; }
+		bool operator==(const TarjetaPorMonto& otro) const { return monto == otro.monto; }
+
+		int operator-(const TarjetaPorMonto& otro) const {
+			if (monto < otro.monto) return -1;
+			if (monto > otro.monto) return 1;
+			return 0;
+		}
+
+		friend ostream& operator<<(ostream& os, const TarjetaPorMonto& t) {
+			os << t.numTarjeta << "($" << t.monto << ")";
+			return os;
+		}
+	};
+
+	static ArbolAVL<TarjetaPorMonto>* arbolTarjetasPorMonto;
+	static bool arbol2Inicializado;
+
+	// ========================================
+	// HITO 2: GRAFO DE TRANSFERENCIAS (STATIC)
+	// ========================================
+	struct Transferencia {
+		string origen;
+		string destino;
+		double monto;
+		string fecha;
+	};
+	static map<string, vector<Transferencia>>* grafoTransferencias;
+	static bool grafoInicializado;
 
 	string generarID() {
 		static int contador = 1;
@@ -59,6 +111,28 @@ private:
 			dia_venc, mes_venc, anio_venc);
 	}
 
+	// ========================================
+	// HITO 2: FUNCIONES AUXILIARES RECURSIVAS PARA GRAFO
+	// ========================================
+
+	// Recorrido DFS recursivo
+	// Big O: O(V + E)
+	static void recorridoDFSRecursivo(string nodo, set<string>& visitados) {
+		visitados.insert(nodo);
+		cout << nodo << " ";
+
+		if (grafoTransferencias != nullptr) {
+			auto it = grafoTransferencias->find(nodo);
+			if (it != grafoTransferencias->end()) {
+				for (const auto& trans : it->second) {
+					if (visitados.find(trans.destino) == visitados.end()) {
+						recorridoDFSRecursivo(trans.destino, visitados);
+					}
+				}
+			}
+		}
+	}
+
 public:
 	// Constructor normal
 	Tarjetas(T n_cuenta, T t, T f_a, T n_tarjeta, T f_emision, T f_vencimiento, T cvv)
@@ -66,6 +140,22 @@ public:
 		id_tarjeta = generarID();
 		estado = "Activa";
 		movimientosPendientes = new Pila<Transaccion<string, double>>();
+
+		// Inicializar estructuras estáticas si es necesario
+		if (!arbol1Inicializado) {
+			arbolTarjetasPorNumero = new ArbolAVL<string>([](string s) { cout << s << " "; });
+			arbol1Inicializado = true;
+		}
+		if (!arbol2Inicializado) {
+			arbolTarjetasPorMonto = new ArbolAVL<TarjetaPorMonto>([](TarjetaPorMonto t) {
+				cout << t << " ";
+				});
+			arbol2Inicializado = true;
+		}
+		if (!grafoInicializado) {
+			grafoTransferencias = new map<string, vector<Transferencia>>();
+			grafoInicializado = true;
+		}
 	}
 
 	// Constructor de copia (DEEP COPY) - RULE OF THREE
@@ -251,4 +341,288 @@ public:
 			t.mostrarInfo();
 			});
 	}
+
+	// ========================================
+	// HITO 2: METODOS DEL PRIMER ARBOL AVL (POR NUMERO)
+	// ========================================
+
+	// Insertar tarjeta en el primer árbol AVL (por número)
+	// Big O: O(log n) garantizado (AVL auto-balancea)
+	void insertarEnArbolPorNumero() {
+		if (arbolTarjetasPorNumero != nullptr) {
+			arbolTarjetasPorNumero->insertar(num_tarjeta);
+			cout << "Tarjeta " << num_tarjeta << " insertada en ARBOL 1 (por numero)" << endl;
+		}
+	}
+
+	// Buscar tarjeta en el primer árbol
+	// Big O: O(log n)
+	static bool buscarEnArbolPorNumero(string numTarjeta) {
+		if (arbolTarjetasPorNumero != nullptr) {
+			return arbolTarjetasPorNumero->Buscar(numTarjeta);
+		}
+		return false;
+	}
+
+	// Mostrar todas las tarjetas ordenadas por número (recorrido InOrden)
+	// Big O: O(n)
+	static void mostrarArbol1Ordenado() {
+		if (arbolTarjetasPorNumero != nullptr) {
+			cout << "\n=== ARBOL 1: TARJETAS ORDENADAS POR NUMERO ===" << endl;
+			cout << "Cantidad: " << arbolTarjetasPorNumero->cantidad()
+				<< " | Altura: " << arbolTarjetasPorNumero->altura() << endl;
+			arbolTarjetasPorNumero->enOrden();
+			cout << endl;
+		}
+	}
+
+	// Mostrar estructura del primer árbol
+	// Big O: O(n)
+	static void mostrarEstructuraArbol1() {
+		if (arbolTarjetasPorNumero != nullptr) {
+			cout << "\n=== ESTRUCTURA DEL ARBOL 1 (POR NUMERO) ===" << endl;
+			arbolTarjetasPorNumero->mostrar();
+		}
+	}
+
+	// ========================================
+	// HITO 2: METODOS DEL SEGUNDO ARBOL AVL (POR MONTO)
+	// ========================================
+
+	// Insertar tarjeta en el segundo árbol AVL (por saldo/monto)
+	// Big O: O(log n) garantizado
+	void insertarEnArbolPorMonto(double monto) {
+		if (arbolTarjetasPorMonto != nullptr) {
+			TarjetaPorMonto registro(monto, num_tarjeta);
+			arbolTarjetasPorMonto->insertar(registro);
+			cout << "Tarjeta " << num_tarjeta << " insertada en ARBOL 2 (por monto: $"
+				<< monto << ")" << endl;
+		}
+	}
+
+	// Buscar tarjeta por monto en el segundo árbol
+	// Big O: O(log n)
+	static bool buscarEnArbolPorMonto(double monto, string numTarjeta) {
+		if (arbolTarjetasPorMonto != nullptr) {
+			TarjetaPorMonto busqueda(monto, numTarjeta);
+			return arbolTarjetasPorMonto->Buscar(busqueda);
+		}
+		return false;
+	}
+
+	// Mostrar todas las tarjetas ordenadas por monto (recorrido InOrden)
+	// Big O: O(n)
+	static void mostrarArbol2Ordenado() {
+		if (arbolTarjetasPorMonto != nullptr) {
+			cout << "\n=== ARBOL 2: TARJETAS ORDENADAS POR MONTO ===" << endl;
+			cout << "Cantidad: " << arbolTarjetasPorMonto->cantidad()
+				<< " | Altura: " << arbolTarjetasPorMonto->altura() << endl;
+			arbolTarjetasPorMonto->enOrden();
+			cout << endl;
+		}
+	}
+
+	// Mostrar estructura del segundo árbol
+	// Big O: O(n)
+	static void mostrarEstructuraArbol2() {
+		if (arbolTarjetasPorMonto != nullptr) {
+			cout << "\n=== ESTRUCTURA DEL ARBOL 2 (POR MONTO) ===" << endl;
+			arbolTarjetasPorMonto->mostrar();
+		}
+	}
+
+	// Comparar búsqueda en ambos árboles
+	// Big O: O(log n)
+	static void compararBusquedaEnArboles(string numTarjeta, double monto) {
+		cout << "\n=== COMPARACION DE BUSQUEDA EN 2 ARBOLES AVL ===" << endl;
+		cout << "Buscando tarjeta: " << numTarjeta << " con monto: $" << monto << endl;
+
+		// Búsqueda en árbol 1 (por número)
+		bool encontrado1 = buscarEnArbolPorNumero(numTarjeta);
+		cout << "Arbol 1 (por numero): " << (encontrado1 ? "ENCONTRADA" : "NO encontrada") << endl;
+
+		// Búsqueda en árbol 2 (por monto)
+		bool encontrado2 = buscarEnArbolPorMonto(monto, numTarjeta);
+		cout << "Arbol 2 (por monto): " << (encontrado2 ? "ENCONTRADA" : "NO encontrada") << endl;
+	}
+
+	// ========================================
+	// HITO 2: METODOS DEL GRAFO
+	// ========================================
+
+	// Registrar transferencia en el grafo
+	// Big O: O(log n)
+	void registrarTransferencia(string tarjetaDestino, double monto, string fecha) {
+		if (grafoTransferencias != nullptr) {
+			Transferencia trans;
+			trans.origen = num_tarjeta;
+			trans.destino = tarjetaDestino;
+			trans.monto = monto;
+			trans.fecha = fecha;
+
+			(*grafoTransferencias)[num_tarjeta].push_back(trans);
+			cout << "Transferencia registrada: " << num_tarjeta << " -> " << tarjetaDestino
+				<< " ($" << monto << ")" << endl;
+		}
+	}
+
+	// Mostrar transferencias de esta tarjeta
+	// Big O: O(k) donde k = numero de transferencias
+	void mostrarMisTransferencias() const {
+		if (grafoTransferencias == nullptr) {
+			cout << "No hay transferencias registradas" << endl;
+			return;
+		}
+
+		auto it = grafoTransferencias->find(num_tarjeta);
+		if (it != grafoTransferencias->end() && !it->second.empty()) {
+			cout << "\n=== TRANSFERENCIAS DE " << num_tarjeta << " ===" << endl;
+			for (const auto& trans : it->second) {
+				cout << "  -> " << trans.destino << " ($" << trans.monto
+					<< ") [" << trans.fecha << "]" << endl;
+			}
+		}
+		else {
+			cout << "Esta tarjeta no ha realizado transferencias" << endl;
+		}
+	}
+
+	// Mostrar todo el grafo de transferencias
+	// Big O: O(V + E)
+	static void mostrarGrafoCompleto() {
+		if (grafoTransferencias == nullptr || grafoTransferencias->empty()) {
+			cout << "No hay transferencias registradas" << endl;
+			return;
+		}
+
+		cout << "\n=== RED DE TRANSFERENCIAS COMPLETA ===" << endl;
+		int totalTransferencias = 0;
+		for (const auto& par : *grafoTransferencias) {
+			if (!par.second.empty()) {
+				cout << "\nTarjeta " << par.first << " realizo:" << endl;
+				for (const auto& trans : par.second) {
+					cout << "  -> " << trans.destino << " ($" << trans.monto
+						<< ") [" << trans.fecha << "]" << endl;
+					totalTransferencias++;
+				}
+			}
+		}
+		cout << "\nTotal de transferencias: " << totalTransferencias << endl;
+	}
+
+	// Recorrido BFS desde una tarjeta
+	// Big O: O(V + E)
+	static void recorridoBFS(string inicio) {
+		if (grafoTransferencias == nullptr) {
+			cout << "Grafo no inicializado" << endl;
+			return;
+		}
+
+		set<string> visitados;
+		queue<string> cola;
+
+		cola.push(inicio);
+		visitados.insert(inicio);
+
+		cout << "\n=== RECORRIDO BFS desde " << inicio << " ===" << endl;
+		cout << "Tarjetas alcanzables: ";
+
+		while (!cola.empty()) {
+			string actual = cola.front();
+			cola.pop();
+			cout << actual << " ";
+
+			auto it = grafoTransferencias->find(actual);
+			if (it != grafoTransferencias->end()) {
+				for (const auto& trans : it->second) {
+					if (visitados.find(trans.destino) == visitados.end()) {
+						visitados.insert(trans.destino);
+						cola.push(trans.destino);
+					}
+				}
+			}
+		}
+		cout << endl;
+	}
+
+	// Recorrido DFS desde una tarjeta (RECURSIVO)
+	// Big O: O(V + E)
+	static void recorridoDFS(string inicio) {
+		if (grafoTransferencias == nullptr) {
+			cout << "Grafo no inicializado" << endl;
+			return;
+		}
+
+		set<string> visitados;
+		cout << "\n=== RECORRIDO DFS (RECURSIVO) desde " << inicio << " ===" << endl;
+		cout << "Exploracion en profundidad: ";
+		recorridoDFSRecursivo(inicio, visitados);
+		cout << endl;
+	}
+
+	// Verificar si existe camino entre dos tarjetas
+	// Big O: O(V + E)
+	static bool existeCamino(string origen, string destino) {
+		if (grafoTransferencias == nullptr) return false;
+
+		set<string> visitados;
+		queue<string> cola;
+
+		cola.push(origen);
+		visitados.insert(origen);
+
+		while (!cola.empty()) {
+			string actual = cola.front();
+			cola.pop();
+
+			if (actual == destino) return true;
+
+			auto it = grafoTransferencias->find(actual);
+			if (it != grafoTransferencias->end()) {
+				for (const auto& trans : it->second) {
+					if (visitados.find(trans.destino) == visitados.end()) {
+						visitados.insert(trans.destino);
+						cola.push(trans.destino);
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	// Calcular total enviado por una tarjeta
+	// Big O: O(k)
+	double calcularTotalEnviado() const {
+		double total = 0;
+		if (grafoTransferencias != nullptr) {
+			auto it = grafoTransferencias->find(num_tarjeta);
+			if (it != grafoTransferencias->end()) {
+				for (const auto& trans : it->second) {
+					total += trans.monto;
+				}
+			}
+		}
+		return total;
+	}
 };
+
+// Inicialización de atributos estáticos - ARBOL 1
+template <typename T>
+ArbolAVL<string>* Tarjetas<T>::arbolTarjetasPorNumero = nullptr;
+
+template <typename T>
+bool Tarjetas<T>::arbol1Inicializado = false;
+
+// Inicialización de atributos estáticos - ARBOL 2
+template <typename T>
+ArbolAVL<typename Tarjetas<T>::TarjetaPorMonto>* Tarjetas<T>::arbolTarjetasPorMonto = nullptr;
+
+template <typename T>
+bool Tarjetas<T>::arbol2Inicializado = false;
+
+// Inicialización de atributos estáticos - GRAFO
+template <typename T>
+map<string, vector<typename Tarjetas<T>::Transferencia>>* Tarjetas<T>::grafoTransferencias = nullptr;
+
+template <typename T>
+bool Tarjetas<T>::grafoInicializado = false;
