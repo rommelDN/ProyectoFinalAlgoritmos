@@ -10,10 +10,6 @@
 #include "MergeSort.h"
 #include "QuickSort.h"
 #include "QuickSelect.h"
-//ESTRUCTURAS DE DATOS - ARBOLES
-#include "ArbolBinarioBusqueda.h"
-#include "ArbolBinarioVL.h"
-//DATASET GENERATOR
 #include "DataSetGenerator.h"
 //CLASSES
 #include "Cliente.h"
@@ -28,10 +24,6 @@
 #include "Tarjetas.h"
 #include "TarjetaCredito.h"
 #include "TarjetaDebito.h"
-// INCLUDES DE CREDITOS
-#include "CreditoPersonal.h"
-#include "CreditoEmpresarial.h"
-#include "CreditoVivienda.h"
 
 using namespace std;
 void limpiarBuffer() {
@@ -152,8 +144,7 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 		cout << "7. Ordenar Cuentas (QuickSort)" << endl;
 		cout << "8. Generar Data Set " << endl;
 		cout << "9. Calcular Intereses " << endl;
-		cout << "10. Usar Arbol Binario (EnOrden - Ahorro Objetivo) " << endl;
-		cout << "11. Volver al Menu Principal" << endl;
+		cout << "10. Volver al Menu Principal" << endl;
 		cout << "Seleccione una opcion: ";
 		cin >> opcion;
 		limpiarBuffer();
@@ -217,6 +208,32 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 			pausar();
 			break;
 		};
+			  /*case 4: {
+				  cout << "\n--- Depositar A Cuenta ---" << endl;
+				  string numCuenta;
+				  double monto;
+				  cout << "Ingrese Numero de Cuenta: ";
+				  getline(cin, numCuenta);
+				  Cuenta<string, double>* cuenta = tablaCuentas.buscar(numCuenta);
+				  Servicios<string, double>* servicio = tablaDeServicios.buscar(numCuenta);
+				  if (cuenta == nullptr) {
+					  cout << "Error: No se encontro la cuenta con el numero proporcionado." << endl;
+					  pausar();
+					  break;
+				  }
+				  cout << "Ingrese Monto a Depositar: ";
+				  cin >> monto;
+				  limpiarBuffer();
+				  double saldoAnterior = servicio->getSaldo();
+				  cuenta->depositar(monto);
+				  if (cuenta->getSaldo() != saldoAnterior) {
+					  servicio->setSaldo(saldoAnterior + monto);
+					  cout << "Saldo actualizado en el sistema." << endl;
+				  }
+				  delete cuenta;
+				  pausar();
+				  break;
+			  }*/
 		case 4: {
 			cout << "\n--- Depositar A Cuenta ---" << endl;
 			string numCuenta;
@@ -247,6 +264,7 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 			pausar();
 			break;
 		}
+
 		case 5: {
 			cout << "\n--- Retirar A Cuenta ---" << endl;
 			pausar();
@@ -317,6 +335,7 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 			pausar();
 			break;
 		};
+
 		case 9:
 		{
 			cout << "\n--- Calcular Intereses ---" << endl;
@@ -339,60 +358,14 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 			break;
 
 		};
-		case 10: {
-
-			cout << "\n--- Construyendo BST con ahorroObjetivo ---\n";
-
-			auto cuentas = tablaCuentas.toVector();
-			if (cuentas.empty()) {
-				cout << "No hay cuentas registradas.\n";
-				pausar();
-				break;
-			}
-
-			// Procesador: qué hacer al imprimir en un recorrido
-			auto procesarAhorro = [](int ahorro) {
-				cout << "Ahorro objetivo (int): " << ahorro << endl;
-				};
-
-			// Comparador para ints
-			auto compararAhorro = [](int a, int b) {
-				if (a < b) return -1;
-				if (a > b) return  1;
-				return 0;
-				};
-
-			// NO usamos extractor porque insertamos ints directamente
-			ArbolBB<int> arbolAhorros(
-				procesarAhorro,
-				compararAhorro,
-				[](const int& x) { return x; }   // extractor trivial
-			);
-
-			// Insertamos en el BST SOLO el ahorro objetivo convertido a int
-			for (auto& cuenta : cuentas) {
-				double ahorroDouble = cuenta.getAhorroObjetivo();
-				int ahorroEntero = static_cast<int>(ahorroDouble);
-				arbolAhorros.insertar(ahorroEntero);
-			}
-
-			cout << "\n--- Ahorros objetivo ORDENADOS (InOrden) ---\n";
-			arbolAhorros.enOrden();
-
-			cout << "\n\n--- Estructura del BST ---\n";
-			arbolAhorros.mostrar();
-
-			pausar();
-			break;
-		}
-		case 11:
+		case 10:
 			cout << "Volviendo al menu principal..." << endl;
 			break;
 		default:
 			break;
 		}
 
-	} while (opcion != 11);
+	} while (opcion != 10);
 
 }
 
@@ -407,12 +380,11 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros, HashTable<Ser
 		cout << "5. Ordenar Seguros (QuickSort)" << endl;
 		cout << "6. Buscar Seguro por Numero de Cuenta" << endl;
 		cout << "7. Crear Reclamo " << endl;
-		cout << "8. Procesar Cola de Reclamos " << endl;
+		cout << "8. Evaluar Cola de Reclamos " << endl;
 		cout << "9. Mostrar Cola de Reclamos " << endl;
-		cout << "10. Mostrar Historial de Reclamos " << endl;
+		cout << "10. Mostrar PIla de Reclamos " << endl;
 		cout << "11. Generar Data Set " << endl;
-		cout << "12. Usa AVL" << endl;
-		cout << "13. Volver al Menu Principal" << endl;
+		cout << "12. Volver al Menu Principal" << endl;
 		cin >> opcion;
 		limpiarBuffer();
 
@@ -671,73 +643,14 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros, HashTable<Ser
 			break;
 		};
 
-		case 12: {
-			cout << "\n--- Construyendo AVL con números de cuenta (Seguros) ---\n";
-
-			auto seguros = tablaSeguros.toVector();
-			if (seguros.empty()) {
-				cout << "No hay seguros registrados.\n";
-				pausar();
-				break;
-			}
-
-			auto procesarCuenta = [](string cuenta) {
-				cout << "Cuenta asociada al seguro: " << cuenta << endl;
-				};
-
-			auto compararCuentas = [](string a, string b) {
-				return a.compare(b);  // devuelve -1, 0, 1
-				};
-
-			ArbolAVL<string> arbolSeguros(
-				procesarCuenta,
-				compararCuentas
-			);
-
-			for (auto& seg : seguros) {
-				arbolSeguros.insertar(seg.getNumCuenta());
-			}
-
-			cout << "\n--- Numeros de cuenta ORDENADOS (InOrden) ---\n";
-			arbolSeguros.enOrden();
-
-			cout << "\n--- Estructura del AVL ---\n";
-			arbolSeguros.mostrar();
-
-			// --- BÚSQUEDA ---
-			cout << "\nIngrese numero de cuenta del seguro a buscar: ";
-			string cuentaBuscada;
-			getline(cin, cuentaBuscada);
-
-			if (arbolSeguros.Buscar(cuentaBuscada)) {
-				cout << "\nNumero de cuenta encontrado en el arbol AVL.\n";
-
-				Seguros<string, double>* seguro = tablaSeguros.buscar(cuentaBuscada);
-				if (seguro != nullptr) {
-					cout << "\n--- Seguro encontrado ---\n";
-					seguro->mostrar();
-				}
-				else {
-					cout << "El AVL tenia el numero, pero el HashTable no encontro el seguro.\n";
-				}
-			}
-			else {
-				cout << "\n No existe un seguro asociado a ese número de cuenta.\n";
-			}
-
-			pausar();
-			break;
-		}
-
-
-		case 13:
+		case 12:
 			cout << "Volviendo al menu principal..." << endl;
 			break;
 		default:
 			break;
 		}
 
-	} while (opcion != 13);
+	} while (opcion != 12);
 };
 
 void menuServiciosContratados(
@@ -889,7 +802,25 @@ void menuTarjetas(
 		cout << "13. Mostrar Estadisticas de Tarjeta" << endl;
 		cout << "14. Ordenar Tarjetas de Credito" << endl;
 		cout << "15. Listar con DataSetGenerator" << endl;
-		cout << "16. Volver al Menu Principal" << endl;
+		cout << "16. Insertar Tarjeta en Arbol 1" << endl;
+		cout << "17. Insertar Tarjeta en Arbol 2" << endl;
+		cout << "18. Buscar en Arbol 1" << endl;
+		cout << "19. Mostrar Arbol 1 Ordenado" << endl;
+		cout << "20. Mostrar Arbol 2 Ordenado" << endl;
+		cout << "21. Mostrar Estructura Arbol 1" << endl;
+		cout << "22. Mostrar Estructura Arbol 2" << endl;
+		cout << "23. Comparar Busqueda en 2 Arboles" << endl;
+		cout << "24. Transferir Credito" << endl;
+		cout << "25. Transferir Dinero" << endl;
+		cout << "26. Mostrar Mis Transferencias" << endl;
+		cout << "27. Mostrar Red Completa" << endl;
+		cout << "28. Recorrido BFS" << endl;
+		cout << "29. Recorrido DFS" << endl;
+		cout << "30. Verificar Camino entre Tarjetas" << endl;
+		cout << "31. Analizar Red de Transferencias" << endl;
+		cout << "32. Analizar Patrones de Retiro" << endl;
+		cout << "\n========================================" << endl;
+		cout << "0. Volver al Menu Principal" << endl;
 		cout << "Seleccione una opcion: ";
 		cin >> opcion;
 		limpiarBuffer();
@@ -1361,7 +1292,238 @@ void menuTarjetas(
 			break;
 		}
 
-		case 16:
+		case 16: { // Insertar en Arbol 1
+			cout << "\n=== INSERTAR EN ARBOL 1 (POR NUMERO) ===" << endl;
+			cout << "1. Tarjeta de Credito\n2. Tarjeta de Debito" << endl;
+			int tipo;
+			cout << "Tipo: ";
+			cin >> tipo;
+			limpiarBuffer();
+			string numTarjeta;
+			cout << "Numero de Tarjeta: ";
+			getline(cin, numTarjeta);
+
+			if (tipo == 1) {
+				TarjetaCredito<string, double>* tarjeta = tablaTarjetasCredito.buscarRef(numTarjeta);
+				if (tarjeta != nullptr) tarjeta->insertarEnArbolPorNumero();
+				else cout << "Tarjeta no encontrada" << endl;
+			}
+			else {
+				TarjetaDebito<string, double>* tarjeta = tablaTarjetasDebito.buscarRef(numTarjeta);
+				if (tarjeta != nullptr) tarjeta->insertarEnArbolPorNumero();
+				else cout << "Tarjeta no encontrada" << endl;
+			}
+			pausar();
+			break;
+		}
+
+		case 17: { // Insertar en Arbol 2
+			cout << "\n=== INSERTAR EN ARBOL 2 (POR MONTO) ===" << endl;
+			cout << "1. Tarjeta de Credito\n2. Tarjeta de Debito" << endl;
+			int tipo;
+			cout << "Tipo: ";
+			cin >> tipo;
+			limpiarBuffer();
+			string numTarjeta;
+			double monto;
+			cout << "Numero de Tarjeta: ";
+			getline(cin, numTarjeta);
+			cout << "Monto: $";
+			cin >> monto;
+			limpiarBuffer();
+
+			if (tipo == 1) {
+				TarjetaCredito<string, double>* tarjeta = tablaTarjetasCredito.buscarRef(numTarjeta);
+				if (tarjeta != nullptr) tarjeta->insertarEnArbolPorMonto(monto);
+				else cout << "Tarjeta no encontrada" << endl;
+			}
+			else {
+				TarjetaDebito<string, double>* tarjeta = tablaTarjetasDebito.buscarRef(numTarjeta);
+				if (tarjeta != nullptr) tarjeta->insertarEnArbolPorMonto(monto);
+				else cout << "Tarjeta no encontrada" << endl;
+			}
+			pausar();
+			break;
+		}
+
+		case 18: { // Buscar en Arbol 1
+			cout << "\n=== BUSCAR EN ARBOL 1 ===" << endl;
+			string numTarjeta;
+			cout << "Numero de Tarjeta: ";
+			getline(cin, numTarjeta);
+			if (Tarjetas<string>::buscarEnArbolPorNumero(numTarjeta))
+				cout << "Tarjeta ENCONTRADA" << endl;
+			else cout << "Tarjeta NO encontrada" << endl;
+			pausar();
+			break;
+		}
+
+		case 19: { // Mostrar Arbol 1
+			Tarjetas<string>::mostrarArbol1Ordenado();
+			pausar();
+			break;
+		}
+
+		case 20: { // Mostrar Arbol 2
+			Tarjetas<string>::mostrarArbol2Ordenado();
+			pausar();
+			break;
+		}
+
+		case 21: { // Estructura Arbol 1
+			Tarjetas<string>::mostrarEstructuraArbol1();
+			pausar();
+			break;
+		}
+
+		case 22: { // Estructura Arbol 2
+			Tarjetas<string>::mostrarEstructuraArbol2();
+			pausar();
+			break;
+		}
+
+		case 23: { // Comparar busqueda
+			cout << "\n=== COMPARAR BUSQUEDA ===" << endl;
+			string numTarjeta;
+			double monto;
+			cout << "Numero: ";
+			getline(cin, numTarjeta);
+			cout << "Monto: $";
+			cin >> monto;
+			limpiarBuffer();
+			Tarjetas<string>::compararBusquedaEnArboles(numTarjeta, monto);
+			pausar();
+			break;
+		}
+
+		case 24: { // Transferir credito
+			cout << "\n=== TRANSFERIR CREDITO ===" << endl;
+			string origen, destino;
+			double monto;
+			cout << "Tarjeta Origen: ";
+			getline(cin, origen);
+			cout << "Tarjeta Destino: ";
+			getline(cin, destino);
+			cout << "Monto: $";
+			cin >> monto;
+			limpiarBuffer();
+
+			TarjetaCredito<string, double>* tarjeta = tablaTarjetasCredito.buscarRef(origen);
+			if (tarjeta != nullptr) tarjeta->transferirCredito(destino, monto);
+			else cout << "Tarjeta no encontrada" << endl;
+			pausar();
+			break;
+		}
+
+		case 25: { // Transferir dinero
+			cout << "\n=== TRANSFERIR DINERO ===" << endl;
+			string origen, destino;
+			double monto;
+			cout << "Tarjeta Origen: ";
+			getline(cin, origen);
+			cout << "Tarjeta Destino: ";
+			getline(cin, destino);
+			cout << "Monto: $";
+			cin >> monto;
+			limpiarBuffer();
+
+			TarjetaDebito<string, double>* tarjeta = tablaTarjetasDebito.buscarRef(origen);
+			if (tarjeta != nullptr) tarjeta->transferirDinero(destino, monto);
+			else cout << "Tarjeta no encontrada" << endl;
+			pausar();
+			break;
+		}
+
+		case 26: { // Mostrar mis transferencias
+			cout << "\n=== MIS TRANSFERENCIAS ===" << endl;
+			cout << "1. Credito\n2. Debito" << endl;
+			int tipo;
+			string numTarjeta;
+			cout << "Tipo: ";
+			cin >> tipo;
+			limpiarBuffer();
+			cout << "Numero: ";
+			getline(cin, numTarjeta);
+
+			if (tipo == 1) {
+				TarjetaCredito<string, double>* tarjeta = tablaTarjetasCredito.buscarRef(numTarjeta);
+				if (tarjeta != nullptr) tarjeta->mostrarMisTransferencias();
+				else cout << "Tarjeta no encontrada" << endl;
+			}
+			else {
+				TarjetaDebito<string, double>* tarjeta = tablaTarjetasDebito.buscarRef(numTarjeta);
+				if (tarjeta != nullptr) tarjeta->mostrarMisTransferencias();
+				else cout << "Tarjeta no encontrada" << endl;
+			}
+			pausar();
+			break;
+		}
+
+		case 27: { // Red completa
+			Tarjetas<string>::mostrarGrafoCompleto();
+			pausar();
+			break;
+		}
+
+		case 28: { // BFS
+			cout << "\n=== RECORRIDO BFS ===" << endl;
+			string inicio;
+			cout << "Tarjeta inicial: ";
+			getline(cin, inicio);
+			Tarjetas<string>::recorridoBFS(inicio);
+			pausar();
+			break;
+		}
+
+		case 29: { // DFS recursivo
+			cout << "\n=== RECORRIDO DFS (RECURSIVO) ===" << endl;
+			string inicio;
+			cout << "Tarjeta inicial: ";
+			getline(cin, inicio);
+			Tarjetas<string>::recorridoDFS(inicio);
+			pausar();
+			break;
+		}
+
+		case 30: { // Verificar camino
+			cout << "\n=== VERIFICAR CAMINO ===" << endl;
+			string origen, destino;
+			cout << "Origen: ";
+			getline(cin, origen);
+			cout << "Destino: ";
+			getline(cin, destino);
+			if (Tarjetas<string>::existeCamino(origen, destino))
+				cout << "EXISTE camino" << endl;
+			else cout << "NO EXISTE camino" << endl;
+			pausar();
+			break;
+		}
+
+		case 31: { // Analizar red
+			cout << "\n=== ANALIZAR RED ===" << endl;
+			string numTarjeta;
+			cout << "Numero Tarjeta Credito: ";
+			getline(cin, numTarjeta);
+			TarjetaCredito<string, double>* tarjeta = tablaTarjetasCredito.buscarRef(numTarjeta);
+			if (tarjeta != nullptr) tarjeta->analizarRedTransferencias();
+			else cout << "Tarjeta no encontrada" << endl;
+			pausar();
+			break;
+		}
+
+		case 32: { // Analizar patrones
+			cout << "\n=== ANALIZAR PATRONES ===" << endl;
+			string numTarjeta;
+			cout << "Numero Tarjeta Debito: ";
+			getline(cin, numTarjeta);
+			TarjetaDebito<string, double>* tarjeta = tablaTarjetasDebito.buscarRef(numTarjeta);
+			if (tarjeta != nullptr) tarjeta->analizarPatronesRetiro();
+			else cout << "Tarjeta no encontrada" << endl;
+			pausar();
+			break;
+		}
+
+		case 0:
 			cout << "Volviendo al menu principal..." << endl;
 			break;
 
@@ -1371,7 +1533,7 @@ void menuTarjetas(
 			break;
 		}
 
-	} while (opcion != 16);
+	} while (opcion != 0);
 }
 
 void menuReportes(ListaEnlazada<Cliente<string>>& listaClientes, ListaEnlazada<Cuenta<string, double>>& listaCuentas, ListaEnlazada<Servicios<string, double>>& listaDeServicios, ListaEnlazada<ServicioContratado<string>>& listaServiciosContratados) {
@@ -1440,122 +1602,6 @@ void menuTrasacciones(ListaEnlazada<Transaccion<string, double>>& listaTransacci
 
 
 };
-
-void menuCreditos(vector<Credito<string, double>*>& listaCreditos, HashTable<Cliente<string>>& tablaClientes) {
-	int opcion;
-	do {
-		cout << "\n=== GESTION DE CREDITOS ===" << endl;
-		cout << "1. Solicitar Credito Personal" << endl;
-		cout << "2. Solicitar Credito Empresarial" << endl;
-		cout << "3. Solicitar Credito Hipotecario (Vivienda)" << endl;
-		cout << "4. Ver mis Creditos y Cronogramas" << endl;
-		cout << "5. Volver al Menu Principal" << endl;
-		cout << "Seleccione una opcion: ";
-		cin >> opcion;
-		limpiarBuffer();
-
-		if (opcion >= 1 && opcion <= 3) {
-			string dni;
-			cout << "Ingrese DNI del Cliente Titular: ";
-			getline(cin, dni);
-
-			Cliente<string>* cliente = tablaClientes.buscar(dni);
-			if (cliente == nullptr) {
-				cout << "ERROR: Cliente no encontrado. Debe registrarlo primero." << endl;
-				pausar();
-				continue;
-			}
-
-			string titular = cliente->getNombre() + " " + cliente->getApellido();
-			cout << "Cliente identificado: " << titular << endl;
-
-			double monto, tasa;
-			int plazo;
-
-			cout << "\n--- Datos del Credito ---" << endl;
-			cout << "Monto a solicitar: $"; cin >> monto;
-			cout << "Plazo (meses): "; cin >> plazo;
-			cout << "Tasa de Interes Anual (%): "; cin >> tasa;
-			limpiarBuffer();
-
-			// Datos generados automáticos para facilitar la prueba
-			static int contadorCreditos = 1;
-			string num_cuenta = "CRD-CTA-" + to_string(contadorCreditos++);
-			string fecha_hoy = "22/11/2025";
-			double tasa_mensual = tasa / 12.0; // Aproximación simple
-
-			if (opcion == 1) {
-				// Credito Personal
-				string destino;
-				cout << "Destino del credito (ej. Viaje, Estudios): ";
-				getline(cin, destino);
-
-				// Asumimos seguro desgravamen true (1) por defecto para simplificar
-				CreditoPersonal<string, double>* cp = new CreditoPersonal<string, double>(
-					num_cuenta, titular, fecha_hoy, monto, plazo, tasa_mensual, destino, true
-				);
-				listaCreditos.push_back(cp);
-				cout << ">> Credito Personal creado exitosamente. ID: " << cp->getIdCreditoPersonal() << endl;
-
-			}
-			else if (opcion == 2) {
-				// Credito Empresarial
-				string empresa, ruc;
-				cout << "Nombre de la Empresa: "; getline(cin, empresa);
-				cout << "RUC: "; getline(cin, ruc);
-
-				// Asumimos linea de credito mayor al prestamo
-				CreditoEmpresarial<string, double>* ce = new CreditoEmpresarial<string, double>(
-					num_cuenta, titular, fecha_hoy, monto, plazo, tasa_mensual, empresa, ruc, monto * 1.5
-				);
-				listaCreditos.push_back(ce);
-				cout << ">> Credito Empresarial creado exitosamente. ID: " << ce->getIdCreditoEmpresarial() << endl;
-
-			}
-			else if (opcion == 3) {
-				// Credito Vivienda
-				string direccion;
-				double valor_casa;
-				cout << "Direccion del inmueble: "; getline(cin, direccion);
-				cout << "Valor del inmueble: $"; cin >> valor_casa;
-
-				CreditoVivienda<string, double>* cv = new CreditoVivienda<string, double>(
-					num_cuenta, titular, fecha_hoy, monto, plazo, tasa_mensual, direccion, valor_casa
-				);
-				listaCreditos.push_back(cv);
-				cout << ">> Credito Vivienda creado exitosamente. ID: " << cv->getIdCreditoVivienda() << endl;
-			}
-			pausar();
-
-		}
-		else if (opcion == 4) {
-			// Ver Créditos (Polimorfismo)
-			if (listaCreditos.empty()) {
-				cout << "No hay creditos registrados en el sistema." << endl;
-			}
-			else {
-				cout << "\n=== LISTADO DE CREDITOS ===" << endl;
-				for (auto credito : listaCreditos) {
-					cout << "------------------------------------------------" << endl;
-					credito->mostrarInfo(); // Llama al método específico de cada hijo
-					cout << endl;
-					// Opción de ver cronograma detallado
-					char verCronograma;
-					cout << "¿Ver cronograma de pagos? (s/n): ";
-					cin >> verCronograma;
-					if (verCronograma == 's' || verCronograma == 'S') {
-						credito->generarCronogramaPagos();
-					}
-				}
-			}
-			pausar();
-			limpiarBuffer(); // Limpieza extra por el char
-		}
-
-	} while (opcion != 5);
-}
-
-
 int main() {
 	// Estructuras de Datos Principales
 	ListaEnlazada<Cliente<string>> listaClientes;
@@ -1574,8 +1620,6 @@ int main() {
 	HashTable<ServicioContratado<string>> tablaServiciosContratados(10);
 
 	ListaEnlazada<Transaccion<string, double>> listaTransacciones;
-
-	vector<Credito<string, double>*> listaCreditos;
 
 	// Hash Tables para Tarjetas
 	HashTable<TarjetaCredito<string, double>> tablaTarjetasCredito(10);
@@ -1603,7 +1647,6 @@ int main() {
 			break;
 		case 4:
 			//Gestionar Creditos
-			menuCreditos(listaCreditos, tablaClientes);
 			break;
 		case 5:
 			menuTarjetas(tablaTarjetasCredito, tablaTarjetasDebito, tablaDeServicios);
@@ -1618,8 +1661,7 @@ int main() {
 			menuTrasacciones(listaTransacciones, tablaDeServicios);
 			break;
 		case 9:
-			cout << "\nGracias por usar el Sistema Bancario! Hasta pronto." << endl;
-			for (auto c : listaCreditos) delete c;
+			cout << "\n�Gracias por usar el Sistema Bancario! Hasta pronto." << endl;
 			break;
 		default:
 			cout << "Opcion no valida! Intente de nuevo." << endl;
