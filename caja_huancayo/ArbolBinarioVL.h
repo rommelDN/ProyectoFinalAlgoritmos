@@ -85,7 +85,7 @@ private:
             nodo->izq = res.first;
         }
         NodoAVL<T>* balanceado = balancear(nodo);
-        return { balanceado, true }; 
+        return { balanceado, true };
     }
     bool _buscar(NodoAVL<T>* nodo, T e) {
         if (nodo == nullptr) return false;
@@ -197,9 +197,9 @@ private:
         delete nodo;
     }
 public:
-    ArbolAVL(void(*otroPunteroFuncion)(T),Comp compararExt) {
+    ArbolAVL(void(*otroPunteroFuncion)(T)) {
         this->procesar = otroPunteroFuncion;
-        this->comparar = compararExt;
+        this->comparar = [](T a, T b) { return (a < b) ? -1 : (a > b) ? 1 : 0; };
         raiz = nullptr;
     }
     ~ArbolAVL() {
@@ -216,20 +216,28 @@ public:
         raiz = res.first;
         return res.second;
     }
+
     bool Buscar(T e) {
         return _buscar(raiz, e);
     }
+
     NodoAVL<T>* Obtener(T e) {
         return _obtener(raiz, e);
     }
+
     void enOrden() { _enOrden(raiz); }
     void preOrden() { _preOrden(raiz); }
     void postOrden() { _postOrden(raiz); }
+
     int cantidad() { return _cantidad(raiz); }
     int altura() { return _altura(raiz); }
+
     T Minimo() { return _minimo(raiz); }
     T Maximo() { return _maximo(raiz); }
+
     T SumarHojas() { return _sumarHojas(raiz); }
+
     void mostrar() { _mostrarArbol(raiz); }
+
     void setComparador(Comp comp) { comparar = comp; }
 };
