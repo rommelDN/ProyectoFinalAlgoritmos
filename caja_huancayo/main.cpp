@@ -150,10 +150,11 @@ void menuClientes(HashTable<Cliente<string>>& tablaClientes) {
 };
 
 void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Servicios<string, double>>& tablaDeServicios) {
-	dibujarMenuCuentas();
-	gotoxy(5, 10);
+	
 	int opcion;
 	do {
+		dibujarMenuCuentas();
+		gotoxy(5, 10);
 		cout << "\n=== GESTION DE CUENTAS ===" << endl;
 		cout << "1. Crear Cuenta" << endl;
 		cout << "2. Mostrar Cuentas" << endl;
@@ -167,8 +168,11 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 		cout << "10. Volver al Menu Principal" << endl;
 		cout << "Seleccione una opcion: ";
 		cin >> opcion;
-		system("cls");
+		
 		limpiarBuffer();
+		system("cls");
+		dibujarMenuCuentas();
+		gotoxy(5, 10);
 
 		switch (opcion)
 		{
@@ -203,6 +207,8 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 			}
 			pausar();
 			system("cls");
+			//dibujarMenuCuentas();
+			//gotoxy(5, 10);
 			break;
 			
 		};
@@ -211,9 +217,9 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 			tablaCuentas.mostrar();
 			pausar();
 			system("cls");
+			//dibujarMenuCuentas();
+			//gotoxy(5, 10);
 			break;
-			
-
 		};
 		case 3: {
 			string numCuenta;
@@ -230,6 +236,7 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 			else {
 				cout << "Error: No se encontro el cliente con el DNI proporcionado." << endl;
 			}
+			system("cls");
 			pausar();
 			break;
 		};
@@ -285,13 +292,13 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 			if (cuenta->getSaldo() != saldoAnterior) {
 				cout << "Saldo actualizado en el sistema." << endl;
 			}
-
+			system("cls");
 			pausar();
 			break;
 		}
-
 		case 5: {
 			cout << "\n--- Retirar A Cuenta ---" << endl;
+			system("cls");
 			pausar();
 			break;
 		}
@@ -316,6 +323,7 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 				l.mostrarInfo();
 				cout << "------------------\n";
 			}
+			system("cls");
 			pausar();
 			break;
 		}
@@ -340,6 +348,7 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 				l.mostrarInfo();
 				cout << "------------------\n";
 			}
+			system("cls");
 			pausar();
 			break;
 		}
@@ -357,10 +366,10 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 				extrac,
 				tablaCuentas
 			);
+			system("cls");
 			pausar();
 			break;
 		};
-
 		case 9:
 		{
 			cout << "\n--- Calcular Intereses ---" << endl;
@@ -379,6 +388,7 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 			cin >> meses;
 			double futuro = cuenta->interesRecursivo(meses);
 			cout << "El monto futuro despues de " << meses << " meses es: $" << futuro << endl;
+			system("cls");
 			pausar();
 			break;
 
@@ -391,6 +401,7 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 		}
 
 	} while (opcion != 10);
+	system("cls");
 
 }
 
@@ -399,6 +410,8 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 	HashTable<Cliente<string>>& tablaClientes) {
 	int opcion;
 	do {
+		dibujarMenuSeguros();
+		gotoxy(5, 10);
 		cout << "\n=== GESTION DE SEGUROS ===" << endl;
 		cout << "1. Crear Seguro" << endl;
 		cout << "2. Mostrar Seguro" << endl;
@@ -417,6 +430,9 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 		cout << "Opcion: ";
 		cin >> opcion;
 		limpiarBuffer();
+		system("cls");
+		dibujarMenuSeguros();
+		gotoxy(5, 10);
 
 		switch (opcion)
 		{
@@ -457,6 +473,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 			catch (const exception& e) {
 				cout << "Error al crear seguro: " << e.what() << endl;
 			}
+			system("cls");
 			pausar();
 			break;
 		}
@@ -464,6 +481,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 		case 2: {
 			cout << "\n--- Tabla de Cuentas ---" << endl;
 			tablaSeguros.mostrar();
+			system("cls");
 			pausar();
 			break;
 		}
@@ -502,6 +520,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 			catch (const exception& e) {
 				cout << "Error al Ingresar Asegurado: " << e.what() << endl;
 			}
+			system("cls");
 			pausar();
 			break;
 		}
@@ -524,6 +543,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 				l.mostrarInfo();
 				cout << "------------------\n";
 			}
+			system("cls");
 			pausar();
 			break;
 		}
@@ -546,6 +566,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 				l.mostrarInfo();
 				cout << "------------------\n";
 			}
+			system("cls");
 			pausar();
 			break;
 		}
@@ -564,6 +585,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 			else {
 				cout << "Error: No se encontro el cliente con el DNI proporcionado." << endl;
 			}
+			system("cls");
 			pausar();
 			break;
 		}
@@ -600,6 +622,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 			catch (const exception& e) {
 				cout << "Error al crear reclamo: " << e.what() << endl;
 			}
+			system("cls");
 			pausar();
 			break;
 		}
@@ -619,6 +642,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 				cout << "No hay reclamos pendientes.\n";
 			else
 				cout << "Procesamiento finalizado.\n";
+			system("cls");
 			pausar();
 			break;
 		}
@@ -634,6 +658,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 				break;
 			}
 			seguro->mostrarColaReclamos();
+			system("cls");
 			pausar();
 			break;
 		}
@@ -649,6 +674,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 				break;
 			}
 			seguro->mostrarHistorialReclamos();
+			system("cls");
 			pausar();
 			break;
 		}
@@ -666,6 +692,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 				extractores,
 				tablaSeguros
 			);
+			system("cls");
 			pausar();
 			break;
 		}
@@ -719,6 +746,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 			catch (const exception& e) {
 				cout << "Error: " << e.what() << endl;
 			}
+			system("cls");
 			pausar();
 			break;
 		}
@@ -735,6 +763,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 				break;
 			}
 			seguro->mostrarRedBeneficiarios();
+			system("cls");
 			pausar();
 			break;
 		}
@@ -749,6 +778,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 		}
 
 	} while (opcion != 12);
+	system("cls");
 }
 /*void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros, HashTable<Servicios<string, double>>& tablaDeServicios, HashTable<Cliente<string>>& tablaClientes) {
 	int opcion;
@@ -2255,12 +2285,17 @@ void menuReportes(ListaEnlazada<Cliente<string>>& listaClientes, ListaEnlazada<C
 void menuTrasacciones(ListaEnlazada<Transaccion<string, double>>& listaTransacciones, HashTable<Servicios<string, double>>& tablaDeServicios) {
 	int opcion;
 	do {
+		dibujarMenuTransaccion();
+		gotoxy(5, 10);
 		cout << "\n=== GESTION DE TRANSACCIONES ===" << endl;
 		cout << "1. Mostrar Transacciones (NUM.Cuenta)" << endl;
 		cout << "2. Filtrar Transacciones" << endl;
 		cout << "3. Regresar a Menu Principal" << endl;
 		cin >> opcion;
 		limpiarBuffer();
+		system("cls");
+		dibujarMenuTransaccion();
+		gotoxy(5, 10);
 		switch (opcion) {
 		case 1:
 		{
@@ -2274,6 +2309,7 @@ void menuTrasacciones(ListaEnlazada<Transaccion<string, double>>& listaTransacci
 				break;
 			}
 			servicio->mostrarHistorialTransacciones();
+			system("cls");
 			pausar();
 			break;
 
@@ -2293,6 +2329,7 @@ void menuTrasacciones(ListaEnlazada<Transaccion<string, double>>& listaTransacci
 
 
 };
+
 int main() {
 
 	// Estructuras de Datos Principales
@@ -2339,8 +2376,8 @@ int main() {
 			menuClientes(tablaClientes);
 			break;
 		case 2:
-			//dibujarMenuCuentas();
-			//gotoxy(5, 10);
+			dibujarMenuCuentas();
+			gotoxy(5, 10);
 			menuCuentas(tablaCuentas, tablaDeServicios);
 			system("cls");
 			break;
@@ -2348,6 +2385,7 @@ int main() {
 			dibujarMenuSeguros();
 			gotoxy(5, 10);
 			menuSeguros(tablaSeguros, tablaDeServicios, tablaClientes);
+			system("cls");
 			break;
 		case 4:
 			//Gestionar Creditos
@@ -2368,6 +2406,7 @@ int main() {
 			dibujarMenuTransaccion();
 			gotoxy(5, 10);
 			menuTrasacciones(listaTransacciones, tablaDeServicios);
+			system("cls");
 			break;
 		case 8:
 			cout << "\n�Gracias por usar el Sistema Bancario! Hasta pronto." << endl;
