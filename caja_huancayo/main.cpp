@@ -1262,28 +1262,44 @@ void crearCreditoEmpresarial() {
 void menuCreditos(HashTable<Cliente<string>>& tablaClientes, HashTable<Credito<string, double>>& tablaCreditos) {
 	int opcion;
 	string dniCliente;
-	// Usamos puntero para buscar la referencia
 	Cliente<string>* clienteVerificado = nullptr;
 
 	do {
-		// system("cls"); // Se mueve la limpieza dentro del loop después de la impresión de menú
-		cout << "\n===============================" << endl;
-		cout << "  ✅ GESTION DE CREDITOS ✅" << endl;
-		cout << "===============================" << endl;
+		// Limpiar y dibujar el menú al inicio de cada iteración
+		system("cls");
+		dibujarMenuCreditos();
+
+		gotoxy(5, 9);
+		cout << "   GESTION DE CREDITOS " << endl;
+		gotoxy(2, 11);
+		cout << "Instrucciones: Aqui podras solicitar un credito de 3 tipos diferentes," << endl;
+		gotoxy(2, 12);
+		cout << " asi como listarlos para poder estar informado sobre tus creditos" << endl;
+		gotoxy(2, 15);
 		cout << "1. Solicitar Crédito Personal" << endl;
+		gotoxy(2, 18);
 		cout << "2. Solicitar Crédito Vivienda" << endl;
+		gotoxy(2, 21);
 		cout << "3. Solicitar Crédito Empresarial" << endl;
+		gotoxy(2, 24);
 		cout << "4. Listar Créditos Activos" << endl;
+		gotoxy(2, 26);
 		cout << "0. Volver al Menu Principal" << endl;
+		gotoxy(35, 17);
 		cout << "Ingrese opcion: ";
+
 		if (!(cin >> opcion)) {
 			opcion = -1;
+			cin.clear();
 		}
-		limpiarBuffer();
+		cin.ignore(); // Limpiar buffer después de leer número
+
+		// Limpiar y redibujar después de la selección
 		system("cls");
+		dibujarMenuCreditos();
+		gotoxy(2, 15); // Posicionar para la siguiente información
 
 		if (opcion >= 1 && opcion <= 3) {
-
 			// ===============================================
 			// 🚨 PASO 1: VALIDACIÓN CRÍTICA DEL CLIENTE
 			// ===============================================
@@ -1291,7 +1307,11 @@ void menuCreditos(HashTable<Cliente<string>>& tablaClientes, HashTable<Credito<s
 			cout << "PASO 1: VERIFICACIÓN DE CLIENTE" << endl;
 			cout << "Ingrese el DNI del cliente solicitante: ";
 			cin >> dniCliente;
-			limpiarBuffer();
+
+			// Limpiar y redibujar después de ingresar DNI
+			system("cls");
+			dibujarMenuCreditos();
+			gotoxy(2, 15);
 
 			// Buscar en la tabla de clientes 
 			clienteVerificado = tablaClientes.buscarRef(dniCliente);
@@ -1300,7 +1320,6 @@ void menuCreditos(HashTable<Cliente<string>>& tablaClientes, HashTable<Credito<s
 				cout << "\n❌ ERROR: El cliente con DNI " << dniCliente << " NO está registrado." << endl;
 				cout << "Debe registrar al cliente primero (Opción 1 del menú principal)." << endl;
 				pausar();
-				system("cls");
 				continue; // Volver al menú de créditos
 			}
 
@@ -1316,22 +1335,35 @@ void menuCreditos(HashTable<Cliente<string>>& tablaClientes, HashTable<Credito<s
 
 			cout << "PASO 2: INGRESO DE DATOS DEL CRÉDITO" << endl;
 			cout << "Monto del Préstamo (USD): ";
-			if (!(cin >> monto)) { monto = 0; limpiarBuffer(); }
+			if (!(cin >> monto)) {
+				monto = 0;
+				cin.clear();
+			}
+			cin.ignore();
 
 			cout << "Plazo (meses): ";
-			if (!(cin >> plazo)) { plazo = 0; limpiarBuffer(); }
+			if (!(cin >> plazo)) {
+				plazo = 0;
+				cin.clear();
+			}
+			cin.ignore();
 
 			cout << "Tasa de Interés Anual (Ej: 0.10 para 10%): ";
-			if (!(cin >> tasa)) { tasa = 0; limpiarBuffer(); }
-
-			limpiarBuffer(); // Limpiar después de la última lectura numérica (tasa)
+			if (!(cin >> tasa)) {
+				tasa = 0;
+				cin.clear();
+			}
+			cin.ignore();
 
 			// --- 🎯 FECHA SOLICITADA AL USUARIO ---
 			string fechaApertura;
 			cout << "Fecha de Apertura del Crédito (YYYY-MM-DD): ";
 			getline(cin, fechaApertura);
-			// --------------------------------------
 
+			// Limpiar y redibujar antes de mostrar resultado
+			system("cls");
+			dibujarMenuCreditos();
+			gotoxy(2, 15);
 
 			// ===============================================
 			// PASO 3: SOLICITUD DE CRÉDITO ESPECÍFICO
@@ -1342,18 +1374,21 @@ void menuCreditos(HashTable<Cliente<string>>& tablaClientes, HashTable<Credito<s
 				cout << "Destino del Crédito (Ej: Viaje, Estudios): ";
 				getline(cin, destino);
 				cout << "¿Desea Seguro de Desgravamen? (1=Si, 0=No): ";
-				if (!(cin >> tieneSeguro)) { tieneSeguro = 0; limpiarBuffer(); }
-				limpiarBuffer();
+				if (!(cin >> tieneSeguro)) {
+					tieneSeguro = 0;
+					cin.clear();
+				}
+				cin.ignore();
 
 				CreditoPersonal<string, double>* nuevoCredito = new CreditoPersonal<string, double>(
 					numCuentaAsociada, titular, fechaApertura,
 					monto, plazo, tasa,
 					destino, (double)tieneSeguro
 				);
-				// Insertar en la tabla de créditos
 				tablaCreditos.insertar(nuevoCredito->getIdServicio(), *nuevoCredito);
 				string id_gen = nuevoCredito->getIdServicio();
 				delete nuevoCredito;
+
 				cout << "\n🟢 Crédito Personal APROBADO y REGISTRADO con ID: " << id_gen << endl;
 
 			}
@@ -1363,8 +1398,11 @@ void menuCreditos(HashTable<Cliente<string>>& tablaClientes, HashTable<Credito<s
 				cout << "Dirección de la Propiedad: ";
 				getline(cin, direccion);
 				cout << "Valor Total de la Propiedad (USD): ";
-				if (!(cin >> valorPropiedad)) { valorPropiedad = 0; limpiarBuffer(); }
-				limpiarBuffer();
+				if (!(cin >> valorPropiedad)) {
+					valorPropiedad = 0;
+					cin.clear();
+				}
+				cin.ignore();
 
 				CreditoVivienda<string, double>* nuevoCredito = new CreditoVivienda<string, double>(
 					numCuentaAsociada, titular, fechaApertura,
@@ -1385,8 +1423,11 @@ void menuCreditos(HashTable<Cliente<string>>& tablaClientes, HashTable<Credito<s
 				cout << "RUC/Identificador Tributario: ";
 				getline(cin, ruc);
 				cout << "Línea de Crédito Máxima Aprobada (USD): ";
-				if (!(cin >> lineaCredito)) { lineaCredito = 0; limpiarBuffer(); }
-				limpiarBuffer();
+				if (!(cin >> lineaCredito)) {
+					lineaCredito = 0;
+					cin.clear();
+				}
+				cin.ignore();
 
 				CreditoEmpresarial<string, double>* nuevoCredito = new CreditoEmpresarial<string, double>(
 					numCuentaAsociada, titular, fechaApertura,
@@ -1401,7 +1442,6 @@ void menuCreditos(HashTable<Cliente<string>>& tablaClientes, HashTable<Credito<s
 
 		}
 		else if (opcion == 4) {
-
 			cout << "\n===== LISTADO DE CRÉDITOS ACTIVOS (" << tablaCreditos.getNumElementos() << ") =====" << endl;
 			if (tablaCreditos.getNumElementos() == 0) {
 				cout << "No hay créditos registrados." << endl;
@@ -1417,10 +1457,14 @@ void menuCreditos(HashTable<Cliente<string>>& tablaClientes, HashTable<Credito<s
 			cout << "\n❌ Opción no válida. Intente de nuevo." << endl;
 		}
 
-		pausar();
-		system("cls");
+		if (opcion != 0) {
+			pausar();
+		}
 
 	} while (opcion != 0);
+
+	// Limpiar pantalla al salir del menú
+	system("cls");
 }
 
 // ===========================================
@@ -2307,6 +2351,8 @@ int main() {
 			break;
 		case 4:
 			//Gestionar Creditos
+			dibujarMenuCreditos();
+			gotoxy(5, 10);
 			menuCreditos(tablaClientes, tablaCreditos);
 			break;
 		case 5:
