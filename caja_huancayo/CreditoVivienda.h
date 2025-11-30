@@ -30,7 +30,7 @@ public:
 	void registrarHipoteca() {
 		cout << "Registrando hipoteca para el inmueble en: " << this->getDireccionPropiedad() << endl;
 		cout << "Valor del inmueble: $" << this->getValorPropiedad() << endl;
-		cout << "Monto del crédito: $" << this->getMontoPrestamo() << endl;
+		cout << "Monto del crÃ©dito: $" << this->getMontoPrestamo() << endl;
 	}
 
 	void mostrarInfo() const {
@@ -39,9 +39,6 @@ public:
 			<< " | Direccion Propiedad: " << direccion_propiedad
 			<< " | Valor Propiedad: $" << valor_propiedad << endl;
 	}
-	void desembolsar() {
-		cout << "Desembolsando CREDITO VIVIENDA" << endl;
-		cout << "Direccion de la propiedad: " << direccion_propiedad << endl;
-		Credito<string, double>::desembolsar();
-	}
+
+	
 };
