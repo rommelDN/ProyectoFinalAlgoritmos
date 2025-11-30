@@ -42,7 +42,7 @@ public:
 			cout << "Incluye seguro de desgravamen" << endl;
 		}
 	}
-
+	//calcularCuotaMensual
 	void pagarAdelantado() {
 		cout << "Realizando pago adelantado al credito personal" << endl;
 		double interesAhorrado = calcularInteres();
