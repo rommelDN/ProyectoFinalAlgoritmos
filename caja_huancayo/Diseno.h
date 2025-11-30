@@ -346,3 +346,29 @@ void dibujarMenuCreditos() {
         }
     }gotoxy(5, 10);
 }
+
+
+
+void fondoRojo() {
+    cout << "[41m[2J[H[97m"; // Fondo rojo + limpiar + texto blanco
+}
+
+void fondoVerde() {
+    cout << "[42m[2J[H[97m";
+}
+
+void fondoAzul() {
+    cout << "[44m[2J[H[97m";
+}
+
+void fondoAmarillo() {
+    cout << "[43m[2J[H[30m"; 
+}
+
+void fondoNegro() {
+    cout << "[40m[2J[H[97m";
+}
+
+void resetearFondo() {
+    cout << "[0m[2J[H"; 
+}
