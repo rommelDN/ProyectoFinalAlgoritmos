@@ -33,28 +33,13 @@ public:
 	void setLineaCredito(T2 linea_credito) { this->linea_credito = linea_credito; }
 
     void solicitarCreditoEmpresarial() {
-        cout << "=== SOLICITUD CRÉDITO EMPRESARIAL ===" << endl;
+        cout << "=== SOLICITUD CRÃ‰DITO EMPRESARIAL ===" << endl;
         cout << "Empresa: " << this->getNombreEmpresa() << endl;
         cout << "RUC: " << this->getRUC() << endl;
-        cout << "Línea de crédito disponible: $" << this->getLineaCredito() << endl;
-        cout << "Monto solicitado: $" << this->getMontoPrestamo() << endl; // Usar getter
-        cout << "Plazo: " << this->getPlazoMeses() << " meses" << endl;    // Usar getter
-        cout << "Tasa: " << (this->getTasaInteres() * 100) << "%" << endl; // Usar getter
+        cout << "LÃ­nea de crÃ©dito disponible: $" << this->getLineaCredito() << endl;
+        cout << "Monto solicitado: $" << this->getMontoPrestamo() << endl; 
+        cout << "Plazo: " << this->getPlazoMeses() << " meses" << endl;    
+        cout << "Tasa: " << (this->getTasaInteres() * 100) << "%" << endl; 
     }
-    void refinanciarDeuda() {
-        cout << "=== REFINANCIACIÓN DE DEUDA ===" << endl;
-        cout << "Empresa: " << nombre_empresa << endl;
-        cout << "Saldo actual: $" << this->getSaldoPendiente() << endl; // Usar getter
 
-        // Refinanciación usando setters
-        T2 nuevo_plazo = this->getPlazoMeses() + 12; // Extender plazo
-        T2 nueva_tasa = this->getTasaInteres() * 0.9; // Reducir tasa
-
-        this->setPlazoMeses(nuevo_plazo);
-        this->setTasaInteres(nueva_tasa);
-
-        cout << "Nuevo plazo: " << this->getPlazoMeses() << " meses" << endl;
-        cout << "Nueva tasa: " << (this->getTasaInteres() * 100) << "%" << endl;
-        cout << "Deuda refinanciada exitosamente" << endl;
-    }
 };
