@@ -1507,6 +1507,10 @@ void menuTarjetas(
 ) {
 	int opcion;
 	do {
+		// ========== FONDO ROJO ACTIVADO ==========
+		fondoRojo();
+		// =========================================
+		
 		cout << "\n=== GESTION DE TARJETAS ===" << endl;
 		cout << "1. Crear Tarjeta de Credito" << endl;
 		cout << "2. Crear Tarjeta de Debito" << endl;
@@ -1542,12 +1546,17 @@ void menuTarjetas(
 		cout << "32. Analizar Patrones de Retiro" << endl;
 		cout << "\n========================================" << endl;
 		cout << "0. Volver al Menu Principal" << endl;
+		
+		// ========== RESETEAR COLOR PARA INPUT ==========
+		cout << "\033[0m";
+		// ================================================
 		cout << "Seleccione una opcion: ";
 		cin >> opcion;
 		limpiarBuffer();
 
 		switch (opcion) {
 		case 1: { // Crear Tarjeta de Crédito
+			fondoRojo();
 			string numCuenta, titular, fecha, numTarjeta, fechaEmision, fechaVenc, cvv;
 			double lineaCredito, tasaInteres;
 
@@ -1593,6 +1602,7 @@ void menuTarjetas(
 		}
 
 		case 2: { // Crear Tarjeta de Débito
+			fondoRojo();
 			string numCuenta, titular, fecha, numTarjeta, fechaEmision, fechaVenc, cvv;
 			double limiteDiario;
 
@@ -1636,6 +1646,7 @@ void menuTarjetas(
 		}
 
 		case 3: { // Mostrar todas las tarjetas de crédito
+			fondoRojo();
 			cout << "\n--- TARJETAS DE CREDITO ---" << endl;
 			tablaTarjetasCredito.mostrar();
 			pausar();
@@ -1643,6 +1654,7 @@ void menuTarjetas(
 		}
 
 		case 4: { // Mostrar todas las tarjetas de débito
+			fondoRojo();
 			cout << "\n--- TARJETAS DE DEBITO ---" << endl;
 			tablaTarjetasDebito.mostrar();
 			pausar();
@@ -1650,6 +1662,7 @@ void menuTarjetas(
 		}
 
 		case 5: { // Buscar tarjeta por número
+			fondoRojo();
 			string numTarjeta;
 			int tipoTarjeta;
 
@@ -1685,6 +1698,7 @@ void menuTarjetas(
 		}
 
 		case 6: { // Usar crédito
+			fondoRojo();
 			string numTarjeta;
 			double monto;
 
@@ -1709,6 +1723,7 @@ void menuTarjetas(
 		}
 
 		case 7: { // Pagar crédito
+			fondoRojo();
 			string numTarjeta;
 			double monto;
 
@@ -1733,6 +1748,7 @@ void menuTarjetas(
 		}
 
 		case 8: { // Retirar dinero
+			fondoRojo();
 			string numTarjeta;
 			double monto;
 
@@ -1757,6 +1773,7 @@ void menuTarjetas(
 		}
 
 		case 9: { // Depositar dinero
+			fondoRojo();
 			string numTarjeta;
 			double monto;
 
@@ -1780,6 +1797,7 @@ void menuTarjetas(
 		}
 
 		case 10: { // Bloquear/Desbloquear
+			fondoRojo();
 			string numTarjeta;
 			int tipoTarjeta, accion;
 
@@ -1818,6 +1836,7 @@ void menuTarjetas(
 		}
 
 		case 11: { // Ver días hasta vencimiento
+			fondoRojo();
 			string numTarjeta, fechaActual;
 			int tipoTarjeta;
 
@@ -1859,6 +1878,7 @@ void menuTarjetas(
 		}
 
 		case 12: { // Proyectar deuda
+			fondoRojo();
 			string numTarjeta;
 			int meses;
 
@@ -1882,6 +1902,7 @@ void menuTarjetas(
 		}
 
 		case 13: { // Mostrar estadísticas
+			fondoRojo();
 			string numTarjeta;
 			int tipoTarjeta;
 
@@ -1915,6 +1936,7 @@ void menuTarjetas(
 		}
 
 		case 14: { // Ordenar tarjetas
+			fondoRojo();
 			cout << "\n--- ORDENAR TARJETAS DE CREDITO ---" << endl;
 			auto listaTarjetas = tablaTarjetasCredito.toVector();
 
@@ -1963,6 +1985,7 @@ void menuTarjetas(
 		}
 
 		case 15: { // DataSetGenerator
+			fondoRojo();
 			cout << "\n--- LISTAR CON DATASET GENERATOR ---" << endl;
 			cout << "1. Listar Tarjetas de Credito" << endl;
 			cout << "2. Listar Tarjetas de Debito" << endl;
@@ -2014,6 +2037,7 @@ void menuTarjetas(
 		}
 
 		case 16: { // Insertar en Arbol 1
+			fondoRojo();
 			cout << "\n=== INSERTAR EN ARBOL 1 (POR NUMERO) ===" << endl;
 			cout << "1. Tarjeta de Credito\n2. Tarjeta de Debito" << endl;
 			int tipo;
@@ -2039,6 +2063,7 @@ void menuTarjetas(
 		}
 
 		case 17: { // Insertar en Arbol 2
+			fondoRojo();
 			cout << "\n=== INSERTAR EN ARBOL 2 (POR MONTO) ===" << endl;
 			cout << "1. Tarjeta de Credito\n2. Tarjeta de Debito" << endl;
 			int tipo;
@@ -2068,6 +2093,7 @@ void menuTarjetas(
 		}
 
 		case 18: { // Buscar en Arbol 1
+			fondoRojo();
 			cout << "\n=== BUSCAR EN ARBOL 1 ===" << endl;
 			string numTarjeta;
 			cout << "Numero de Tarjeta: ";
@@ -2080,30 +2106,35 @@ void menuTarjetas(
 		}
 
 		case 19: { // Mostrar Arbol 1
+			fondoRojo();
 			Tarjetas<string>::mostrarArbol1Ordenado();
 			pausar();
 			break;
 		}
 
 		case 20: { // Mostrar Arbol 2
+			fondoRojo();
 			Tarjetas<string>::mostrarArbol2Ordenado();
 			pausar();
 			break;
 		}
 
 		case 21: { // Estructura Arbol 1
+			fondoRojo();
 			Tarjetas<string>::mostrarEstructuraArbol1();
 			pausar();
 			break;
 		}
 
 		case 22: { // Estructura Arbol 2
+			fondoRojo();
 			Tarjetas<string>::mostrarEstructuraArbol2();
 			pausar();
 			break;
 		}
 
 		case 23: { // Comparar busqueda
+			fondoRojo();
 			cout << "\n=== COMPARAR BUSQUEDA ===" << endl;
 			string numTarjeta;
 			double monto;
@@ -2118,6 +2149,7 @@ void menuTarjetas(
 		}
 
 		case 24: { // Transferir credito
+			fondoRojo();
 			cout << "\n=== TRANSFERIR CREDITO ===" << endl;
 			string origen, destino;
 			double monto;
@@ -2137,6 +2169,7 @@ void menuTarjetas(
 		}
 
 		case 25: { // Transferir dinero
+			fondoRojo();
 			cout << "\n=== TRANSFERIR DINERO ===" << endl;
 			string origen, destino;
 			double monto;
@@ -2156,6 +2189,7 @@ void menuTarjetas(
 		}
 
 		case 26: { // Mostrar mis transferencias
+			fondoRojo();
 			cout << "\n=== MIS TRANSFERENCIAS ===" << endl;
 			cout << "1. Credito\n2. Debito" << endl;
 			int tipo;
@@ -2181,12 +2215,14 @@ void menuTarjetas(
 		}
 
 		case 27: { // Red completa
+			fondoRojo();
 			Tarjetas<string>::mostrarGrafoCompleto();
 			pausar();
 			break;
 		}
 
 		case 28: { // BFS
+			fondoRojo();
 			cout << "\n=== RECORRIDO BFS ===" << endl;
 			string inicio;
 			cout << "Tarjeta inicial: ";
@@ -2197,6 +2233,7 @@ void menuTarjetas(
 		}
 
 		case 29: { // DFS recursivo
+			fondoRojo();
 			cout << "\n=== RECORRIDO DFS (RECURSIVO) ===" << endl;
 			string inicio;
 			cout << "Tarjeta inicial: ";
@@ -2207,6 +2244,7 @@ void menuTarjetas(
 		}
 
 		case 30: { // Verificar camino
+			fondoRojo();
 			cout << "\n=== VERIFICAR CAMINO ===" << endl;
 			string origen, destino;
 			cout << "Origen: ";
@@ -2221,6 +2259,7 @@ void menuTarjetas(
 		}
 
 		case 31: { // Analizar red
+			fondoRojo();
 			cout << "\n=== ANALIZAR RED ===" << endl;
 			string numTarjeta;
 			cout << "Numero Tarjeta Credito: ";
@@ -2233,6 +2272,7 @@ void menuTarjetas(
 		}
 
 		case 32: { // Analizar patrones
+			fondoRojo();
 			cout << "\n=== ANALIZAR PATRONES ===" << endl;
 			string numTarjeta;
 			cout << "Numero Tarjeta Debito: ";
@@ -2245,6 +2285,7 @@ void menuTarjetas(
 		}
 
 		case 0:
+			resetearFondo(); // ← Resetear al salir
 			cout << "Volviendo al menu principal..." << endl;
 			break;
 
