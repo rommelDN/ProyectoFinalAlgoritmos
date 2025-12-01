@@ -854,7 +854,7 @@ void crearCreditoPersonal() {
 	int plazo_meses;
 	int opcion_seguro;
 
-	cout << "\n--- CREAR CREDITO PERSONAL ---" << endl;
+	cout << "\n    CREAR CREDITO PERSONAL    " << endl;
 
 	// Lectura de datos heredados de Servicios
 	cout << "Numero de Cuenta (Servicio): "; cin >> num_cuenta; limpiarBuffer();
@@ -878,7 +878,7 @@ void crearCreditoPersonal() {
 
 	// Agregar el objeto a la lista global
 	listaCP.agregarFinal(nuevoCP);
-	cout << "\n✅ Credito Personal agregado a la Lista Enlazada." << endl;
+	cout << "\n Credito Personal agregado a la Lista Enlazada." << endl;
 }
 
 void crearCreditoVivienda() {
@@ -886,7 +886,7 @@ void crearCreditoVivienda() {
 	T2 monto_prestamo, tasa_interes, valor_propiedad;
 	int plazo_meses;
 
-	cout << "\n--- CREAR CREDITO MI VIVIENDA ---" << endl;
+	cout << "\n   CREAR CREDITO MI VIVIENDA    " << endl;
 
 	// Lectura de datos heredados y Credito base
 	cout << "Numero de Cuenta (Servicio): "; cin >> num_cuenta; limpiarBuffer();
@@ -907,7 +907,7 @@ void crearCreditoVivienda() {
 
 	// Agregar el objeto a la lista global
 	listaCV.agregarFinal(nuevoCV);
-	cout << "\n✅ Credito Vivienda agregado a la Lista Enlazada." << endl;
+	cout << "\n Credito Vivienda agregado a la Lista Enlazada." << endl;
 }
 
 void crearCreditoEmpresarial() {
@@ -937,7 +937,7 @@ void crearCreditoEmpresarial() {
 
 	// Agregar el objeto a la lista global
 	listaCE.agregarFinal(nuevoCE);
-	cout << "\n✅ Credito Empresarial agregado a la Lista Enlazada." << endl;
+	cout << "\n Credito Empresarial agregado a la Lista Enlazada." << endl;
 }
 
 
