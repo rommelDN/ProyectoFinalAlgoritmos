@@ -236,7 +236,7 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 			else {
 				cout << "Error: No se encontro el cliente con el DNI proporcionado." << endl;
 			}
-			system("cls");
+			//system("cls");
 			pausar();
 			break;
 		};
@@ -323,7 +323,7 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 				l.mostrarInfo();
 				cout << "------------------\n";
 			}
-			system("cls");
+			//system("cls");
 			pausar();
 			break;
 		}
@@ -348,7 +348,7 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 				l.mostrarInfo();
 				cout << "------------------\n";
 			}
-			system("cls");
+			//system("cls");
 			pausar();
 			break;
 		}
@@ -366,7 +366,7 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 				extrac,
 				tablaCuentas
 			);
-			system("cls");
+			//system("cls");
 			pausar();
 			break;
 		};
@@ -388,8 +388,9 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 			cin >> meses;
 			double futuro = cuenta->interesRecursivo(meses);
 			cout << "El monto futuro despues de " << meses << " meses es: $" << futuro << endl;
-			system("cls");
+			//system("cls");
 			pausar();
+			//system("cls");
 			break;
 
 		};
@@ -473,7 +474,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 			catch (const exception& e) {
 				cout << "Error al crear seguro: " << e.what() << endl;
 			}
-			system("cls");
+			//system("cls");
 			pausar();
 			break;
 		}
@@ -481,7 +482,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 		case 2: {
 			cout << "\n--- Tabla de Cuentas ---" << endl;
 			tablaSeguros.mostrar();
-			system("cls");
+			//system("cls");
 			pausar();
 			break;
 		}
@@ -520,7 +521,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 			catch (const exception& e) {
 				cout << "Error al Ingresar Asegurado: " << e.what() << endl;
 			}
-			system("cls");
+			//system("cls");
 			pausar();
 			break;
 		}
@@ -543,7 +544,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 				l.mostrarInfo();
 				cout << "------------------\n";
 			}
-			system("cls");
+			//system("cls");
 			pausar();
 			break;
 		}
@@ -566,7 +567,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 				l.mostrarInfo();
 				cout << "------------------\n";
 			}
-			system("cls");
+			//system("cls");
 			pausar();
 			break;
 		}
@@ -585,7 +586,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 			else {
 				cout << "Error: No se encontro el cliente con el DNI proporcionado." << endl;
 			}
-			system("cls");
+			//system("cls");
 			pausar();
 			break;
 		}
@@ -622,7 +623,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 			catch (const exception& e) {
 				cout << "Error al crear reclamo: " << e.what() << endl;
 			}
-			system("cls");
+			//system("cls");
 			pausar();
 			break;
 		}
@@ -642,7 +643,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 				cout << "No hay reclamos pendientes.\n";
 			else
 				cout << "Procesamiento finalizado.\n";
-			system("cls");
+			//system("cls");
 			pausar();
 			break;
 		}
@@ -658,7 +659,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 				break;
 			}
 			seguro->mostrarColaReclamos();
-			system("cls");
+			//system("cls");
 			pausar();
 			break;
 		}
@@ -674,7 +675,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 				break;
 			}
 			seguro->mostrarHistorialReclamos();
-			system("cls");
+			//system("cls");
 			pausar();
 			break;
 		}
@@ -692,7 +693,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 				extractores,
 				tablaSeguros
 			);
-			system("cls");
+			//system("cls");
 			pausar();
 			break;
 		}
@@ -746,7 +747,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 			catch (const exception& e) {
 				cout << "Error: " << e.what() << endl;
 			}
-			system("cls");
+			//system("cls");
 			pausar();
 			break;
 		}
@@ -763,7 +764,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 				break;
 			}
 			seguro->mostrarRedBeneficiarios();
-			system("cls");
+			//system("cls");
 			pausar();
 			break;
 		}
@@ -2354,7 +2355,7 @@ void menuTrasacciones(ListaEnlazada<Transaccion<string, double>>& listaTransacci
 				break;
 			}
 			servicio->mostrarHistorialTransacciones();
-			system("cls");
+			//system("cls");
 			pausar();
 			break;
 
@@ -2371,7 +2372,7 @@ void menuTrasacciones(ListaEnlazada<Transaccion<string, double>>& listaTransacci
 			break;
 		}
 	} while (opcion != 3);
-
+	system("cls");
 
 };
 
