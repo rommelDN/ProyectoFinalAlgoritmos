@@ -164,5 +164,11 @@
     <ClInclude Include="GrafoBeneficiaro.h">
       <Filter>Archivos de encabezado\Seguros</Filter>
     </ClInclude>
+    <ClInclude Include="BSTCuentas.h">
+      <Filter>Archivos de encabezado\Cuentas</Filter>
+    </ClInclude>
+    <ClInclude Include="AVLSeguros.h">
+      <Filter>Archivos de encabezado\Seguros</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

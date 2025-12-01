@@ -30,6 +30,9 @@
 #include "TarjetaCredito.h"
 #include "TarjetaDebito.h"
 
+#include "BSTCuentas.h"
+#include "AVLSeguros.h"
+
 using namespace std;
 void limpiarBuffer() {
 	cin.clear();
@@ -156,6 +159,38 @@ void menuClientes(HashTable<Cliente<string>>& tablaClientes) {
 	} while (opcion != 5);
 };
 
+
+/*ArbolBB<Cuenta<string, double>>* arbolBST = nullptr;
+
+void inicializarBST(HashTable<Cuenta<string, double>>& tablaCuentas) {
+	auto procesador = [](Cuenta<string, double> c) {
+		c.mostrar();
+		};
+
+	// CORREGIDO: Usar getLimiteRetiro() que está en la clase Cuenta
+	auto comparador = [](Cuenta<string, double> a, Cuenta<string, double> b) -> int {
+		double limiteA = a.getLimiteRetiro();
+		double limiteB = b.getLimiteRetiro();
+		if (limiteA < limiteB) return -1;
+		if (limiteA > limiteB) return 1;
+		return 0;
+		};
+
+	auto extractor = [](const Cuenta<string, double>& c) -> int {
+		return static_cast<int>(c.getLimiteRetiro());
+		};
+
+	arbolBST = new ArbolBB<Cuenta<string, double>>(procesador, comparador, extractor);
+
+	auto cuentas = tablaCuentas.toVector();
+	for (const auto& cuenta : cuentas) {
+		arbolBST->insertar(cuenta);
+	}
+
+	cout << "BST inicializado con " << cuentas.size() << " cuentas." << endl;
+}
+*/
+
 void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Servicios<string, double>>& tablaDeServicios) {
 
 	int opcion;
@@ -172,7 +207,9 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 		cout << "7. Ordenar Cuentas (QuickSort)" << endl;
 		cout << "8. Generar Data Set " << endl;
 		cout << "9. Calcular Intereses " << endl;
-		cout << "10. Volver al Menu Principal" << endl;
+		cout << "10. Mostrar Cuentas Ordenadas (BST)" << endl;
+		cout << "11. Ver Estructura del Arbol (BST)" << endl; 
+		cout << "12. Volver al Menu Principal" << endl;
 		cout << "Seleccione una opcion: ";
 		cin >> opcion;
 
@@ -370,17 +407,31 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 			break;
 
 		};
-		case 10:
+		case 10: {
+			mostrarCuentasOrdenadas(tablaCuentas);
+			pausar();
+			system("cls");
+			break;
+		}
+
+		case 11: {
+			mostrarEstructuraBST(tablaCuentas);
+			pausar();
+			system("cls");
+			break;
+		}
+		case 12:
 			cout << "Volviendo al menu principal..." << endl;
 			break;
 		default:
 			break;
 		}
 
-	} while (opcion != 10);
+	} while (opcion != 12);
 	system("cls");
 
 }
+
 
 void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 	HashTable<Servicios<string, double>>& tablaDeServicios,
@@ -401,9 +452,11 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 		cout << "9. Mostrar Cola de Reclamos" << endl;
 		cout << "10. Mostrar Pila de Reclamos" << endl;
 		cout << "11. Generar Data Set" << endl;
-		cout << "13. Crear Relacion entre Beneficiarios" << endl;
-		cout << "14. Mostrar Red de Beneficiarios (Grafo)" << endl;
-		cout << "12. Volver al Menu Principal" << endl;
+		cout << "12. Mostrar Seguros Ordenados (AVL)" << endl;          // ← NUEVO
+		cout << "13. Ver Estructura del Arbol AVL" << endl;
+		cout << "14. Crear Relacion entre Beneficiarios" << endl;
+		cout << "15. Mostrar Red de Beneficiarios (Grafo)" << endl;
+		cout << "16. Volver al Menu Principal" << endl;
 		cout << "Opcion: ";
 		cin >> opcion;
 		limpiarBuffer();
@@ -674,8 +727,21 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 			break;
 		}
 
+		case 12: {
+			mostrarSegurosOrdenados_AVL(tablaSeguros);
+			pausar();
+			system("cls");
+			break;
+		}
 
 		case 13: {
+			mostrarEstructuraAVL_Seguros(tablaSeguros);
+			pausar();
+			system("cls");
+			break;
+		}
+
+		case 14: {
 			// Crear relación entre beneficiarios
 			cout << "\n--- Crear Relacion entre Beneficiarios ---" << endl;
 			string num_cuenta, dni;
@@ -727,7 +793,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 			break;
 		}
 
-		case 14: {
+		case 15: {
 			// Mostrar red completa de beneficiarios
 			cout << "\n--- Red de Beneficiarios (Grafo) ---" << endl;
 			string num_cuenta;
@@ -744,7 +810,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 			break;
 		}
 
-		case 12:
+		case 16:
 			cout << "Volviendo al menu principal..." << endl;
 			break;
 
@@ -753,7 +819,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 			break;
 		}
 
-	} while (opcion != 12);
+	} while (opcion != 16);
 	system("cls");
 }
 

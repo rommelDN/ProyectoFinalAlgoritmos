@@ -130,8 +130,10 @@
   <ItemGroup>
     <ClInclude Include="ArbolBinarioBusqueda.h" />
     <ClInclude Include="ArbolBinarioVL.h" />
+    <ClInclude Include="AVLSeguros.h" />
     <ClInclude Include="Beneficiario.h" />
     <ClInclude Include="BinarySearch.h" />
+    <ClInclude Include="BSTCuentas.h" />
     <ClInclude Include="Cliente.h" />
     <ClInclude Include="Cola.h" />
     <ClInclude Include="Credito.h" />
