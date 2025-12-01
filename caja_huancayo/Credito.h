@@ -50,12 +50,11 @@ public:
 
 
 
-    // 1. Calcular Cuota Mensual (Sistema Francés)
+    //calcular la Cuota Mensual 
     virtual double calcularCuotaMensual() const {
-        // Fórmula: R = P * [i * (1+i)^n] / [(1+i)^n - 1]
+        
         double i = tasa_interes; // Tasa mensual (Ej: 0.02)
 
-        // Validación para evitar división por cero si la tasa es 0
         if (i == 0) return monto_prestamo / plazo_meses;
 
         double numerador = i * pow(1 + i, plazo_meses);
@@ -82,7 +81,7 @@ public:
             double amortizacionCapital = cuotaFija - interes;
             saldoTemp -= amortizacionCapital;
 
-            if (saldoTemp < 0) saldoTemp = 0; // Ajuste por decimales
+            if (saldoTemp < 0) saldoTemp = 0;
 
             cout << mes << "\t| " << fixed << setprecision(2) << cuotaFija
                 << "\t| " << interes
@@ -92,13 +91,13 @@ public:
         cout << "--------------------------------------------------------------" << endl;
     }
 
-    // 3. Desembolsar
+    //Desembolsar
     virtual void desembolsar() {
         cout << "Desembolsando credito por: $" << monto_prestamo << endl;
         saldo_pendiente = monto_prestamo;
     }
 
-    // 4. Pagar Cuota
+    //Pagar Cuota
     virtual void pagarCuota(double monto) {
         if (monto <= saldo_pendiente + 1.0) {
             saldo_pendiente -= monto;
