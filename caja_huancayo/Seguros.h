@@ -81,9 +81,7 @@ public:
 	void setPrimaMensual(T2 prima_mensual) { this->prima_mensual = prima_mensual; }
 	void setMontoCobertura(T2 monto_cov) { monto_cobertura = monto_cov; }
 
-	// ========== NUEVOS MÉTODOS PARA EL GRAFO ==========
-
-	// Agregar beneficiario con integración al grafo
+	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	void crearBeneficiarioConGrafo(Seguros<string, double>* seguro, Cliente<string>* cliente,
 		const string& nombre, const string& relacion, double porcentaje) {
 		// Crear beneficiario en la lista enlazada (método existente)
@@ -96,7 +94,7 @@ public:
 
 		cout << "Beneficiario '" << nombre << "' agregado con éxito a la lista y al grafo.\n";
 	}
-
+	//!!!!!!!!!!!!!!!!!!!!!!
 	// Crear relación de dependencia entre beneficiarios
 	void crearRelacionBeneficiarios(const string& nombre_origen, const string& id_cliente_origen,
 		const string& nombre_destino, const string& id_cliente_destino,
@@ -106,7 +104,7 @@ public:
 
 		redBeneficiarios->crearRelacion(id_origen, id_destino, peso, tipo_relacion);
 	}
-
+	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// Mostrar la red completa de beneficiarios
 	void mostrarRedBeneficiarios() {
 		cout << "\n========================================\n";
@@ -114,55 +112,6 @@ public:
 		cout << "========================================\n";
 		redBeneficiarios->mostrarGrafo();
 	}
-
-	// Análisis de beneficiarios conectados
-	void analizarBeneficiariosConectados(const string& nombre, const string& id_cliente) {
-		string id_beneficiario = nombre + "_" + id_cliente;
-		redBeneficiarios->beneficiariosConectados(id_beneficiario);
-	}
-
-	// Detectar conflictos de interés
-	void detectarConflictosInteres() {
-		cout << "\n----- Analisis de Conflictos -----\n";
-		bool hay_ciclos = redBeneficiarios->detectarCiclos();
-		if (!hay_ciclos) {
-			cout << "No se detectaron conflictos de interés en la red.\n";
-		}
-	}
-
-	// Validar distribución de porcentajes
-	void validarDistribucionBeneficiarios() {
-		cout << "\n----- Validacion de Distribucion -----\n";
-		redBeneficiarios->validarDistribucion();
-	}
-
-	// Mostrar beneficiarios más influyentes
-	void mostrarBeneficiariosInfluyentes(int top = 3) {
-		if (redBeneficiarios->estaVacio()) {
-			cout << "No hay beneficiarios en el grafo.\n";
-			return;
-		}
-		redBeneficiarios->beneficiariosMasInfluyentes(top);
-	}
-
-	// Encontrar beneficiarios principales
-	void mostrarBeneficiariosPrincipales() {
-		if (redBeneficiarios->estaVacio()) {
-			cout << "No hay beneficiarios en el grafo.\n";
-			return;
-		}
-		redBeneficiarios->encontrarBeneficiariosPrincipales();
-	}
-
-	// Calcular distribución acumulada para un beneficiario y su red
-	void calcularDistribucionAcumulada(const string& nombre, const string& id_cliente) {
-		string id_beneficiario = nombre + "_" + id_cliente;
-		double distribucion = redBeneficiarios->calcularDistribucionAcumulada(id_beneficiario);
-		cout << "\nDistribución acumulada para " << nombre << " y su red: "
-			<< distribucion << "%\n";
-	}
-
-	// ========== MÉTODOS EXISTENTES (sin cambios) ==========
 
 	void mostrarBeneficiarios() {
 		if (beneficiarios->estaVacia()) {
