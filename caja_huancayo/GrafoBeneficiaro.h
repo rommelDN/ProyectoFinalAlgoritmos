@@ -50,7 +50,6 @@ private:
 public:
     GrafoBeneficiarios() {}
 
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // Agregar un beneficiario al grafo
     void agregarBeneficiario(const string& id, const string& nombre, T2 porcentaje) {
         if (nodos.find(id) == nodos.end()) {
@@ -63,7 +62,7 @@ public:
         }
     }
 
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
     // Crear relación entre dos beneficiarios
     void crearRelacion(const string& origen, const string& destino, T2 peso, const string& tipo) {
         if (nodos.find(origen) == nodos.end() || nodos.find(destino) == nodos.end()) {
@@ -77,7 +76,7 @@ public:
             << " [" << tipo << ", peso: " << peso << "]\n";
     }
 
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
     // Mostrar el grafo completo
     void mostrarGrafo() const {
         if (nodos.empty()) {
