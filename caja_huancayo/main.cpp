@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <limits>
+
 //ESTRUCTURAS DE DATOS
 #include "Pila.h"
 #include "Cola.h"
@@ -11,7 +12,7 @@
 #include "QuickSort.h"
 #include "QuickSelect.h"
 #include "DataSetGenerator.h"
-//CLASSES
+//CLASES
 #include "Cliente.h"
 #include "Servicios.h"
 #include "ServicioContratado.h"
@@ -50,7 +51,7 @@ void dibujarMenuSeguros();
 void dibujarMenuTransaccion();
 
 void mostrarMenu() {
-	
+
 	cout << "\n=== SISTEMA BANCARIO ===" << endl;
 	cout << "1. Gestionar Clientes" << endl;
 	cout << "2. Gestionar Cuentas" << endl;
@@ -58,7 +59,7 @@ void mostrarMenu() {
 	cout << "4.	Gestionar Creditos" << endl;
 	cout << "5.	Gestionar Tarjetas" << endl;
 	cout << "6. Gestionar Servicios Contratados" << endl;
-	//cout << "7. Mostrar Reportes" << endl;
+
 	cout << "7. Gestionar Transacciones" << endl;
 	cout << "8. Salir" << endl;
 	cout << "Seleccione una opcion: ";
@@ -68,18 +69,21 @@ void menuClientes(HashTable<Cliente<string>>& tablaClientes) {
 
 	int opcion;
 	do {
+		fondoRojo();
 		cout << "\n=== GESTION DE CLIENTES ===" << endl;
 		cout << "1. Agregar Cliente" << endl;
 		cout << "2. Mostrar Clientes" << endl;
 		cout << "3. Buscar Cliente por DNI" << endl;
 		cout << "4. Eliminar Cliente por DNI" << endl;
 		cout << "5. Volver al Menu Principal" << endl;
+		cout << "\033[0m";
 		cout << "Seleccione una opcion: ";
 		cin >> opcion;
 		limpiarBuffer();
 		switch (opcion)
 		{
 		case 1: {
+			fondoRojo();
 			string nombre, apellido, dni, email, telefono;
 			cout << "\n--- Agregar Nuevo Cliente ---" << endl;
 			cout << "Nombre: ";
@@ -94,18 +98,20 @@ void menuClientes(HashTable<Cliente<string>>& tablaClientes) {
 			getline(cin, telefono);
 			Cliente<string> nuevo(nombre, apellido, dni, email, telefono);
 			tablaClientes.insertar(nuevo.getDNI(), nuevo);
-			//listaClientes.agregarFinal(nuevo);
+			
 			cout << "Cliente agregado exitosamente." << endl;
 			pausar();
 			break;
 		}
 		case 2: {
+			fondoRojo();
 			cout << "\n--- Tabla de Clientes ---" << endl;
 			tablaClientes.mostrar();
 			pausar();
 			break;
 		}
 		case 3: {
+			fondoRojo();
 			string dni;
 			cout << "\n--- Buscar Cliente por DNI ---" << endl;
 			cout << "Ingrese DNI: ";
@@ -122,6 +128,7 @@ void menuClientes(HashTable<Cliente<string>>& tablaClientes) {
 			break;
 		}
 		case 4: {
+			fondoRojo();
 			string dni;
 			cout << "\n--- Eliminar Cliente por DNI ---" << endl;
 			cout << "Ingrese DNI: ";
@@ -138,7 +145,8 @@ void menuClientes(HashTable<Cliente<string>>& tablaClientes) {
 			break;
 		}
 		case 5:
-			cout << "Volviendo al men� principal..." << endl;
+			resetearFondo();
+			cout << "Volviendo al menu principal..." << endl;
 			break;
 		default:
 			cout << "Opcion invalida. Intente de nuevo." << endl;
@@ -149,7 +157,7 @@ void menuClientes(HashTable<Cliente<string>>& tablaClientes) {
 };
 
 void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Servicios<string, double>>& tablaDeServicios) {
-	
+
 	int opcion;
 	do {
 		dibujarMenuCuentas();
@@ -167,7 +175,7 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 		cout << "10. Volver al Menu Principal" << endl;
 		cout << "Seleccione una opcion: ";
 		cin >> opcion;
-		
+
 		limpiarBuffer();
 		system("cls");
 		dibujarMenuCuentas();
@@ -206,18 +214,16 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 			}
 			pausar();
 			system("cls");
-			//dibujarMenuCuentas();
-			//gotoxy(5, 10);
-			break;
 			
+			break;
+
 		};
 		case 2: {
 			cout << "\n--- Tabla de Cuentas ---" << endl;
 			tablaCuentas.mostrar();
 			pausar();
 			system("cls");
-			//dibujarMenuCuentas();
-			//gotoxy(5, 10);
+		
 			break;
 		};
 		case 3: {
@@ -239,32 +245,7 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 			pausar();
 			break;
 		};
-			  /*case 4: {
-				  cout << "\n--- Depositar A Cuenta ---" << endl;
-				  string numCuenta;
-				  double monto;
-				  cout << "Ingrese Numero de Cuenta: ";
-				  getline(cin, numCuenta);
-				  Cuenta<string, double>* cuenta = tablaCuentas.buscar(numCuenta);
-				  Servicios<string, double>* servicio = tablaDeServicios.buscar(numCuenta);
-				  if (cuenta == nullptr) {
-					  cout << "Error: No se encontro la cuenta con el numero proporcionado." << endl;
-					  pausar();
-					  break;
-				  }
-				  cout << "Ingrese Monto a Depositar: ";
-				  cin >> monto;
-				  limpiarBuffer();
-				  double saldoAnterior = servicio->getSaldo();
-				  cuenta->depositar(monto);
-				  if (cuenta->getSaldo() != saldoAnterior) {
-					  servicio->setSaldo(saldoAnterior + monto);
-					  cout << "Saldo actualizado en el sistema." << endl;
-				  }
-				  delete cuenta;
-				  pausar();
-				  break;
-			  }*/
+
 		case 4: {
 			cout << "\n--- Depositar A Cuenta ---" << endl;
 			string numCuenta;
@@ -309,9 +290,7 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 				pausar();
 				break;
 			}
-			////////////////////////////////////
-			//ORDENAMIENTO CON MERGESORT
-			////////////////////////////////////
+
 			auto criterio = [](const Cuenta<string, double>& a,
 				const Cuenta<string, double>& b) {
 					return a.getLimiteRetiro() < b.getLimiteRetiro();
@@ -334,15 +313,13 @@ void menuCuentas(HashTable<Cuenta<string, double>>& tablaCuentas, HashTable<Serv
 				pausar();
 				break;
 			}
-			////////////////////////////////////
-			//ORDENAMIENTO CON QUICKSORT
-			/////////////////////////////////////
+
 			auto criterio = [](const Cuenta<string, double>& a,
 				const Cuenta<string, double>& b) {
 					return a.getAhorroObjetivo() < b.getAhorroObjetivo();
 				};
 			quicksort(listas, 0, (int)listas.size() - 1, criterio);
-			cout << "\n--- Cuentas Ordenadas x Ahorro Objetivo---\n";
+			cout << "\n--- Cuentas Ordenadas por Ahorro Objetivo---\n";
 			for (auto& l : listas) {
 				l.mostrarInfo();
 				cout << "------------------\n";
@@ -486,7 +463,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 		}
 
 		case 3: {
-			// MODIFICADO: Ahora usa crearBeneficiarioConGrafo
+		
 			string dni, nombre, relacion, num_cuenta;
 			double porcentaje;
 			cout << "\n--- Ingresar Asegurados ---" << endl;
@@ -513,7 +490,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 			cin >> porcentaje;
 			limpiarBuffer();
 			try {
-				// CAMBIO AQUÍ: Usa el nuevo método que integra el grafo
+				
 				seguro->crearBeneficiarioConGrafo(seguro, cliente, nombre, relacion, porcentaje);
 			}
 			catch (const exception& e) {
@@ -560,7 +537,7 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 					return a.getMesesCobertura() < b.getMesesCobertura();
 				};
 			quicksort(listas, 0, (int)listas.size() - 1, criterio);
-			cout << "\n--- Cuentas Ordenadas x Meses De Cobertura---\n";
+			cout << "\n--- Cuentas Ordenadas por Meses De Cobertura---\n";
 			for (auto& l : listas) {
 				l.mostrarInfo();
 				cout << "------------------\n";
@@ -696,7 +673,6 @@ void menuSeguros(HashTable<Seguros<string, double>>& tablaSeguros,
 			break;
 		}
 
-			   // ========== NUEVOS CASOS PARA EL GRAFO ==========
 
 		case 13: {
 			// Crear relación entre beneficiarios
@@ -788,10 +764,12 @@ void menuServiciosContratados(
 	int opcion;
 
 	do {
+		fondoRojo();
 		cout << "\n=== SERVICIOS CONTRATADOS ===" << endl;
 		cout << "1. Contratar Servicio" << endl;
 		cout << "2. Mostrar Servicios Contratados" << endl;
 		cout << "3. Volver al Menu Principal" << endl;
+		cout << "\033[0m";
 		cout << "Seleccione una opcion: ";
 		cin >> opcion;
 		limpiarBuffer();
@@ -799,6 +777,7 @@ void menuServiciosContratados(
 		switch (opcion)
 		{
 		case 1: {
+			fondoRojo();
 			string fecha, dniCliente, numCuentaServicio;
 			cout << "\n--- Contratar Nuevo Servicio ---" << endl;
 			cout << "Fecha de Contratacion (dd/mm/aaaa): ";
@@ -826,12 +805,14 @@ void menuServiciosContratados(
 			break;
 		}
 		case 2: {
+			fondoRojo();
 			cout << "\n--- Servicios Contratados ---" << endl;
 			tablaServiciosContratados.mostrar();
 			pausar();
 			break;
 		}
 		case 3:
+			resetearFondo();
 			cout << "Volviendo al menu principal..." << endl;
 			break;
 		default:
@@ -854,7 +835,7 @@ void crearCreditoPersonal() {
 	int plazo_meses;
 	int opcion_seguro;
 
-	cout << "\n    CREAR CREDITO PERSONAL    " << endl;
+	cout << "\n--- CREAR CREDITO PERSONAL ---" << endl;
 
 	// Lectura de datos heredados de Servicios
 	cout << "Numero de Cuenta (Servicio): "; cin >> num_cuenta; limpiarBuffer();
@@ -886,7 +867,7 @@ void crearCreditoVivienda() {
 	T2 monto_prestamo, tasa_interes, valor_propiedad;
 	int plazo_meses;
 
-	cout << "\n   CREAR CREDITO MI VIVIENDA    " << endl;
+	cout << "\n--- CREAR CREDITO MI VIVIENDA ---" << endl;
 
 	// Lectura de datos heredados y Credito base
 	cout << "Numero de Cuenta (Servicio): "; cin >> num_cuenta; limpiarBuffer();
@@ -945,11 +926,11 @@ void menuCreditos(HashTable<Cliente<string>>& tablaClientes, HashTable<Credito<s
 	int opcion;
 	string dniCliente;
 	Cliente<string>* clienteVerificado = nullptr;
-	
+
 	do {
 		system("cls");
 
-		 dibujarMenuCreditos(); 
+		dibujarMenuCreditos();
 
 		cout << "" << endl;
 		cout << "          GESTION DE CREDITOS                 " << endl;
@@ -972,7 +953,7 @@ void menuCreditos(HashTable<Cliente<string>>& tablaClientes, HashTable<Credito<s
 		}
 		limpiarBuffer();
 
-     //verificacion clientem
+		//verificacion clientem
 		if (opcion >= 1 && opcion <= 3) {
 			system("cls");
 			dibujarMenuCreditos();
@@ -1120,7 +1101,7 @@ void menuCreditos(HashTable<Cliente<string>>& tablaClientes, HashTable<Credito<s
 				}
 			}
 			else {
-				cout << "[!] Credito no encontrado." << endl;
+				cout << " Credito no encontrado." << endl;
 			}
 			pausar();
 		}
@@ -1138,7 +1119,7 @@ void menuCreditos(HashTable<Cliente<string>>& tablaClientes, HashTable<Credito<s
 			getline(cin, idBusqueda);
 
 			Credito<string, double>* credito = tablaCreditos.buscarRef(idBusqueda);
-			
+
 			if (credito != nullptr) {
 				credito->generarCronogramaPagos();
 			}
@@ -1156,9 +1137,7 @@ void menuCreditos(HashTable<Cliente<string>>& tablaClientes, HashTable<Credito<s
 	} while (opcion != 0);
 }
 
-// ===========================================
-// MENU DE TARJETAS
-// ===========================================
+
 void menuTarjetas(
 	HashTable<TarjetaCredito<string, double>>& tablaTarjetasCredito,
 	HashTable<TarjetaDebito<string, double>>& tablaTarjetasDebito,
@@ -1166,10 +1145,10 @@ void menuTarjetas(
 ) {
 	int opcion;
 	do {
-		// ========== FONDO ROJO ACTIVADO ==========
+
 		fondoRojo();
-		// =========================================
-		
+
+
 		cout << "\n=== GESTION DE TARJETAS ===" << endl;
 		cout << "1. Crear Tarjeta de Credito" << endl;
 		cout << "2. Crear Tarjeta de Debito" << endl;
@@ -1205,16 +1184,16 @@ void menuTarjetas(
 		cout << "32. Analizar Patrones de Retiro" << endl;
 		cout << "\n========================================" << endl;
 		cout << "0. Volver al Menu Principal" << endl;
-		
-		// ========== RESETEAR COLOR PARA INPUT ==========
+
+
 		cout << "\033[0m";
-		// ================================================
+
 		cout << "Seleccione una opcion: ";
 		cin >> opcion;
 		limpiarBuffer();
 
 		switch (opcion) {
-		case 1: { // Crear Tarjeta de Crédito
+		case 1: {
 			fondoRojo();
 			string numCuenta, titular, fecha, numTarjeta, fechaEmision, fechaVenc, cvv;
 			double lineaCredito, tasaInteres;
@@ -1260,7 +1239,7 @@ void menuTarjetas(
 			break;
 		}
 
-		case 2: { // Crear Tarjeta de Débito
+		case 2: {
 			fondoRojo();
 			string numCuenta, titular, fecha, numTarjeta, fechaEmision, fechaVenc, cvv;
 			double limiteDiario;
@@ -1375,7 +1354,7 @@ void menuTarjetas(
 				tarjeta->usarCredito(monto);
 			}
 			else {
-				cout << "✗ Tarjeta no encontrada." << endl;
+				cout << " Tarjeta no encontrada." << endl;
 			}
 			pausar();
 			break;
@@ -1400,7 +1379,7 @@ void menuTarjetas(
 				tarjeta->pagarCredito(monto);
 			}
 			else {
-				cout << "✗ Tarjeta no encontrada." << endl;
+				cout << " Tarjeta no encontrada." << endl;
 			}
 			pausar();
 			break;
@@ -1425,7 +1404,7 @@ void menuTarjetas(
 				tarjeta->retirar(monto);
 			}
 			else {
-				cout << "✗ Tarjeta no encontrada." << endl;
+				cout << " Tarjeta no encontrada." << endl;
 			}
 			pausar();
 			break;
@@ -1449,7 +1428,7 @@ void menuTarjetas(
 				tarjeta->depositar(monto);
 			}
 			else {
-				cout << "✗ Tarjeta no encontrada." << endl;
+				cout << " Tarjeta no encontrada." << endl;
 			}
 			pausar();
 			break;
@@ -1477,7 +1456,7 @@ void menuTarjetas(
 					else tarjeta->desbloquearTarjeta();
 				}
 				else {
-					cout << "✗ Tarjeta no encontrada." << endl;
+					cout << " Tarjeta no encontrada." << endl;
 				}
 			}
 			else {
@@ -1487,7 +1466,7 @@ void menuTarjetas(
 					else tarjeta->desbloquearTarjeta();
 				}
 				else {
-					cout << "✗ Tarjeta no encontrada." << endl;
+					cout << " Tarjeta no encontrada." << endl;
 				}
 			}
 			pausar();
@@ -1517,7 +1496,7 @@ void menuTarjetas(
 					}
 				}
 				else {
-					cout << "✗ Tarjeta no encontrada." << endl;
+					cout << " Tarjeta no encontrada." << endl;
 				}
 			}
 			else {
@@ -1529,7 +1508,7 @@ void menuTarjetas(
 					}
 				}
 				else {
-					cout << "✗ Tarjeta no encontrada." << endl;
+					cout << " Tarjeta no encontrada." << endl;
 				}
 			}
 			pausar();
@@ -1554,7 +1533,7 @@ void menuTarjetas(
 				tarjeta->proyectarDeuda(meses);
 			}
 			else {
-				cout << "✗ Tarjeta no encontrada." << endl;
+				cout << " Tarjeta no encontrada." << endl;
 			}
 			pausar();
 			break;
@@ -1578,7 +1557,7 @@ void menuTarjetas(
 					tarjeta->mostrarEstadisticas();
 				}
 				else {
-					cout << "✗ Tarjeta no encontrada." << endl;
+					cout << " Tarjeta no encontrada." << endl;
 				}
 			}
 			else {
@@ -1587,7 +1566,7 @@ void menuTarjetas(
 					tarjeta->mostrarEstadisticas();
 				}
 				else {
-					cout << "✗ Tarjeta no encontrada." << endl;
+					cout << " Tarjeta no encontrada." << endl;
 				}
 			}
 			pausar();
@@ -1944,7 +1923,7 @@ void menuTarjetas(
 		}
 
 		case 0:
-			resetearFondo(); // ← Resetear al salir
+			resetearFondo(); 
 			cout << "Volviendo al menu principal..." << endl;
 			break;
 
@@ -2056,7 +2035,7 @@ int main() {
 	HashTable<TarjetaCredito<string, double>> tablaTarjetasCredito(10);
 	HashTable<TarjetaDebito<string, double>> tablaTarjetasDebito(10);
 
-	// Configuraci�n inicial
+	
 	Cuenta<string, double>::setTablaServiciosGlobal(tablaDeServicios);
 	Seguros<string, double>::setTablaServiciosGlobal(tablaDeServicios);
 
@@ -2065,14 +2044,14 @@ int main() {
 		dibujarMenu();
 		gotoxy(5, 10);
 		mostrarMenu();
-		
+
 		cin >> opcionPrincipal;
 		system("cls");
 		limpiarBuffer();
 
 		switch (opcionPrincipal) {
 		case 1:
-			
+
 			menuClientes(tablaClientes);
 			break;
 		case 2:
@@ -2098,9 +2077,7 @@ int main() {
 		case 6:
 			menuServiciosContratados(tablaServiciosContratados, tablaClientes, tablaDeServicios);
 			break;
-		/*case 7:
-			//menuReportes(listaClientes, listaCuentas, listaDeServicios, listaServiciosContratados);
-			break;*/
+			
 		case 7:
 			dibujarMenuTransaccion();
 			gotoxy(5, 10);
@@ -2108,7 +2085,7 @@ int main() {
 			system("cls");
 			break;
 		case 8:
-			cout << "\n�Gracias por usar el Sistema Bancario! Hasta pronto." << endl;
+			cout << "\nGracias por usar el Sistema Bancario! Hasta pronto." << endl;
 			break;
 		default:
 			cout << "Opcion no valida! Intente de nuevo." << endl;
